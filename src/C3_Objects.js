@@ -5,7 +5,7 @@ export class C3_Objects {
   
   add(GameObject, attributes) {
     const newObject = new GameObject(attributes)
-    this.list.push([{ type: GameObject.constructor.name, object: newObject }])
+    this.list.push(newObject)
     
     return newObject
   }
@@ -14,5 +14,11 @@ export class C3_Objects {
     return this.list.find(gameObject => {
       return gameObject.object instanceof GameObjectType
     })
+  }
+  
+  loop() {
+    for (const object of this.list) {
+      object.step()
+    }
   }
 }

@@ -12,33 +12,21 @@ class Engine extends C3 {
       this.types = {
         cube: ObjectCube
       }
-  
-      this.global = { 
-        hi: 1
+      
+      this.global = {
+        hi: 'hello'
       }
   }
-  
-  create() {
-    console.log('starting')
-    // new ObjectCube
+
+  start() {
     
-    this.global = {
-      test: '123',
-      meow: 'cats',
-    }
-    
-    GLOBAL.wtf = 'awdaw'
   }
-}
-
-export const GLOBAL = {
-  hi: 1
-}
-
-export const TYPES = {
-  cube: ObjectCube
+  
+  step() {
+    // console.log('meow')
+  }
 }
 
 export { C3_Object }
 export const c3 = new Engine
-window.c3 = c3
+if (typeof window !== 'undefined') window.c3 = c3
