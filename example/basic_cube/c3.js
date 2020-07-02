@@ -3,30 +3,26 @@
 
 import { C3, C3_Object } from '../../C3.js'
 import { ObjectCube } from './ObjectCube.js'
+// c3.three.
 
+export const KEYMAP = {
+  spacbar: 32
+}
 
-class Engine extends C3 {
-  constructor() {
-      super()
-      
-      this.types = {
-        cube: ObjectCube
-      }
-      
-      this.global = {
-        hi: 'hello'
-      }
-  }
+export const TYPES = {
+  cube: ObjectCube
+}
 
-  start() {
-    
-  }
-  
-  step() {
-    // console.log('meow')
-  }
+export const SHARED = {
+  hi: 'hello'
 }
 
 export { C3_Object }
-export const c3 = new Engine
-if (typeof window !== 'undefined') window.c3 = c3
+export const c3 = new C3()
+
+if (typeof window !== 'undefined') {
+   window.c3 = c3
+   window.TYPES = TYPES
+   window.KEYMAP = KEYMAP
+   window.SHARED = SHARED
+}

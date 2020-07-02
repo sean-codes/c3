@@ -1,5 +1,6 @@
-import { c3 } from './c3.js'
+import { c3, TYPES } from './c3.js'
 // import { global } from './global.js'
+
 
 // console.log(global.data)
 // global.data = 'wtf'
@@ -7,8 +8,10 @@ import { c3 } from './c3.js'
 // c3.global.meow = 'aaaa'
 // c3.objects.
 // c3.mat
-console.log(c3)
-c3.objects.add(c3.types.cube, { anAttribute: 'hello' })
+c3.scene.setBackground('#FFF')
+c3.camera.setPosition(0, 0, -5)
+c3.camera.lookAt(0, 0, 0)
+c3.objects.add(TYPES.cube, { anAttribute: 'hello' })
 // c3.objects.find(c3.types.cube)
 // c3.objects.find(TYPES.cube)
 
