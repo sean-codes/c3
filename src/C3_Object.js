@@ -1,13 +1,15 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
 import { C3_Vector } from './C3_Vector.js'
+import * as C3_Mesh from './C3_Mesh.js'
 
 export class C3_Object {
-   constructor({ id, attr }) {
+   constructor(c3, id, attr) {
+      this.c3 = c3
       this.id = id
       this.attr = attr || {}
 
       this.rotation = new C3_Vector(0, 0, 0)
-      this.mesh = this.mesh ? this.mesh() : new THREE.Object3D()
+      this.mesh = this.object ? this.object() : C3_Mesh.Blank()
       this.physics = this.physics ? this.physics() : { meshes: [] }
       this.physicsObject = this.physics.meshes.length ? c3.physics.addObject(this) : undefined
       this.body = this.physicsObject ? this.physicsObject.body : undefined
@@ -22,7 +24,7 @@ export class C3_Object {
    //    c3.objects.destroy(this)
    // }
 
-   setPosition({ x, y, z }) {
+   setPosition(x, y, z) {      
       if (this.body && !this.physics.linkToMesh) {
          this.body.position.x = x
          this.body.position.y = y
@@ -32,6 +34,10 @@ export class C3_Object {
          this.mesh.position.y = y
          this.mesh.position.z = z
       }
+   }
+   
+   setPositionVec({ x, y, z }) {
+      this.setPosition(x, y, z)
    }
 
    getPosition() {
