@@ -2,7 +2,8 @@ import * as THREE from '../node_modules/three/build/three.module.js'
 
 export class C3_Camera {
    constructor() {
-      this.object = new THREE.PerspectiveCamera(45, 0, 0, 0.001, 1000)
+      // this.object = new THREE.PerspectiveCamera(45, 0, 0, 0.001, 1000)
+      this.object = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000)
    }
 
    getWorldPosition() {
@@ -38,6 +39,7 @@ export class C3_Camera {
    }
 
    handleResize(width, height) {
-      this.setAspect(width / height)
+      console.log('camera resize', width, height)
+      // this.setAspect(width / height)
    }
 }

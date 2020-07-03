@@ -5,18 +5,18 @@ export class C3_Render {
     this.c3 = c3
     
     this.renderer = new THREE.WebGLRenderer({
-      antialias: true
+      // antialias: true
     })
 
-    this.renderer.shadowMap.enabled = true
-    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
-    this.renderer.domElement.tabIndex = 1
+    // this.renderer.shadowMap.enabled = true
+    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    // this.renderer.domElement.tabIndex = 1
 
     document.body.appendChild(this.renderer.domElement);
   }
 
   loop(scene, camera, delta) {
-    
+    // console.log('meow')
     // window.requestAnimationFrame((time) => this.render(time))
     this.renderer.render(scene.object, camera.object)
 
@@ -34,6 +34,8 @@ export class C3_Render {
   handleResize(width, height) {
     this.renderer.domElement.width = width
     this.renderer.domElement.height = height
+    console.log('renderer size', width, height)
+    
     this.renderer.setSize(width, height, false)
   }
 }
