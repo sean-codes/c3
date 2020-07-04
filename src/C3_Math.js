@@ -31,7 +31,7 @@ export function iRandom(num) {
  */
 export function randomPointFromPoint(point, radius) {
   const angle = Math.PI * 2 * Math.random()
-  return c3.vector.create(
+  return new c3.Vector(
     point.x + Math.cos(angle) * radius,
     point.y,
     point.z + Math.sin(angle) * radius

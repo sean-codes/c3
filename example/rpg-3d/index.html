@@ -1,0 +1,41 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no">
+
+    <title>rpg-3d</title>
+    <style>
+      canvas {
+        position: fixed;
+      }
+
+      .info {
+         position: fixed;
+         top: 0;
+         left: 0;
+         z-index: 1000;
+         font-size: 16px;
+         font-family: monospace;
+         font-weight: 600;
+         background: rgba(0, 0, 0, 0.25);
+         padding: 0.5rem;
+         color: #FFF;
+      }
+    </style>
+  </head>
+  <body>
+     <div class="info">
+       Move = WASD <br>
+       Jump = Spacebar <br>
+       Camera = arrows <br>
+       Attack = e <br>
+       Block = q <br>
+       Target = t <br>
+       Sprint = shift <br>
+       <!-- Make Fence = 1 <br>
+       Toggle Fence = 2 -->
+     </div>
+    <script type="module" src="./index.js"></script>
+  </body>
+</html>

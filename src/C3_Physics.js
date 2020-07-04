@@ -169,7 +169,6 @@ export class C3_Physics {
             mesh.position.copy(body.position)
             mesh.quaternion.copy(body.quaternion)
          }
-         
       }
    }
 }

@@ -5,30 +5,18 @@ export class C3_Render {
     this.c3 = c3
     
     this.renderer = new THREE.WebGLRenderer({
-      // antialias: true
+      antialias: true
     })
 
-    // this.renderer.shadowMap.enabled = true
-    // this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
-    // this.renderer.domElement.tabIndex = 1
+    this.renderer.shadowMap.enabled = true
+    this.renderer.shadowMap.type = THREE.PCFSoftShadowMap
+    this.renderer.domElement.tabIndex = 1
 
     document.body.appendChild(this.renderer.domElement);
   }
 
   loop(scene, camera, delta) {
-    // console.log('meow')
-    // window.requestAnimationFrame((time) => this.render(time))
     this.renderer.render(scene.object, camera.object)
-
-    // c3.physics.loopApplyCollisions()
-
-    // for (const object of this.objects.list) {
-    //   object.step()
-    // }
-    // 
-    // c3.physics.loop(delta)
-    // c3.models.loop(delta)
-    // c3.keyboard.resetKeys()
   }
 
   handleResize(width, height) {
