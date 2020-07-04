@@ -1,41 +1,90 @@
 <!doctype html>
 <html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no">
 
-    <title>rpg-3d</title>
-    <style>
+<head>
+   <meta charset="utf-8">
+   <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no">
+
+   <title>rpg-3d</title>
+   <style>
+      html,
+      body {
+         padding: 0;
+         margin: 0;
+         font-family: monospace;
+         font-weight: 600;
+      }
+
       canvas {
-        position: fixed;
+         position: fixed;
+         background: #444;
+         width: 100%;
+         height: 100%;
       }
 
       .info {
          position: fixed;
          top: 0;
          left: 0;
-         z-index: 1000;
+         z-index: 10;
          font-size: 16px;
-         font-family: monospace;
-         font-weight: 600;
          background: rgba(0, 0, 0, 0.25);
          padding: 0.5rem;
          color: #FFF;
       }
-    </style>
-  </head>
-  <body>
-     <div class="info">
-       Move = WASD <br>
-       Jump = Spacebar <br>
-       Camera = arrows <br>
-       Attack = e <br>
-       Block = q <br>
-       Target = t <br>
-       Sprint = shift <br>
-       <!-- Make Fence = 1 <br>
+      
+      .load-screen {
+         position: fixed;
+         top: 0;
+         left: 0;
+         width: 100%;
+         height: 100%;
+         background: #444;
+         color: #FFF;
+         z-index: 100;
+         display: flex;
+      }
+      
+      .load-screen .center {
+         margin: auto;
+         text-align: center;
+         width: 50%;
+         max-width: 200px;
+      }
+      
+      .load-screen .loader {
+         width: 100%;
+         height: 1rem;
+         border: 3px solid #FFF;
+      }
+      
+      .load-screen .loader .inner {
+         width: 0;
+         height: 100%;
+         background: #FFF;
+      }
+   </style>
+</head>
+
+<body>
+   <div class="info">
+      Move = WASD <br>
+      Jump = Spacebar <br>
+      Camera = arrows <br>
+      Attack = e <br>
+      Block = q <br>
+      Target = t <br>
+      Sprint = shift <br>
+      <!-- Make Fence = 1 <br>
        Toggle Fence = 2 -->
-     </div>
-    <script type="module" src="./index.js"></script>
-  </body>
+   </div>
+   <div class="load-screen">
+      <div class="center">
+         <h2>loading...</h2>
+         <div class="loader"><div class="inner"></div></div>
+      </div>   
+   </div>
+   <script type="module" src="./index.js"></script>
+</body>
+
 </html>

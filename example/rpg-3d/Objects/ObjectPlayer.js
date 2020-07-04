@@ -101,10 +101,10 @@ export class ObjectPlayer extends c3.Object {
       this.stepAnimation()
       
       // testing equip
-      if (c3.keyboard.check('equip_helmet').down) {
-         const modelHelmet = c3.models.find('helmet')
-         this.model.boneToggle('Head', modelHelmet)
-      }
+      // if (c3.keyboard.check('equip_helmet').down) {
+      //    const modelHelmet = c3.models.find('helmet')
+      //    this.model.boneToggle('Head', modelHelmet)
+      // }
    }
    
    stepTargeting() {

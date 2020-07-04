@@ -6,7 +6,7 @@ export class C3_Objects {
    }
 
    create(GameObject, attr)  {
-      const newObject = new GameObject(this.c3, this.idCounter, attr)
+      const newObject = new GameObject(this.c3, this.idCounter, attr, GameObject)
 
       this.list.push(newObject)
       this.c3.scene.add(newObject.mesh)

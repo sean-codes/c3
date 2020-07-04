@@ -28,7 +28,7 @@ c3.init({
       sheath: 88, // x
       sprint: 16, // shift
    },
-   
+
    types: {
       AmbientLight: ObjectAmbientLight,
       Arrow: ObjectArrow,
@@ -44,24 +44,6 @@ c3.init({
       Weapon: ObjectWeapon,
    },
 
-   scripts: [
-      // Objects
-      { src: './Objects/ObjectAmbientLight.js' },
-      { src: './Objects/ObjectDirectionalLight.js' },
-      { src: './Objects/ObjectBox.js' },
-      { src: './Objects/ObjectCamera.js' },
-      { src: './Objects/ObjectDragon.js' },
-      { src: './Objects/ObjectPlayer.js' },
-      { src: './Objects/ObjectPlatform.js' },
-      { src: './Objects/ObjectGround.js' },
-      { src: './Objects/ObjectResource.js' },
-      { src: './Objects/ObjectTarget.js' },
-      { src: './Objects/ObjectWeapon.js' },
-      { src: './Objects/ObjectArrow.js' },
-      // Scripts
-      { src: './Scripts/ScriptCameraController.js' }, 
-   ],
-   
    models: [
       { name: 'sword', file: './assets/equipment/Sword.fbx', scale: 0.0125, rotation: [0, Math.PI*0.5, 0], offset: [0, -0.4, 0.15] },
       { name: 'shield', file: './assets/equipment/Shield.fbx', scale: 0.013, rotation: [0, -Math.PI*0.5, 0], offset: [0, 0, 0] },
@@ -103,11 +85,18 @@ c3.init({
       },
    ],
    
+   progress: function(percent) {
+      const eleLoadScreen = document.querySelector('.load-screen')
+      const eleLoaderInner = document.querySelector('.loader .inner')
+      eleLoaderInner.style.width = `${percent * 100}%`
+      if (percent === 1) eleLoadScreen.style.display = 'none'
+   },
+
    init: function() {
       c3.scene.setBackground('#FFF')      
       c3.camera.setNearFar(1, 75)
       c3.scene.setFog(45, 75)
-      
+
       c3.models.materialAdd('BOX', new c3.three.MeshLambertMaterial({ color: '#F55' }))
       c3.models.materialAdd('TARGET', new c3.three.MeshLambertMaterial({ color: '#99f' }))
       c3.models.materialAdd('WIREFRAME', new c3.three.MeshBasicMaterial({
@@ -117,7 +106,7 @@ c3.init({
          transparent: true,
          visible: false,
       }))
-      
+
       // Setup materials
       c3.physics.addMaterial('BOX', { friction: 0.1, restitution: 0  })
       c3.physics.addMaterial('PLAYER', { friction: 0, restitution: 0 })
@@ -126,29 +115,29 @@ c3.init({
       // lights
       c3.objects.create(c3.types.AmbientLight)
       c3.objects.create(c3.types.DirectionalLight)
-   
+
       const player = c3.objects.create(c3.types.Player, { pos: new c3.Vector(0, 2, 0) })
       c3.objects.create(c3.types.Ground)
 
       for (let i = 0; i < 40; i++) {
          c3.objects.create(c3.types.Box)
       }
-      
+
       for (let i = 0; i < 100; i++) {
          c3.objects.create(c3.types.Resource)
       }
-      
+
       for (let x = 0; x < 2; x++) {
          for (let y = 0; y < 2; y++) {
             c3.objects.create(c3.types.Dragon, { pos: new c3.Vector(15+x*6, 2, -15+y*6) })
          }
       }
-      
+
       c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-15, 3, -15) })
       c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-20, 6, -15) })
       c3.objects.create(c3.types.Target, { pos: new c3.Vector(-8, 4, 8) })
    },
-   
+
    step: function(c3) {
       // this.scripts.cameraController.step()
    }

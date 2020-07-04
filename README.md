@@ -1,8 +1,11 @@
 # c3
 3d javascript game engine
 
+![example](./example.gif)
+
 ## examples
-- [basic-cube](http://sean-codes.github.io/c3/example/basic_cube/index.html)
+- [rpg-3d](http://sean-codes.github.io/c3/example/rpg-3d/index.html)
+- [basic-cube](http://sean-codes.github.io/c3/example/basic_cube_monofile/index.html)
 
 
 ## Boilerplate

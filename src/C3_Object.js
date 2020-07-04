@@ -3,11 +3,12 @@ import { C3_Vector } from './C3_Vector.js'
 import * as C3_Mesh from './C3_Mesh.js'
 
 export class C3_Object {
-   constructor(c3, id, attr) {
+   constructor(c3, id, attr, type) {
       this.c3 = c3
       this.id = id
       this.attr = attr || {}
-
+      this.type = type
+      
       this.rotation = new C3_Vector(0, 0, 0)
       this.mesh = this.mesh ? this.mesh() : c3.mesh.Blank()
       this.physics = this.physics ? this.physics() : { meshes: [] }

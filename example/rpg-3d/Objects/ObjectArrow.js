@@ -46,7 +46,7 @@ export class ObjectArrow extends c3.Object {
       for (const collision of this.getCollisions()) {
          const { other } = collision
          
-         if (other.type === 'Dragon') {
+         if (other.type === c3.types.Dragon) {
             other.killDragon()
             this.destroy()
          }

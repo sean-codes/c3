@@ -1,4 +1,5 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
+import { FBXLoader } from '../node_modules/three/examples/jsm/loaders/FBXLoader.js'
 import { C3_Objects } from './C3_Objects.js'
 import { C3_Camera } from './C3_Camera.js'
 import { C3_Physics } from './C3_Physics.js'
@@ -37,24 +38,26 @@ export class C3 {
       this.three = THREE
       this.const = constants
       
-      if (options) this.init(options)   
+      this.loading = 0   
    }
    
    init({
       types = {},
       models = [],
       keyMap = {},
+      progress = () => {},
       init = () => {},
       step = () => {},
    } = {}) {
       this.keyMap = keyMap
       this.userInit = init
       this.userStep = step
+      this.userProgress = progress
       this.types = types
       this.listModels = [...models]
       this.keyboard.applyKeyMap(keyMap)
-      
-      this.models.load(models)
+
+      this.loadModels(models)
          .then(() => this.engineInit())
    }
 
@@ -97,5 +100,25 @@ export class C3 {
 
       this.render.handleResize(width, height)
       this.camera.handleResize(width, height)
+   }
+   
+   loadModels(models) {
+      const loader = new FBXLoader()
+      
+      return new Promise((yay, nay) => {   
+         let loading = models.length
+         for (const loadInfo of models) {
+            // const model = models[modelName]
+            loader.load(loadInfo.file, (object) => {
+               this.models.add({ loadInfo, object })
+               if (loadInfo.log) console.log('Loaded Model', loadInfo.name, object)
+               
+               loading -= 1
+               
+               this.userProgress(1 - loading/models.length)
+               if (!loading) yay()
+            }, null, (e) => { throw e })
+         }
+      })
    }
 }
