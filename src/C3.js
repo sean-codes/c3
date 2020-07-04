@@ -107,6 +107,8 @@ export class C3 {
       
       return new Promise((yay, nay) => {   
          let loading = models.length
+         !loading && yay()
+         
          for (const loadInfo of models) {
             // const model = models[modelName]
             loader.load(loadInfo.file, (object) => {
@@ -119,6 +121,7 @@ export class C3 {
                if (!loading) yay()
             }, null, (e) => { throw e })
          }
+         
       })
    }
 }

@@ -2,7 +2,7 @@ import { C3 } from '../../src/C3.js'
 const c3 = new C3()
 
 class ObjectCube extends c3.Object {
-   object() {
+   mesh() {
       return c3.mesh.Box({ size: [1, 1, 1], color: '#FFF' })
    }
    
@@ -13,7 +13,7 @@ class ObjectCube extends c3.Object {
 }
 
 class ObjectLight extends c3.Object {
-   object() {
+   mesh() {
       return c3.light.Directional()
    }
    
@@ -29,6 +29,7 @@ c3.init({
    },
    
    init: function() {
+      console.log('hello', c3)
       c3.mesh.setMaterialType(c3.const.MaterialTypePhong)
       c3.scene.setBackground('#555')
       c3.camera.setPosition(0, 0, 2)
