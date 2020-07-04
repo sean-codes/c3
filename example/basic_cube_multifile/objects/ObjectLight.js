@@ -1,6 +1,6 @@
-import { C3_Object } from '../c3.js'
+import { c3 } from '../c3.js'
 
-export class ObjectLight extends C3_Object {
+export class ObjectLight extends c3.Object {
    object() {
       return this.c3.light.Directional()
    }

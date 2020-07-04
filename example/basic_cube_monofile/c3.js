@@ -1,10 +1,5 @@
-import * as C3 from '../../src/C3.js'
-
-const c3 = new C3.Engine()
-
-c3.mesh.setMaterialType(C3.MaterialTypePhong)
-c3.scene.setBackground('#555')
-c3.camera.setPosition(0, 0, 2)
+import { C3 } from '../../src/C3.js'
+const c3 = new C3()
 
 class ObjectCube extends c3.Object {
    object() {
@@ -17,7 +12,7 @@ class ObjectCube extends c3.Object {
    }
 }
 
-class ObjectLight extends C3.Object {
+class ObjectLight extends c3.Object {
    object() {
       return c3.light.Directional()
    }
@@ -27,7 +22,18 @@ class ObjectLight extends C3.Object {
    }
 }
 
-
-
-c3.objects.create(ObjectCube)
-c3.objects.create(ObjectLight)
+c3.init({
+   types: {
+      Cube: ObjectCube,
+      Light: ObjectLight,
+   },
+   
+   init: function() {
+      c3.mesh.setMaterialType(c3.const.MaterialTypePhong)
+      c3.scene.setBackground('#555')
+      c3.camera.setPosition(0, 0, 2)
+      
+      c3.objects.create(c3.types.Cube)
+      c3.objects.create(c3.types.Light)
+   }
+})

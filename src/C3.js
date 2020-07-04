@@ -7,14 +7,36 @@ import { C3_Scene } from './C3_Scene.js'
 import { C3_Vector } from './C3_Vector.js'
 import { C3_Light } from './C3_Light.js'
 import { C3_Mesh } from './C3_Mesh.js'
+import { C3_Models } from './C3_Models.js'
 import * as C3_Math from './C3_Math.js'
+import * as constants from './constants.js'
 import { C3_Object } from './C3_Object.js'
 
 export { C3_Object } from './C3_Object.js'
-export * from './constants.js'
 
-export class Engine {
-   constructor({
+export class C3 {
+   constructor(options = undefined) {
+      this.clock = new THREE.Clock()
+
+      this.global = {}
+      this.render = new C3_Render
+      this.camera = new C3_Camera
+      this.objects = new C3_Objects(this)
+      this.physics = new C3_Physics
+      this.scene = new C3_Scene
+      this.models = new C3_Models
+      this.math = C3_Math
+      this.Object = C3_Object
+      this.Vector = C3_Vector
+      this.light = new C3_Light
+      this.mesh = new C3_Mesh
+      this.three = THREE
+      this.const = constants
+      
+      if (options) this.init(options)   
+   }
+   
+   init({
       types = {},
       models = [],
       keyMap = {},
@@ -27,21 +49,6 @@ export class Engine {
       this.types = types
       this.models = models
 
-      this.clock = new THREE.Clock()
-
-      this.global = {}
-      this.render = new C3_Render
-      this.camera = new C3_Camera
-      this.objects = new C3_Objects(this)
-      this.physics = new C3_Physics
-      this.scene = new C3_Scene
-      this.math = C3_Math
-      this.Object = C3_Object
-      this.Vector = C3_Vector
-      this.light = new C3_Light
-      this.mesh = new C3_Mesh
-      this.three = THREE
-
       this.engineInit()
    }
 
@@ -50,7 +57,6 @@ export class Engine {
    }
 
    engineInit() {
-      console.log('adding camera', this.camera.object)
       this.scene.add(this.camera.object)
 
       window.onresize = () => this.handleResize()

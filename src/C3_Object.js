@@ -9,7 +9,7 @@ export class C3_Object {
       this.attr = attr || {}
 
       this.rotation = new C3_Vector(0, 0, 0)
-      this.mesh = this.object ? this.object() : C3_Mesh.Blank()
+      this.mesh = this.object ? this.object() : c3.mesh.Blank()
       this.physics = this.physics ? this.physics() : { meshes: [] }
       this.physicsObject = this.physics.meshes.length ? c3.physics.addObject(this) : undefined
       this.body = this.physicsObject ? this.physicsObject.body : undefined

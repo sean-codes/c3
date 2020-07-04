@@ -34,7 +34,6 @@ export class C3_Render {
   handleResize(width, height) {
     this.renderer.domElement.width = width
     this.renderer.domElement.height = height
-    console.log('renderer size', width, height)
     
     this.renderer.setSize(width, height, false)
   }
