@@ -1,4 +1,4 @@
-import * as C3 from '../../C3.js'
+import * as C3 from '../../src/C3.js'
 
 const c3 = new C3.Engine()
 

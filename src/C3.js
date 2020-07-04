@@ -1,5 +1,4 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
-import { C3_Object } from './C3_Object.js'
 import { C3_Objects } from './C3_Objects.js'
 import { C3_Camera } from './C3_Camera.js'
 import { C3_Physics } from './C3_Physics.js'
@@ -9,10 +8,14 @@ import { C3_Vector } from './C3_Vector.js'
 import { C3_Light } from './C3_Light.js'
 import { C3_Mesh } from './C3_Mesh.js'
 import * as C3_Math from './C3_Math.js'
+import { C3_Object } from './C3_Object.js'
 
-export class C3_Engine {
+export { C3_Object } from './C3_Object.js'
+export * from './constants.js'
+
+export class Engine {
    constructor({
-      objectTypes = {},
+      types = {},
       models = [],
       keyMap = {},
       init = () => {},
@@ -21,7 +24,7 @@ export class C3_Engine {
       this.keyMap = keyMap
       this.userInit = init
       this.userStep = step
-      this.objectTypes = objectTypes
+      this.types = types
       this.models = models
 
       this.clock = new THREE.Clock()
@@ -53,7 +56,7 @@ export class C3_Engine {
       window.onresize = () => this.handleResize()
       this.handleResize()
 
-      this.userInit()
+      this.userInit.call(this)
       this.engineStep()
    }
 
@@ -63,7 +66,7 @@ export class C3_Engine {
          setTimeout(() => this.engineStep(), 1000 / 60)
 
       const delta = this.clock.getDelta()
-      this.userStep(delta)
+      this.userStep.call(this, delta)
       this.render.loop(this.scene, this.camera, delta)
       this.objects.loop(delta)
    }

@@ -1,8 +1,8 @@
-import { c3, C3_Object } from '../c3.js'
+import { C3_Object } from '../c3.js'
 
 export class ObjectCube extends C3_Object {
    object() {
-      return c3.mesh.Box({ size: [1, 1, 1], color: '#FFF' })
+      return this.c3.mesh.Box({ size: [1, 1, 1], color: '#FFF' })
    }
    
    step() {
