@@ -45,17 +45,17 @@ c3.init({
    },
 
    models: [
-      { name: 'sword', file: './assets/equipment/Sword.fbx', scale: 0.0125, rotation: [0, Math.PI*0.5, 0], offset: [0, -0.4, 0.15] },
-      { name: 'shield', file: './assets/equipment/Shield.fbx', scale: 0.013, rotation: [0, -Math.PI*0.5, 0], offset: [0, 0, 0] },
-      { name: 'tree', file: './assets/environment/Tree.fbx', scale: 0.035, },
-      { name: 'rock', file: './assets/environment/Rock.fbx', scale: 0.035, },
-      { name: 'bush', file: './assets/environment/Bush.fbx', scale: 0.035, },
-      { name: 'fence', file: './assets/environment/Fence.fbx', scale: 0.035, },
-      { name: 'dragon', file: './assets/Dragon.fbx', scale: 0.01, offset: [0, 0.2, 0.15] },
-      { log: true, name: 'arrow', file: './assets/equipment/Arrow.fbx', scale: 0.015, rotation: [-Math.PI*0.5, 0, 0], offset: [0, 0, 0] },
+      { name: 'sword', file: './Assets/equipment/Sword.fbx', scale: 0.0125, rotation: [0, Math.PI*0.5, 0], offset: [0, -0.4, 0.15] },
+      { name: 'shield', file: './Assets/equipment/Shield.fbx', scale: 0.013, rotation: [0, -Math.PI*0.5, 0], offset: [0, 0, 0] },
+      { name: 'tree', file: './Assets/environment/Tree.fbx', scale: 0.035, },
+      { name: 'rock', file: './Assets/environment/Rock.fbx', scale: 0.035, },
+      { name: 'bush', file: './Assets/environment/Bush.fbx', scale: 0.035, },
+      { name: 'fence', file: './Assets/environment/Fence.fbx', scale: 0.035, },
+      { name: 'dragon', file: './Assets/Dragon.fbx', scale: 0.01, offset: [0, 0.2, 0.15] },
+      { log: true, name: 'arrow', file: './Assets/equipment/Arrow.fbx', scale: 0.015, rotation: [-Math.PI*0.5, 0, 0], offset: [0, 0, 0] },
       { 
          name: 'bow', 
-         file: './assets/equipment/bow.fbx', 
+         file: './Assets/equipment/Bow.fbx', 
          scale: 0.01, 
          rotation: [0, -Math.PI*0.5, 0], 
          offset: [0, 0, 0],
@@ -66,7 +66,7 @@ c3.init({
       {
          name: 'character', 
          scale: 0.01,
-         file: './assets/CubePerson.fbx',
+         file: './Assets/CubePerson.fbx',
          clips: [
             { name: 'Idle', map: 'Armature|Idle', add: true },
             { name: 'Legs.Walk', map: 'Armature|Legs.Walk', add: true },
