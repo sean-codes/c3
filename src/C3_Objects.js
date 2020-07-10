@@ -24,6 +24,15 @@ export class C3_Objects {
          return gameObject instanceof GameObjectType
       })
    }
+   
+   findAll(GameObjectType) {
+      const arrTypes = typeof GameObjectType === 'object' ? GameObjectType : [GameObjectType]
+      return this.list.filter(object => {
+         return arrTypes.some(type => { 
+            return object instanceof type
+         })
+      })
+   }
 
    loop(delta) {
       for (const object of this.list) {
