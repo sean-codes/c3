@@ -14,6 +14,7 @@ import * as constants from './constants.js'
 import { C3_Model } from './C3_Model.js'
 import { C3_Object } from './C3_Object.js'
 import { C3_Vector } from './C3_Vector.js'
+import { C3_Network } from './C3_Network.js'
 
 export { C3_Object } from './C3_Object.js'
 
@@ -29,6 +30,7 @@ export class C3 {
       this.scene = new C3_Scene(this)
       this.models = new C3_Models(this)
       this.keyboard = new C3_Keyboard(this)
+      this.network = new C3_Network(this)
       this.math = C3_Math
       this.Model = C3_Model
       this.Object = C3_Object
@@ -37,6 +39,7 @@ export class C3 {
       this.mesh = new C3_Mesh
       this.three = THREE
       this.const = constants
+      this.script = {}
       
       this.loading = 0   
    }
@@ -44,6 +47,7 @@ export class C3 {
    init({
       types = {},
       models = [],
+      scripts = {},
       keyMap = {},
       progress = () => {},
       init = () => {},
@@ -56,11 +60,20 @@ export class C3 {
       this.types = types
       this.listModels = [...models]
       this.keyboard.applyKeyMap(keyMap)
+      
+      // applying cs to scripts
+      for (const scriptName in scripts) {
+         if (typeof scripts[scriptName] === 'object') {
+            scripts[scriptName].cs = this
+         }
+         this.script[scriptName] = scripts[scriptName]
+      }
+      
 
       this.loadModels(models)
          .then(() => this.engineInit())
    }
-
+   
    clone(object) {
       return JSON.parse(JSON.stringify(object))
    }
@@ -91,6 +104,8 @@ export class C3 {
       this.physics.loop(delta)
       this.models.loop(delta)
       this.keyboard.resetKeys()
+      this.network.updateMetrics()
+      this.network.read()
    }
 
    handleResize(e) {
@@ -102,6 +117,7 @@ export class C3 {
       this.camera.handleResize(width, height)
    }
    
+   // should move tihs to C3_Models.js
    loadModels(models) {
       const loader = new FBXLoader()
       
@@ -112,7 +128,7 @@ export class C3 {
          for (const loadInfo of models) {
             // const model = models[modelName]
             loader.load(loadInfo.file, (object) => {
-               this.models.add({ loadInfo, object })
+               this.models.add({ c3: this, loadInfo, object })
                if (loadInfo.log) console.log('Loaded Model', loadInfo.name, object)
                
                loading -= 1
@@ -121,7 +137,6 @@ export class C3 {
                if (!loading) yay()
             }, null, (e) => { throw e })
          }
-         
       })
    }
 }
