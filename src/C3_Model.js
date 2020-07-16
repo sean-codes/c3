@@ -2,8 +2,8 @@ import * as THREE from '../node_modules/three/build/three.module.js'
 import { SkeletonUtils } from '../node_modules/three/examples/jsm/utils/SkeletonUtils.js'
 
 export class C3_Model {
-   constructor({ loadInfo, object, isClone = false }) {
-      
+   constructor({ c3, loadInfo, object, isClone = false }) {
+      this.c3 = c3
       this.loadInfo = loadInfo
       this.name = loadInfo.name
       // makes it easier to scale rorate etc without breaking animations
@@ -94,7 +94,7 @@ export class C3_Model {
       const clone = SkeletonUtils.clone(this.object.children[0])
       clone.animations = this.object.children[0].animations
    
-      const newModel = c3.models.add({
+      const newModel = this.c3.models.add({
          loadInfo: { ...this.loadInfo, name },
          object: clone,
          isClone: true

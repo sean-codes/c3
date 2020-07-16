@@ -1,3 +1,5 @@
+import { C3_Vector } from './C3_Vector.js'
+
 /**
  * Gets a random number between range
  * @param {number} min
@@ -31,7 +33,7 @@ export function iRandom(num) {
  */
 export function randomPointFromPoint(point, radius) {
   const angle = Math.PI * 2 * Math.random()
-  return new c3.Vector(
+  return new C3_Vector(
     point.x + Math.cos(angle) * radius,
     point.y,
     point.z + Math.sin(angle) * radius
@@ -52,7 +54,7 @@ export function choose(array) {
  * @param {number} angle2
  */
 export function angleBetween(a1, a2) {
-  const angleDiff = c3.math.angleToAngle(a1, a2)
+  const angleDiff = angleToAngle(a1, a2)
   return a1 + angleDiff / 2
 }
 

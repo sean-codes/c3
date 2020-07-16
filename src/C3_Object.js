@@ -87,7 +87,7 @@ export class C3_Object {
    }
 
    addRotationY(radians) {
-      this.rotation.y = c3.math.loopAngle(this.rotation.y + radians)
+      this.rotation.y = this.c3.math.loopAngle(this.rotation.y + radians)
       this.rotateUpdate()
    }
 

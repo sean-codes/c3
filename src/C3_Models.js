@@ -6,7 +6,7 @@ export class C3_Models {
    }
    
    add({ loadInfo, object, isClone }) {
-      const newModel = new this.c3.Model({ loadInfo, object, isClone })
+      const newModel = new this.c3.Model({ c3: this.c3, loadInfo, object, isClone })
       this.list.push(newModel)
       
       return newModel
