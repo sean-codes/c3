@@ -42,7 +42,7 @@ export class C3_Model {
          object.translateZ(loadInfo.offset[2] / loadInfo.scale)
       }
 
-      if (loadInfo.rotation) {
+      if (!isClone && loadInfo.rotation) {
          object.rotateX(loadInfo.rotation[0])
          object.rotateY(loadInfo.rotation[1])
          object.rotateZ(loadInfo.rotation[2])
