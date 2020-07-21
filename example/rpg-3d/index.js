@@ -11,6 +11,7 @@ import { ObjectPlayer } from './Objects/ObjectPlayer.js'
 import { ObjectResource } from './Objects/ObjectResource.js'
 import { ObjectTarget } from './Objects/ObjectTarget.js'
 import { ObjectWeapon } from './Objects/ObjectWeapon.js'
+import { ObjectCylinder } from './Objects/ObjectCylinder.js'
 
 c3.init({
    node_modules: '../../node_modules',
@@ -42,6 +43,7 @@ c3.init({
       Resource: ObjectResource,
       Target: ObjectTarget,
       Weapon: ObjectWeapon,
+      Cylinder: ObjectCylinder,
    },
 
    models: [
@@ -104,7 +106,7 @@ c3.init({
          wireframe: true,
          opacity: 0.1,
          transparent: true,
-         visible: false,
+         // visible: false,
       }))
 
       // Setup materials
@@ -132,6 +134,8 @@ c3.init({
             c3.objects.create(c3.types.Dragon, { pos: new c3.Vector(15+x*6, 2, -15+y*6) })
          }
       }
+      
+      c3.objects.create(c3.types.Cylinder, { pos: new c3.Vector(0, 10, 10)})
 
       c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-15, 3, -15) })
       c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-20, 6, -15) })

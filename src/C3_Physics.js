@@ -76,6 +76,28 @@ export class C3_Physics {
          })
       }
       
+      if (geoType.startsWith('Cylinder')) {
+         const { radiusTop, radiusBottom, height, radialSegments } = mesh.geometry.parameters
+         const { x, y, z } = mesh.position
+         
+         // rotate the cylinder to map with threejs
+         const shape = new CANNON.Cylinder(radiusTop, radiusBottom, height, radialSegments);
+         var quat = new CANNON.Quaternion();
+         quat.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI/2);
+         var translation = new CANNON.Vec3(0, 0, 0);
+         shape.transformAllPoints(translation, quat);
+         
+         console.log('i rotated this')
+         body = new CANNON.Body({
+            fixedRotation,
+            mass,
+            // quaternion,
+            position: new CANNON.Vec3(x, y, z),
+            shape,
+            material: this.materials[material],
+         })
+      }
+      
       // Additional Bodies
       for (let i = 1; i < object.physics.meshes.length; i++) {
          const mesh = object.physics.meshes[i]
@@ -102,8 +124,8 @@ export class C3_Physics {
             // rotate the cylinder to map with threejs
             const shape = new CANNON.Cylinder(radiusTop, radiusBottom, height, radialSegments);
             var quat = new CANNON.Quaternion();
-            quat.setFromAxisAngle(new CANNON.Vec3(1,0,0),-Math.PI/2);
-            var translation = new CANNON.Vec3(0,0,0);
+            quat.setFromAxisAngle(new CANNON.Vec3(0, 1, 0),-Math.PI/2);
+            var translation = new CANNON.Vec3(0, 0, 0);
             shape.transformAllPoints(translation,quat);
             
             body.addShape(shape, new CANNON.Vec3(x, y, z))

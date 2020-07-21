@@ -38,13 +38,13 @@ export class ObjectBox extends c3.Object {
    }
    
    step() {
-      if (!this.resetTime--) {
-         this.resetTime = this.resetInterval
-         this.setPositionVec(new c3.Vector(
-            this.xOff + c3.math.randomRange(-this.spread, this.spread), 
-            c3.math.randomRange(10, 20), 
-            this.zOff + c3.math.randomRange(-this.spread, this.spread)
-         ))
-      }
+      // if (!this.resetTime--) {
+      //    this.resetTime = this.resetInterval
+      //    this.setPositionVec(new c3.Vector(
+      //       this.xOff + c3.math.randomRange(-this.spread, this.spread), 
+      //       c3.math.randomRange(10, 20), 
+      //       this.zOff + c3.math.randomRange(-this.spread, this.spread)
+      //    ))
+      // }
    }
 }
