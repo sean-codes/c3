@@ -43,6 +43,18 @@ export class C3_Object {
    getPosition() {
       return this.mesh.position
    }
+   
+   getVelocity() {
+      return this.body.velocity
+   }
+   
+   setVelocity(x, y, z) {
+      this.body.velocity.set(x, y, z)
+   }
+   
+   setVelocityVec(vec) {
+      this.body.velocity.set(vec.x, vec.y, vec.z)
+   }
 
    rotate(x, y, z) {
       this.mesh.rotation.x += x
