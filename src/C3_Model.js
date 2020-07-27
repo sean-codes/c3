@@ -175,7 +175,7 @@ export class C3_Model {
       }
    }
    
-   animateRemove(clipName, { fade=0 }) {
+   animateStop(clipName, { fade=0 } = {}) {
       const clip = this.clips[clipName]
       clip.fadeOut(fade)
    }
@@ -184,15 +184,15 @@ export class C3_Model {
       const clip = this.clips[clipName]
       clip.reset()
       clip.enabled = true
-      clip.clampWhenFinished = true
+      clip.clampWhenFinished = true // keeps at last frame when finished
       clip.setLoop(THREE.LoopOnce, 1)
       clip.time = 0
       this.animateWeight(clipName, 1, true)
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
-            this.mixer.removeEventListener('finished', stopAnimation)
-            this.animateWeight(clipName, 0, true)
             onEnd && onEnd()
+            this.animateWeight(clipName, 0, true)
+            this.mixer.removeEventListener('finished', stopAnimation)
          }
       }
 
