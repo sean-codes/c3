@@ -162,6 +162,7 @@ export class C3_Model {
       this.currentClip = inClip
    }
    
+   // this was from legacy system
    animateAdd(clipName, { fade=0, syncWith=undefined }) {
       const clip = this.clips[clipName]
       clip.enabled = true
@@ -175,9 +176,10 @@ export class C3_Model {
       }
    }
    
-   animateStop(clipName, { fade=0 } = {}) {
-      const clip = this.clips[clipName]
-      clip.fadeOut(fade)
+   // this was from legacy system
+   animateStop(clipName) {
+      // const clip = this.clips[clipName]
+      this.animateWeight(clipName, 0)
    }
    
    animateOnce(clipName, onEnd) {
@@ -190,7 +192,10 @@ export class C3_Model {
       this.animateWeight(clipName, 1, true)
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
-            onEnd && onEnd()
+            const weight = this.animateGetWeight(clipName)
+            const endedEarly = weight == 0
+            onEnd && onEnd(endedEarly)
+            
             this.animateWeight(clipName, 0, true)
             this.mixer.removeEventListener('finished', stopAnimation)
          }
@@ -220,7 +225,7 @@ export class C3_Model {
    }
    
    animateGetWeight(clipName) {
-      return this.clips[clipName].c3_weightCurrent
+      return this.clips[clipName].c3_weightTarget
    }
    
    loop(delta) {
