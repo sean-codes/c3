@@ -22,6 +22,7 @@ export class C3_Object {
       this.c3.scene.remove(this.mesh)
       if (this.physicsObject) this.c3.physics.removeObject(this.physicsObject)
       this.c3.objects.destroy(this)
+      this.onDestroy && this.onDestroy()
    }
 
    setPosition(x, y, z) {
