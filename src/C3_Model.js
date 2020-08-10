@@ -103,6 +103,38 @@ export class C3_Model {
       return newModel
    }
    
+   instance(count) {
+      const clone = SkeletonUtils.clone(this.object.children[0])
+      clone.animations = this.object.children[0].animations
+   
+      const newModel = this.c3.models.add({
+         loadInfo: { ...this.loadInfo, name },
+         object: clone,
+         isClone: true
+      })
+      
+      const parent = newModel.object.children[0].children[0]
+      const geo = parent.geometry.clone()
+      const mat = parent.material.map(material => material.clone())
+      
+      // match up scale
+      const scaleFix = parent.scale.x * this.loadInfo.scale
+      geo.scale(scaleFix, scaleFix, scaleFix)
+      const mes = new THREE.InstancedMesh(geo, mat, count)
+      
+      return {
+         count: count,
+         object: mes,
+         cursor: new THREE.Object3D(),
+         setPosAt: function(index, x, y, z) {
+            this.cursor.position.set(x, y, z)
+            this.cursor.updateMatrix()
+            this.object.setMatrixAt(index, this.cursor.matrix)
+            
+         }
+      }
+   }
+   
    boneToggle(boneName, model) {
       const bone = this.bones[boneName]
       const object = model.uuid ? model : model.object
