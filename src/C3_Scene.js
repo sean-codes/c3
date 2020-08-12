@@ -5,8 +5,8 @@ export class C3_Scene {
       this.object = new THREE.Scene()
    }
    
-   setFog(start, end) {
-      this.object.fog = new THREE.Fog('#FFF', start, end);
+   setFog(color, start, end) {
+      this.object.fog = new THREE.Fog(color, start, end);
    }
    
    add(object) {
