@@ -115,12 +115,17 @@ export class C3_Model {
       
       const parent = newModel.object.children[0].children[0]
       const geo = parent.geometry.clone()
-      const mat = parent.material.map(material => material.clone())
+      const mat = parent.material.map(material => {
+         const clone = material.clone()
+         return clone
+      })
       
       // match up scale
       const scaleFix = parent.scale.x * this.loadInfo.scale
       geo.scale(scaleFix, scaleFix, scaleFix)
       const mes = new THREE.InstancedMesh(geo, mat, count)
+      mes.castShadow = true
+      mes.receiveShadow = true
       
       return {
          count: count,
@@ -128,9 +133,15 @@ export class C3_Model {
          cursor: new THREE.Object3D(),
          setPosAt: function(index, x, y, z) {
             this.cursor.position.set(x, y, z)
+            this.updateAt(index)
+         },
+         setRotationAt: function(index, x, y, z) {
+            this.cursor.rotation.set(x, y, z)
+            this.updateAt(index)
+         },
+         updateAt: function(index) {
             this.cursor.updateMatrix()
             this.object.setMatrixAt(index, this.cursor.matrix)
-            
          }
       }
    }
