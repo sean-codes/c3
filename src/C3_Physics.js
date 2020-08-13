@@ -34,8 +34,8 @@ export class C3_Physics {
       quaternion.setFromEuler(mesh.rotation.x, mesh.rotation.y, mesh.rotation.z, 'XYZ')
 
       if (geoType.startsWith('Box')) {
-         const { width, height, depth } = object.mesh.geometry.parameters
-         const { x, y, z } = object.mesh.position
+         const { width, height, depth } = mesh.geometry.parameters
+         const { x, y, z } = mesh.position
          
          body = new CANNON.Body({
             fixedRotation,
@@ -48,7 +48,7 @@ export class C3_Physics {
       }
       
       if (geoType.startsWith('Plane')) {
-         const { x, y, z } = object.mesh.position
+         const { x, y, z } = mesh.position
          
          body = new CANNON.Body({
             fixedRotation,
@@ -63,8 +63,8 @@ export class C3_Physics {
       }
       
       if (geoType.startsWith('Sphere')) {
-         const { radius } = object.mesh.geometry.parameters
-         const { x, y, z } = object.mesh.position
+         const { radius } = mesh.geometry.parameters
+         const { x, y, z } = mesh.position
          
          body = new CANNON.Body({
             fixedRotation,
