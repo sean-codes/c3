@@ -9,6 +9,8 @@ import { C3_Keyboard } from './C3_Keyboard.js'
 import { C3_Light } from './C3_Light.js'
 import { C3_Mesh } from './C3_Mesh.js'
 import { C3_Models } from './C3_Models.js'
+import { C3_Texture } from './C3_Texture.js'
+import { C3_Textures } from './C3_Textures.js'
 import * as C3_Math from './C3_Math.js'
 import * as constants from './constants.js'
 import { C3_Model } from './C3_Model.js'
@@ -29,11 +31,13 @@ export class C3 {
       this.physics = new C3_Physics(this)
       this.scene = new C3_Scene(this)
       this.models = new C3_Models(this)
+      this.textures = new C3_Textures(this)
       this.keyboard = new C3_Keyboard(this)
       this.network = new C3_Network(this)
       this.math = C3_Math
       this.Model = C3_Model
       this.Object = C3_Object
+      this.Texture = C3_Texture
       this.Vector = C3_Vector
       this.light = new C3_Light
       this.mesh = new C3_Mesh
@@ -47,6 +51,7 @@ export class C3 {
    init({
       types = {},
       models = [],
+      textures = [],
       scripts = {},
       keyMap = {},
       progress = () => {},
@@ -71,6 +76,7 @@ export class C3 {
       
 
       this.loadModels(models)
+         .then(() => this.loadTextures(textures))
          .then(() => this.engineInit())
    }
    
@@ -136,6 +142,26 @@ export class C3 {
                this.userProgress(1 - loading/models.length)
                if (!loading) yay()
             }, null, (e) => { throw e })
+         }
+      })
+   }
+   
+   loadTextures(textures) {
+      const loader = new THREE.TextureLoader()
+      
+      return new Promise((yay, nay) => {
+         let loading = textures.length
+         !loading && yay()
+         
+         for (const loadInfo of textures) {
+            loader.load(loadInfo.file, texture => {
+               this.textures.add({ c3: this.c3, loadInfo, texture })
+               if (loadInfo.log) console.log('Loaded Texture', loadInfo.name, texture)
+               
+               
+               loading -= 1
+               if (!loading) yay()
+            })
          }
       })
    }
