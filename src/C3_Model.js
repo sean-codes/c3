@@ -15,14 +15,25 @@ export class C3_Model {
       object.traverse((part) => {
          // flat shading
          if (part.material) {
-            const makeMaterialFlat = (material) => {
+            const modifyMaterial = (material) => {
                material.flatShading = true
                material.reflectivity = 0
                material.shininess = 0
+               
+               if (loadInfo.materialOverrides) {
+                  const overrides = loadInfo.materialOverrides[material.name]
+                  if (overrides) {
+                     if (overrides.opacity) {
+                        material.opacity = overrides.opacity
+                        material.transparent = true
+                        material.side = c3.three.DobleSide
+                     }
+                  }
+               }
             }
 
-            if (part.material.length) part.material.forEach(makeMaterialFlat)
-            else makeMaterialFlat(part.material)
+            if (part.material.length) part.material.forEach(modifyMaterial)
+            else modifyMaterial(part.material)
          }
 
          // bones
@@ -33,6 +44,16 @@ export class C3_Model {
          if (part.type === 'Mesh' || part.type === 'SkinnedMesh') {
             part.receiveShadow = true
             part.castShadow = true
+            if (loadInfo.meshOverrides) {
+               const overrides = loadInfo.meshOverrides[part.name]
+               if (overrides) {
+                  if (overrides.noShadow) {
+                     console.log('no shadow')
+                     part.receiveShadow = false
+                     part.castShadow = false
+                  }
+               }
+            }
          }
       })
       
@@ -235,7 +256,7 @@ export class C3_Model {
       this.animateWeight(clipName, 1, true)
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
-            const weight = this.animateGetWeight(clipName)
+            const weight = this.animateGetWeightTarget(clipName)
             const endedEarly = weight == 0
             onEnd && onEnd(endedEarly)
             
@@ -268,6 +289,10 @@ export class C3_Model {
    }
    
    animateGetWeight(clipName) {
+      return this.clips[clipName].getEffectiveWeight()
+   }
+   
+   animateGetWeightTarget(clipName) {
       return this.clips[clipName].c3_weightTarget
    }
    
