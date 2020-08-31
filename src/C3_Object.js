@@ -84,11 +84,20 @@ export class C3_Object {
       this.rotateUpdate()
    }
 
-   setRotation(rotation) {
+   setRotationVec(rotation) {
       this.rotation.x = rotation.x
       this.rotation.y = rotation.y
       this.rotation.z = rotation.z
       this.rotateUpdate()
+   }
+   
+   setScaleVec(scale) {
+      this.mesh.scale.copy(scale)
+      this.scaleUpdate()
+   }
+   
+   getScale() {
+      return this.mesh.scale
    }
 
    getRotation() {
@@ -111,6 +120,16 @@ export class C3_Object {
          this.mesh.rotation.z = this.rotation.z
       } else {
          this.body.quaternion.setFromEuler(this.rotation.x, this.rotation.y, this.rotation.z, 'XYZ')
+      }
+   }
+   
+   scaleUpdate() {
+      const { c3 } = this
+      // we need to update physics if there is a body
+      if (this.body) {
+         c3.physics.removeObject(this)
+         this.physicsObject = c3.physics.addObject(this)
+         this.body = this.physicsObject.body
       }
    }
 
