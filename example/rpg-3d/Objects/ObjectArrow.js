@@ -7,7 +7,7 @@ export class ObjectArrow extends c3.Object {
       const mesh = new c3.three.Mesh(geo, mat)
       
       const modelArrow = c3.models.find('arrow').clone()
-      modelArrow.object.rotation.y += Math.PI
+      modelArrow.object.rotation.x += Math.PI/2
       modelArrow.object.position.z -= 2
       mesh.add(modelArrow.object)
       
@@ -27,7 +27,7 @@ export class ObjectArrow extends c3.Object {
    
    create({ pos, rotation }) {
       this.setPositionVec(pos)
-      this.setRotation(rotation)
+      this.setRotationVec(rotation)
       
       this.lifeSpan = 60 * 1  // 5 seconds
    }

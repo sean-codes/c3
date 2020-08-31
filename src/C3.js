@@ -1,5 +1,6 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
 import { FBXLoader } from '../node_modules/three/examples/jsm/loaders/FBXLoader.js'
+
 import { C3_Objects } from './C3_Objects.js'
 import { C3_Camera } from './C3_Camera.js'
 import { C3_Physics } from './C3_Physics.js'
@@ -17,6 +18,7 @@ import { C3_Model } from './C3_Model.js'
 import { C3_Object } from './C3_Object.js'
 import { C3_Vector } from './C3_Vector.js'
 import { C3_Network } from './C3_Network.js'
+import { C3_Transform } from './C3_Transform.js'
 
 export { C3_Object } from './C3_Object.js'
 
@@ -34,6 +36,7 @@ export class C3 {
       this.textures = new C3_Textures(this)
       this.keyboard = new C3_Keyboard(this)
       this.network = new C3_Network(this)
+      this.transform = new C3_Transform(this)
       this.math = C3_Math
       this.Model = C3_Model
       this.Object = C3_Object
