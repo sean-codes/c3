@@ -48,7 +48,6 @@ export class C3_Model {
                const overrides = loadInfo.meshOverrides[part.name]
                if (overrides) {
                   if (overrides.noShadow) {
-                     console.log('no shadow')
                      part.receiveShadow = false
                      part.castShadow = false
                   }

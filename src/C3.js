@@ -28,8 +28,8 @@ export class C3 {
       this.render = new C3_Render(this)
       this.camera = new C3_Camera(this)
       this.objects = new C3_Objects(this)
+      this.scene = new C3_Scene(this) // required for physics
       this.physics = new C3_Physics(this)
-      this.scene = new C3_Scene(this)
       this.models = new C3_Models(this)
       this.textures = new C3_Textures(this)
       this.keyboard = new C3_Keyboard(this)
