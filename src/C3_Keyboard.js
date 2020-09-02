@@ -66,8 +66,9 @@ export class C3_Keyboard {
    
 
       for (const keyName of keyNames) {
-         const key = this.keyMap[keyName]
-         const status = this.keys[key]
+         // if key is a string map it to a keycode. else use as is
+         const keyCode = typeof keyName === 'string' ? this.keyMap[keyName] : keyName
+         const status = this.keys[keyCode]
          if (!status) continue
          
          returnVal.up = returnVal.up || status.up
