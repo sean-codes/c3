@@ -2,7 +2,8 @@ import * as THREE from '../node_modules/three/build/three.module.js'
 import * as CONSTANTS from './constants.js'
 
 export class C3_Mesh {
-   constructor() {
+   constructor(c3) {
+      this.c3 = c3
       this.materialType = CONSTANTS.MaterialTypeBasic
    }
    

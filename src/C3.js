@@ -10,6 +10,7 @@ import { C3_Keyboard } from './C3_Keyboard.js'
 import { C3_Light } from './C3_Light.js'
 import { C3_Mesh } from './C3_Mesh.js'
 import { C3_Models } from './C3_Models.js'
+import { C3_Mouse } from './C3_Mouse.js'
 import { C3_Texture } from './C3_Texture.js'
 import { C3_Textures } from './C3_Textures.js'
 import * as C3_Math from './C3_Math.js'
@@ -43,7 +44,8 @@ export class C3 {
       this.Texture = C3_Texture
       this.Vector = C3_Vector
       this.light = new C3_Light
-      this.mesh = new C3_Mesh
+      this.mesh = new C3_Mesh(this)
+      this.mouse = new C3_Mouse(this)
       this.three = THREE
       this.const = constants
       this.script = {}
@@ -115,6 +117,7 @@ export class C3 {
       this.keyboard.resetKeys()
       this.network.updateMetrics()
       this.network.read()
+      this.mouse.loop()
    }
 
    handleResize(e) {

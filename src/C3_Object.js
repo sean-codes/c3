@@ -11,6 +11,7 @@ export class C3_Object {
       
       this.rotation = new C3_Vector(0, 0, 0)
       this.mesh = this.mesh ? this.mesh() : c3.mesh.Blank()
+      this.mesh.C3_Object = this // might be handy for querying
       this.physics = this.physics ? this.physics() : { meshes: [] }
       this.physicsObject = this.physics.meshes.length ? c3.physics.addObject(this) : undefined
       this.body = this.physicsObject ? this.physicsObject.body : undefined
