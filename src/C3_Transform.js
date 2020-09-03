@@ -19,6 +19,8 @@ export class C3_Transform {
       
       this.controls.mode = MODES.scale
       this.controls.addEventListener('change', (e) => this.handleChange(e))
+      this.controls.addEventListener('mouseDown', (e) => this.handleDown(e))
+      this.controls.addEventListener('mouseup', (e) => this.handleUp(e))
    }
    
    
@@ -39,6 +41,14 @@ export class C3_Transform {
    detach() {
       c3.scene.remove(this.pointer)
       c3.scene.remove(this.controls)
+   }
+   
+   handleDown(e) {
+      this.c3.mouse.blockInput()
+   }
+   
+   handleUp(e) {
+      this.c3.mouse.blockInput()
    }
    
    handleChange(e) {
