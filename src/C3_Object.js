@@ -9,7 +9,7 @@ export class C3_Object {
       this.attr = attr || {}
       this.type = type
       
-      this.rotation = new C3_Vector(0, 0, 0)
+      this.rotation = new THREE.Euler(0, 0, 0)
       this.mesh = this.mesh ? this.mesh() : c3.mesh.Blank()
       this.mesh.C3_Object = this // might be handy for querying
       this.physics = this.physics ? this.physics() : { meshes: [] }
@@ -132,7 +132,11 @@ export class C3_Object {
          this.mesh.rotation.y = this.rotation.y
          this.mesh.rotation.z = this.rotation.z
       } else {
-         this.body.quaternion.setFromEuler(this.rotation.x, this.rotation.y, this.rotation.z, 'XYZ')
+         this.body.quaternion.setFromEuler(
+            this.rotation.x, 
+            this.rotation.y, 
+            this.rotation.z, 
+            'XYZ')
       }
    }
    
