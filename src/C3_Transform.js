@@ -12,12 +12,11 @@ export class C3_Transform {
       this.controls = new TransformControls(
          c3.camera.object, 
          c3.render.renderer.domElement)
-         
       this.pointer = new THREE.Object3D()
       this.controls.attach(this.pointer)
       this.gameObject = undefined
       
-      this.controls.mode = MODES.scale
+      this.modeTranslate()
       this.controls.addEventListener('change', (e) => this.handleChange(e))
       this.controls.addEventListener('mouseDown', (e) => this.handleDown(e))
       this.controls.addEventListener('mouseup', (e) => this.handleUp(e))
@@ -29,6 +28,7 @@ export class C3_Transform {
       const currentPosition = gameObject.getPosition()
       const currentRotation = gameObject.getRotation()
       const currentScale = gameObject.getScale()
+      
       this.pointer.position.copy(currentPosition)
       this.pointer.rotation.copy(currentRotation)
       this.pointer.scale.copy(currentScale)
@@ -52,8 +52,21 @@ export class C3_Transform {
    }
    
    handleChange(e) {
-      this.gameObject.setPositionVec(this.pointer.position)
-      this.gameObject.setPositionVec(this.pointer.position)
+      if (!this.gameObject) return
       this.gameObject.setScaleVec(this.pointer.scale)
+      this.gameObject.setPositionVec(this.pointer.position)
+      this.gameObject.setRotationVec(this.pointer.rotation)
+   }
+   
+   modeTranslate(mode) {
+      this.controls.mode = MODES.translate
+   }
+   
+   modeScale(mode) {
+      this.controls.mode = MODES.scale
+   }
+   
+   modeRotate(mode) {
+      this.controls.mode = MODES.rotate
    }
 }
