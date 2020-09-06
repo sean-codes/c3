@@ -28,7 +28,7 @@ export class C3_Transform {
       const currentPosition = gameObject.getPosition()
       const currentRotation = gameObject.getRotation()
       const currentScale = gameObject.getScale()
-      
+
       this.pointer.position.copy(currentPosition)
       this.pointer.rotation.copy(currentRotation)
       this.pointer.scale.copy(currentScale)

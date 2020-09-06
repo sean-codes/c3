@@ -31,11 +31,11 @@ export class C3_Object {
          this.body.position.x = x
          this.body.position.y = y
          this.body.position.z = z
-      } else {
-         this.mesh.position.x = x
-         this.mesh.position.y = y
-         this.mesh.position.z = z
       }
+      
+      this.mesh.position.x = x
+      this.mesh.position.y = y
+      this.mesh.position.z = z
    }
    
    moveVec({ x, y, z }) {

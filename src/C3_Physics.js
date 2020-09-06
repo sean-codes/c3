@@ -35,7 +35,7 @@ export class C3_Physics {
       
       const geo = mesh.geometry ? mesh.geometry : mesh.children[0].children[0].geometry
       const geoType = geo.type
-      
+      const objectPosition = object.getPosition()
       let body = undefined
       
       const quaternion = new CANNON.Quaternion()
@@ -43,7 +43,7 @@ export class C3_Physics {
 
       if (geoType.startsWith('Box')) {
          const { width, height, depth } = mesh.geometry.parameters
-         const { x, y, z } = mesh.position
+         const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
          
          body = new CANNON.Body({
             fixedRotation,
@@ -56,7 +56,7 @@ export class C3_Physics {
       }
       
       if (geoType.startsWith('Plane')) {
-         const { x, y, z } = mesh.position
+         const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
          
          body = new CANNON.Body({
             fixedRotation,
@@ -72,7 +72,7 @@ export class C3_Physics {
       
       if (geoType.startsWith('Sphere')) {
          const { radius } = mesh.geometry.parameters
-         const { x, y, z } = mesh.position
+         const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
          
          body = new CANNON.Body({
             fixedRotation,
@@ -86,7 +86,7 @@ export class C3_Physics {
       
       if (geoType.startsWith('Cylinder')) {
          const { radiusTop, radiusBottom, height, radialSegments } = mesh.geometry.parameters
-         const { x, y, z } = mesh.position
+         const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
          
          // rotate the cylinder to map with threejs
          const shape = new CANNON.Cylinder(radiusTop, radiusBottom, height, radialSegments);
@@ -106,7 +106,7 @@ export class C3_Physics {
       }
       
       if (geoType.startsWith('BufferGeometry')) {
-         const { x, y, z } = mesh.position
+         const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
          
          body = new CANNON.Body({
             fixedRotation,
@@ -126,21 +126,21 @@ export class C3_Physics {
          
          if (geoType.startsWith('Box')) {
             const { width, height, depth } = mesh.geometry.parameters
-            const { x, y, z } = mesh.position
+            const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
             const shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2))
             body.addShape(shape, new CANNON.Vec3(x, y, z))
          }
          
          if (geoType.startsWith('Sphere')) {
             const { radius } = mesh.geometry.parameters
-            const { x, y, z } = mesh.position
+            const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
             const shape = new CANNON.Sphere(radius)
             body.addShape(shape, new CANNON.Vec3(x, y, z))
          }
          
          if (geoType.startsWith('Cylinder')) {
             const { radiusTop, radiusBottom, height, radialSegments } = mesh.geometry.parameters
-            const { x, y, z } = mesh.position
+            const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
             
             // rotate the cylinder to map with threejs
             const shape = new CANNON.Cylinder(radiusTop, radiusBottom, height, radialSegments);
@@ -205,7 +205,8 @@ export class C3_Physics {
 
       const debugBodies = []
       for (const physicObjectId in this.list) {
-         const { mesh, body, linkToMesh, debug } = this.list[physicObjectId]
+         const { object, body, linkToMesh, debug } = this.list[physicObjectId]
+         const { mesh } = object
          if(linkToMesh) {
             const meshWorldPosition = mesh.getWorldPosition(new THREE.Vector3())
             body.position.copy(meshWorldPosition)
