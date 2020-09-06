@@ -56,20 +56,29 @@ export class C3_Mouse {
       // TODO: cache this incase it's called more than once per step
       this.raycaster.setFromCamera(this.pos, this.c3.camera.object)
       const intersects = this.raycaster.intersectObjects(this.c3.scene.object.children, true)
-      
+      // console.log(intersects)
       // match the intersects up with C3_Objects
       const returnIntersects = {}
       for (const intersect of intersects) {
-         const { object, distance } = intersect
+         const { object, distance, point, face } = intersect
          let c3_object = undefined
          object.traverseAncestors((a) => {
             if (c3_object) return
-            if (a.C3_Object) c3_object = { object: a.C3_Object, distance: distance }
+            if (a.C3_Object) c3_object = { 
+               object: a.C3_Object, 
+               distance: distance, 
+               point: point, 
+               normal: face.normal,
+            }
          })
          
          
          if (c3_object) {
-            returnIntersects[c3_object.object.id] = c3_object
+            // only add if it hasn't been or is closer than current
+            if (!returnIntersects[c3_object.object.id] 
+               || returnIntersects[c3_object.object.id].distance > c3_object.distance) {
+               returnIntersects[c3_object.object.id] = c3_object
+            }
          }
       }
       
