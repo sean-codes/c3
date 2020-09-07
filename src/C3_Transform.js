@@ -35,10 +35,12 @@ export class C3_Transform {
       c3.scene.add(this.pointer)
       c3.scene.add(this.controls)
       
+      this.controls.attach(this.pointer)
       // console.log('attached', gameObject, currentPosition, currentRotation, currentScale)
    }
    
    detach() {
+      this.controls.detach()
       c3.scene.remove(this.pointer)
       c3.scene.remove(this.controls)
    }

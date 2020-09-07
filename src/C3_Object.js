@@ -28,9 +28,9 @@ export class C3_Object {
 
    setPosition(x, y, z) {
       if (this.body && !this.physics.linkToMesh) {
-         this.body.position.x = x
-         this.body.position.y = y
-         this.body.position.z = z
+         this.body.position.x = x + this.physicsObject.offset.x
+         this.body.position.y = y + this.physicsObject.offset.y
+         this.body.position.z = z + this.physicsObject.offset.z
       }
       
       this.mesh.position.x = x
