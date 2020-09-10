@@ -52,7 +52,6 @@ export class C3_Physics {
       
       const physicsMeshes = getPhysicsMeshes(meshes[0].mesh)
       if (physicsMeshes.length) {
-         console.log('hello world',physicsMeshes )
          meshes = physicsMeshes
       }
       
@@ -164,7 +163,7 @@ export class C3_Physics {
       
       // Additional Bodies
       for (let i = 1; i < meshes.length; i++) {
-         console.log(meshes[i])
+         // console.log(meshes[i])
          const { mesh, shape, hug } = meshes[i]
          const geoType = mesh.geometry.type
          
@@ -179,8 +178,9 @@ export class C3_Physics {
          if (bodyShape === SHAPES.BOX) {
             const innerMesh = getMesh(mesh)
             let { x, y, z } = innerMesh.position
-            const createdShapeData = createShapeBox(mesh)
+            let createdShapeData = createShapeBox(mesh)
             const scale = object.getScale()
+            
             const childBodyOffset = new CANNON.Vec3(
                x * scale.x - offset.x,
                y * scale.y - offset.y,
@@ -212,6 +212,24 @@ export class C3_Physics {
             shape.transformAllPoints(translation,quat);
             
             body.addShape(shape, new CANNON.Vec3(x, y, z))
+         }
+         
+         if(bodyShape === SHAPES.MESH) {
+            const innerMesh = getMesh(mesh)
+            let { x, y, z } = innerMesh.position
+            const scale = object.getScale()
+            const createdShapeData = createShapeConvexPolyhedron(mesh, scale)
+            
+            const childBodyOffset = new CANNON.Vec3(
+               x * scale.x - offset.x,
+               y * scale.y - offset.y,
+               z * scale.z - offset.z,
+            )
+            
+            const childBodyQuarternion = new CANNON.Quaternion()
+            childBodyQuarternion.setFromEuler(innerMesh.rotation.x, innerMesh.rotation.y, innerMesh.rotation.z, 'XYZ')
+            
+            body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
          }
       }
       
@@ -310,7 +328,7 @@ function createShapeBox(object) {
    }
 }
 
-function createShapeConvexPolyhedron(object) {
+function createShapeConvexPolyhedron(object, scale) {
    let mesh = getMesh(object)
    mesh.updateMatrixWorld()
    const geometry = new THREE.Geometry()
@@ -320,7 +338,9 @@ function createShapeConvexPolyhedron(object) {
    geometry.rotateZ(mesh.rotation.z)
    
    // Do this  after rotating
-   geometry.scale(object.scale.x * 100, object.scale.y * 100, object.scale.z * 100)
+   scale = scale || object.scale.clone().multiplyScalar(100)
+   
+   geometry.scale(scale.x, scale.y, scale.z)
 
    // We have to move the points around so they aren't perfectly aligned?
    var eps = 1e-2; // between 2-4 seems to work
@@ -336,8 +356,11 @@ function createShapeConvexPolyhedron(object) {
    // get vertices and faces for cannon
    const vertices = convexGeo.vertices.map(v => new CANNON.Vec3(v.x, v.y, v.z));
    const faces = convexGeo.faces.map(f => [f.a, f.b, f.c]);
-
-   return new CANNON.ConvexPolyhedron({ vertices, faces });
+   
+   return {
+      shape: new CANNON.ConvexPolyhedron({ vertices, faces }),
+      // ...size
+   }
 }
 
 function getMesh(object) {
@@ -351,7 +374,8 @@ function getPhysicsMeshes(object) {
    const meshes = []
    object.traverse(part => {
       if (part.name.startsWith('c3_phy_mesh')) {
-         meshes.push({ mesh: part, shape: SHAPES.BOX })
+         const shape = part.name.toLowerCase().includes('convex') ? SHAPES.MESH : SHAPES.BOX
+         meshes.push({ mesh: part, shape })
       }
    })
    
