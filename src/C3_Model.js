@@ -42,6 +42,7 @@ export class C3_Model {
          }
 
          if (part.type === 'Mesh' || part.type === 'SkinnedMesh') {
+            if (part.name.startsWith('c3_phy_mesh')) part.visible = false
             if (!loadInfo.noReceiveShadow) part.receiveShadow = true
             if (!loadInfo.noCastShadow) part.castShadow = true
             if (loadInfo.meshOverrides) {
@@ -317,5 +318,16 @@ export class C3_Model {
          clip.weight = newWeight
          clip.setEffectiveWeight(newWeight)
       }
+   }
+   
+   getPhysicsMeshes() {
+      const meshes = []
+      this.object.traverse(part => {
+         if (part.name.startsWith('c3_phy_mesh')) {
+            meshes.push({ mesh: part })
+         }
+      })
+      
+      return meshes
    }
 }

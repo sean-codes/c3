@@ -17,7 +17,7 @@ export class ObjectBox extends c3.Object {
    
    physics() {
       return {
-         meshes: [ this.mesh ],
+         meshes: [{ mesh: this.mesh }],
          material: 'BOX',
          // debug: true,
       }

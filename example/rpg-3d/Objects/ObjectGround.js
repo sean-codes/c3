@@ -20,7 +20,7 @@ export class ObjectGround extends c3.Object {
    
    physics() {
       return {
-         meshes: [this.mesh],
+         meshes: [{ mesh: this.mesh }],
          material: 'GROUND',
          mass: 0
       }

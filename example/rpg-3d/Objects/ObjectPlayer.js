@@ -39,7 +39,10 @@ export class ObjectPlayer extends c3.Object {
    
    physics() {
       return {
-         meshes: [ this.meshBodyBottom, this.meshBodyTop ],
+         meshes: [
+            { mesh: this.meshBodyBottom }, 
+            { mesh: this.meshBodyTop }
+         ],
          material: 'PLAYER',
          fixedRotation: true,
          watchCollisions: true,

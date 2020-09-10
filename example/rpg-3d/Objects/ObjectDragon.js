@@ -16,7 +16,7 @@ export class ObjectDragon extends c3.Object {
    
    physics() {
       return {
-         meshes: [this.mesh],
+         meshes: [{ mesh: this.mesh }],
          material: 'BOX',
          fixedRotation: true
       }

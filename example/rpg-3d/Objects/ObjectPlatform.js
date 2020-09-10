@@ -13,7 +13,7 @@ export class ObjectPlatform extends c3.Object {
    
    physics() {
       return {
-         meshes: [this.mesh],
+         meshes: [{ mesh: this.mesh }],
          material: 'BOX',
          mass: 0
       }

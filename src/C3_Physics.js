@@ -37,7 +37,6 @@ export class C3_Physics {
    
    addObject(object) {
       const { 
-         meshes, 
          material, 
          mass=1, 
          fixedRotation=false, 
@@ -45,12 +44,20 @@ export class C3_Physics {
          collisionResponse=true,
          watchCollisions=false,
          debug=false,
-         shape=undefined,
-         hug=HUG.CENTER,
       } = object.physics
       
+      let {
+         meshes
+      } = object.physics
       
-      const mesh = meshes[0]
+      const physicsMeshes = getPhysicsMeshes(meshes[0].mesh)
+      if (physicsMeshes.length) {
+         console.log('hello world',physicsMeshes )
+         meshes = physicsMeshes
+      }
+      
+      const { mesh, shape, hug } = meshes[0]
+      
       const geo = mesh.geometry ? mesh.geometry : mesh.children[0].children[0].geometry
       const geoType = geo.type
       const objectPosition = object.getPosition()
@@ -67,23 +74,27 @@ export class C3_Physics {
       if (geoType.startsWith('Cylinder')) bodyShape = SHAPES.CYLINDER
       if (geoType.startsWith('BufferGeometry')) bodyShape = SHAPES.MESH
       if (shape) bodyShape = shape
-      
 
       if (bodyShape === SHAPES.BOX) {
-         const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
+         const innerMesh = getMesh(mesh)
+         const { x, y, z } = innerMesh.position//objectPosition.add(innerMesh.position.clone().sub(objectPosition))
          const createdShapeData = createShapeBox(mesh)
    
          body = new CANNON.Body({
             shape: createdShapeData.shape,
-            position: new CANNON.Vec3(x, y, z),
+            position: new CANNON.Vec3(0, 0, 0),
             material: this.materials[material],
             fixedRotation,
             quaternion,
             mass,
          })
          
+         offset.x = x * object.getScale().x
+         offset.y = y * object.getScale().y
+         offset.z = z * object.getScale().z
+         
          if (hug === HUG.BOTTOM) {
-            offset.y = createdShapeData.height / 2
+            offset.y += createdShapeData.height / 2
          }
       }
       
@@ -152,25 +163,44 @@ export class C3_Physics {
       }
       
       // Additional Bodies
-      for (let i = 1; i < object.physics.meshes.length; i++) {
-         const mesh = object.physics.meshes[i]
+      for (let i = 1; i < meshes.length; i++) {
+         console.log(meshes[i])
+         const { mesh, shape, hug } = meshes[i]
          const geoType = mesh.geometry.type
          
-         if (geoType.startsWith('Box')) {
-            const { width, height, depth } = mesh.geometry.parameters
-            const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
-            const shape = new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2))
-            body.addShape(shape, new CANNON.Vec3(x, y, z))
+         bodyShape = SHAPES.BOX
+         if (geoType.startsWith('Plane')) bodyShape = SHAPES.PLANE
+         if (geoType.startsWith('Sphere')) bodyShape = SHAPES.SPHERE
+         if (geoType.startsWith('Cylinder')) bodyShape = SHAPES.CYLINDER
+         if (geoType.startsWith('BufferGeometry')) bodyShape = SHAPES.MESH
+         if (shape) bodyShape = shape
+         
+         
+         if (bodyShape === SHAPES.BOX) {
+            const innerMesh = getMesh(mesh)
+            let { x, y, z } = innerMesh.position
+            const createdShapeData = createShapeBox(mesh)
+            const scale = object.getScale()
+            const childBodyOffset = new CANNON.Vec3(
+               x * scale.x - offset.x,
+               y * scale.y - offset.y,
+               z * scale.z - offset.z,
+            )
+            
+            const childBodyQuarternion = new CANNON.Quaternion()
+            childBodyQuarternion.setFromEuler(innerMesh.rotation.x, innerMesh.rotation.y, innerMesh.rotation.z, 'XYZ')
+            
+            body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
          }
          
-         if (geoType.startsWith('Sphere')) {
+         if (bodyShape === SHAPES.SPHERE) {
             const { radius } = mesh.geometry.parameters
             const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
             const shape = new CANNON.Sphere(radius)
             body.addShape(shape, new CANNON.Vec3(x, y, z))
          }
          
-         if (geoType.startsWith('Cylinder')) {
+         if (bodyShape === SHAPES.CYLINDER) {
             const { radiusTop, radiusBottom, height, radialSegments } = mesh.geometry.parameters
             const { x, y, z } = objectPosition.add(mesh.position.clone().sub(objectPosition))
             
@@ -315,4 +345,15 @@ function getMesh(object) {
    if (object.type === 'Mesh') return object
    object.traverse(part => mesh = part.type === 'Mesh' ? part : mesh)
    return mesh
+}
+
+function getPhysicsMeshes(object) {
+   const meshes = []
+   object.traverse(part => {
+      if (part.name.startsWith('c3_phy_mesh')) {
+         meshes.push({ mesh: part, shape: SHAPES.BOX })
+      }
+   })
+   
+   return meshes
 }

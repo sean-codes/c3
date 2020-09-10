@@ -16,7 +16,7 @@ export class ObjectArrow extends c3.Object {
    
    physics() {
       return {
-         meshes: [ this.mesh ],
+         meshes: [{ mesh: this.mesh }],
          fixedRotation: true,
          mass: 0,
          collisionResponse: false,
