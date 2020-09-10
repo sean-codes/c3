@@ -42,8 +42,8 @@ export class C3_Model {
          }
 
          if (part.type === 'Mesh' || part.type === 'SkinnedMesh') {
-            part.receiveShadow = true
-            part.castShadow = true
+            if (!loadInfo.noReceiveShadow) part.receiveShadow = true
+            if (!loadInfo.noCastShadow) part.castShadow = true
             if (loadInfo.meshOverrides) {
                const overrides = loadInfo.meshOverrides[part.name]
                if (overrides) {
