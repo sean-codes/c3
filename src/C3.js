@@ -1,5 +1,6 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
 import { FBXLoader } from '../node_modules/three/examples/jsm/loaders/FBXLoader.js'
+import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoader.js'
 
 import { C3_Objects } from './C3_Objects.js'
 import { C3_Camera } from './C3_Camera.js'
@@ -131,15 +132,20 @@ export class C3 {
    
    // should move tihs to C3_Models.js
    loadModels(models) {
-      const loader = new FBXLoader()
+      const fbxLoader = new FBXLoader()
+      const gltfLoader = new GLTFLoader()
       
       return new Promise((yay, nay) => {   
          let loading = models.length
          !loading && yay()
          
          for (const loadInfo of models) {
-            // const model = models[modelName]
+            const isGltf = loadInfo.file.includes('.gltf') || loadInfo.file.includes('.glb')
+            const isFbx = loadInfo.file.includes('.fbx')
+            const loader = isGltf ? gltfLoader : fbxLoader
+            
             loader.load(loadInfo.file, (object) => {
+               if (isGltf) { object = object.scene }
                this.models.add({ c3: this, loadInfo, object })
                if (loadInfo.log) console.log('Loaded Model', loadInfo.name, object)
                
