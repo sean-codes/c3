@@ -76,6 +76,7 @@ export class C3_Physics {
          body = new CANNON.Body({
             shape: createdShapeData.shape,
             position: new CANNON.Vec3(x, y, z),
+            material: this.materials[material],
             fixedRotation,
             quaternion,
             mass,
@@ -262,18 +263,20 @@ export class C3_Physics {
 
 
 function createShapeBox(object) {
-   let mesh = getMesh(object)
-   mesh.geometry.computeBoundingBox()
-   const { x, y, z } = mesh.geometry.boundingBox.getSize()
-   const width = x * (object.scale.x * mesh.scale.x)
-   const height = y * (object.scale.y * mesh.scale.y)
-   const depth = z * (object.scale.z * mesh.scale.z)
+   const saveRotation = object.rotation.clone()
+   object.rotation.set(0, 0, 0)
+   const box = new THREE.Box3().setFromObject(object)
+   object.rotation.copy(saveRotation)
+   
+   const size = {
+      width: (box.max.x - box.min.x), //object.scale.x * mesh.scale.x),
+      height: (box.max.y - box.min.y), //object.scale.y * mesh.scale.y),
+      depth: (box.max.z - box.min.z), //object.scale.z * mesh.scale.z),
+   }
    
    return {
-      shape: new CANNON.Box(new CANNON.Vec3(width/2, height/2, depth/2)),
-      width,
-      height,
-      depth,
+      shape: new CANNON.Box(new CANNON.Vec3(size.width/2, size.height/2, size.depth/2)),
+      ...size
    }
 }
 

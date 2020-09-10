@@ -40,6 +40,7 @@ export class C3_Transform {
    }
    
    detach() {
+      this.gameObject = undefined
       this.controls.detach()
       c3.scene.remove(this.pointer)
       c3.scene.remove(this.controls)
