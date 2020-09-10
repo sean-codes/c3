@@ -21,6 +21,7 @@ import { C3_Object } from './C3_Object.js'
 import { C3_Vector } from './C3_Vector.js'
 import { C3_Network } from './C3_Network.js'
 import { C3_Transform } from './C3_Transform.js'
+import { C3_Fps } from './C3_Fps.js'
 
 export { C3_Object } from './C3_Object.js'
 
@@ -31,6 +32,7 @@ export class C3 {
       this.global = {}
       this.render = new C3_Render(this)
       this.camera = new C3_Camera(this)
+      this.fps = new C3_Fps(this)
       this.objects = new C3_Objects(this)
       this.scene = new C3_Scene(this) // required for physics
       this.physics = new C3_Physics(this)
@@ -109,7 +111,7 @@ export class C3 {
       
       this.physics.loopApplyCollisions()
       
-      this.userStep.call(this, delta)
+      this.userStep.call(this, this, delta)
       this.render.loop(this.scene, this.camera, delta)
       this.objects.loop(delta)
       
@@ -119,6 +121,7 @@ export class C3 {
       this.network.updateMetrics()
       this.network.read()
       this.mouse.loop()
+      this.fps.step()
    }
 
    handleResize(e) {
