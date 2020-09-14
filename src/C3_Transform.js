@@ -15,6 +15,11 @@ export class C3_Transform {
       this.pointer = new THREE.Object3D()
       this.controls.attach(this.pointer)
       this.gameObject = undefined
+      this.gameObjectInitialTransform = {
+         position: new THREE.Vector3(),
+         scale: new THREE.Vector3(),
+         rotation: new THREE.Euler(),
+      }
       
       this.modeTranslate()
       this.controls.addEventListener('change', (e) => this.handleChange(e))
@@ -24,19 +29,25 @@ export class C3_Transform {
    
    
    attach(gameObject) {
-      this.gameObject = gameObject
       const currentPosition = gameObject.getPosition()
       const currentRotation = gameObject.getRotation()
       const currentScale = gameObject.getScale()
-
+      
+      if (!this.gameObject || this.gameObject.id !== gameObject.id) {
+         this.gameObjectInitialTransform.position = currentPosition.clone()
+         this.gameObjectInitialTransform.scale = currentScale.clone()
+         this.gameObjectInitialTransform.rotation = currentRotation.clone()
+      }
+      
       this.pointer.position.copy(currentPosition)
       this.pointer.rotation.copy(currentRotation)
       this.pointer.scale.copy(currentScale)
+      
       c3.scene.add(this.pointer)
       c3.scene.add(this.controls)
       
       this.controls.attach(this.pointer)
-      // console.log('attached', gameObject, currentPosition, currentRotation, currentScale)
+      this.gameObject = gameObject
    }
    
    detach() {
@@ -44,6 +55,21 @@ export class C3_Transform {
       this.controls.detach()
       c3.scene.remove(this.pointer)
       c3.scene.remove(this.controls)
+   }
+   
+   // doens't remove the gameObject
+   // handy to maintain gameObjectInitialTransform values
+   hide() {
+      this.controls.detach()
+      c3.scene.remove(this.pointer)
+      c3.scene.remove(this.controls)
+   }
+   
+   show() {
+      if (this.gameObject) {
+         c3.scene.add(this.pointer)
+         c3.scene.add(this.controls)
+      }
    }
    
    handleDown(e) {
@@ -54,22 +80,30 @@ export class C3_Transform {
       this.c3.mouse.blockInput()
    }
    
-   handleChange(e) {
+   handleChange() {
       if (!this.gameObject) return
       this.gameObject.setScaleVec(this.pointer.scale)
       this.gameObject.setPositionVec(this.pointer.position)
       this.gameObject.setRotationVec(this.pointer.rotation)
    }
    
-   modeTranslate(mode) {
+   modeTranslate() {
       this.controls.mode = MODES.translate
    }
    
-   modeScale(mode) {
+   modeScale() {
       this.controls.mode = MODES.scale
    }
    
-   modeRotate(mode) {
+   modeRotate() {
       this.controls.mode = MODES.rotate
+   }
+   
+   undo() {
+      const { position, rotation, scale } = this.gameObjectInitialTransform
+      this.pointer.scale.copy(scale)
+      this.pointer.position.copy(position)
+      this.pointer.rotation.copy(rotation)
+      this.handleChange()
    }
 }
