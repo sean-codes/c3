@@ -24,7 +24,6 @@ export class C3_Physics {
       this.materials = {}
       this.SHAPES = SHAPES
       this.HUG = HUG
-      
       this.world = new CANNON.World()
       this.world.gravity.set(0, -60, 0)
       this.debug = true
@@ -44,6 +43,7 @@ export class C3_Physics {
          collisionResponse=true,
          watchCollisions=false,
          debug=false,
+         checkIsOnGround=false,
       } = object.physics
       
       let {
@@ -242,6 +242,8 @@ export class C3_Physics {
          linkToMesh,
          debug,
          offset,
+         isOnGround: false,
+         checkIsOnGround,
          tempCollisions: [],
          collisions: []
       }
@@ -252,14 +254,14 @@ export class C3_Physics {
             const contactNormal = new CANNON.Vec3()
             // let obj1 = biIsSelf ? event.contact.bi : event.contact.bj
             let obj2 = biIsSelf ? event.contact.bj : event.contact.bi
+            if (!this.list[obj2.id]) return
             
             const other = this.list[obj2.id].object
             const normal = biIsSelf 
                ? event.contact.ni.negate(contactNormal) 
                : contactNormal.copy(contactNormal)
-               
-            const isOnGround = normal.y > 0.8
-            physicObject.tempCollisions.push({ other, normal, isOnGround })
+            
+            physicObject.tempCollisions.push({ other, normal })
          })
       }
       
@@ -286,16 +288,19 @@ export class C3_Physics {
 
       const debugBodies = []
       for (const physicObjectId in this.list) {
-         const { object, body, linkToMesh, debug, offset } = this.list[physicObjectId]
+         const { object, body, linkToMesh, debug, offset, checkIsOnGround } = this.list[physicObjectId]
          const { mesh } = object
-         if(linkToMesh) {
+         if (linkToMesh) {
             const meshWorldPosition = mesh.getWorldPosition(new THREE.Vector3())
             body.position.copy(meshWorldPosition)
             body.quaternion.copy(body.quaternion)
          } else {
-            
             mesh.position.copy(body.position).sub(offset)
             mesh.quaternion.copy(body.quaternion)
+         }
+         
+         if (checkIsOnGround) {
+            this.list[physicObjectId].isOnGround = this.checkIsOnGround(body)
          }
          
          if (debug) {
@@ -306,6 +311,19 @@ export class C3_Physics {
       if (this.debug) {
          this.debugger.update(debugBodies)
       }
+   }
+   
+   checkIsOnGround(body) {
+      body.computeAABB()
+      const rayPositionFrom = body.position.clone()
+      rayPositionFrom.y = body.aabb.lowerBound.y-1
+      const rayPositionTo = rayPositionFrom.clone()
+      rayPositionTo.y += 1.05
+      
+      const ray = new CANNON.Ray(rayPositionFrom, rayPositionTo)
+      const bodiesWithoutself = this.world.bodies.filter(b => b.id !== body.id)
+      ray.intersectBodies(bodiesWithoutself, ray.result)
+      if (ray.result.hasHit) return true
    }
 }
 

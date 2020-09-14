@@ -153,6 +153,10 @@ export class C3_Object {
    getCollisions() {
       return this.physicsObject.collisions
    }
+   
+   getIsOnGround() {
+      return this.physicsObject && this.physicsObject.isOnGround
+   }
 
    create() {}
    step() {}
