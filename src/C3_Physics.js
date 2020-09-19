@@ -54,9 +54,20 @@ export class C3_Physics {
          meshes = physicsMeshes
       }
       
-      const parentOffset = new THREE.Vector3(0, 0, 0)
-      let body = undefined
-      for (let i = 0; i < 1; i++) {
+      const quaternion = new CANNON.Quaternion()
+      quaternion.setFromEuler(meshes[0].mesh.rotation.x, meshes[0].mesh.rotation.y, meshes[0].mesh.rotation.z, 'XYZ')
+      
+      let body = new CANNON.Body({
+         // shape: createdShapeData.shape,
+         position: new CANNON.Vec3(0, 0, 0),
+         material: this.materials[material],
+         fixedRotation,
+         quaternion,
+         mass,
+      })
+      
+      const offset = new THREE.Vector3(0, 0, 0)
+      for (let i = 0; i < meshes.length; i++) {
          const { mesh, shape, hug } = meshes[i]
          
          const bodyShape = shape || getShapeType(mesh)
@@ -65,58 +76,31 @@ export class C3_Physics {
          if (bodyShape === SHAPES.SPHERE) createdShapeData = createShapeSphere(mesh)
          if (bodyShape === SHAPES.CYLINDER) createdShapeData = createShapeCylinder(mesh)
          if (bodyShape === SHAPES.MESH) createdShapeData = createShapeConvexPolyhedron(mesh)
-         
+
          const innerMesh = getMesh(mesh)
          const scale = getMeshScale(innerMesh)
-         // console.log(object.getScale(), getMeshScale(innerMesh))
-         // let offset = innerMesh.position.clone().multiply(scale)
-         const offset = new THREE.Vector3()
-         const { x, y, z } = innerMesh.position
-         console.log(innerMesh.position, object.getScale())
-         offset.x = x * object.getScale().x
-         offset.y = y * object.getScale().y
-         offset.z = z * object.getScale().z
-         if (!body) {
-            const quaternion = new CANNON.Quaternion()
-            quaternion.setFromEuler(mesh.rotation.x, mesh.rotation.y, mesh.rotation.z, 'XYZ')
-            
-            // <3
+
+         if (i === 0) {
             if (hug === HUG.BOTTOM) offset.y += createdShapeData.height / 2
-            parentOffset.copy(offset)
-            console.log('parent')
-            
-            body = new CANNON.Body({
-               shape: createdShapeData.shape,
-               position: new CANNON.Vec3(0, 0, 0),
-               material: this.materials[material],
-               fixedRotation,
-               quaternion,
-               mass,
-            })
-            
-            // cannot be applied in body constructor :,(
-            body.collisionResponse = collisionResponse
-         } else {
-            // const objectPosition = object.getPosition()
-            // const testPos = objectPosition.add(mesh.position.clone().sub(objectPosition))
-            // const childScale = object.getScale()
-            // const childBodyQuarternion = new CANNON.Quaternion()
-            // childBodyQuarternion.setFromEuler(innerMesh.rotation.x, innerMesh.rotation.y, innerMesh.rotation.z, 'XYZ')
-            // 
-            // const childBodyOffset = testPos.clone().multiply(childScale).sub(parentOffset)
-            // 
-            // body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
          }
+         
+         const objectPosition = object.getPosition()
+         const testPos = objectPosition.add(mesh.position.clone().sub(objectPosition))
+         const childScale = object.getScale()
+         const childBodyQuarternion = new CANNON.Quaternion()
+         childBodyQuarternion.setFromEuler(innerMesh.rotation.x, innerMesh.rotation.y, innerMesh.rotation.z, 'XYZ')
+         
+         const childBodyOffset = testPos.clone().multiply(childScale).sub(offset)
+         body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
       }
       
-      console.log(parentOffset)
       const physicObject = {
          object,
          body, 
          meshes,
          linkToMesh,
          debug,
-         offset: parentOffset,
+         offset,
          isOnGround: false,
          checkIsOnGround,
          tempCollisions: [],
@@ -170,7 +154,9 @@ export class C3_Physics {
             body.position.copy(meshWorldPosition)
             body.quaternion.copy(body.quaternion)
          } else {
-            mesh.position.copy(body.position).sub(offset)
+            // const rotatedOffset = offset.clone().applyEuler(object.getRotation())
+            // console.log(body.position)
+            mesh.position.copy(body.position)//.sub(rotatedOffset)
             mesh.quaternion.copy(body.quaternion)
          }
          

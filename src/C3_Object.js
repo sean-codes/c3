@@ -8,14 +8,13 @@ export class C3_Object {
       this.id = id
       this.attr = attr || {}
       this.type = type
-      
       this.rotation = new THREE.Euler(0, 0, 0)
       this.mesh = this.mesh ? this.mesh() : c3.mesh.Blank()
       this.mesh.C3_Object = this // might be handy for querying
       this.physics = this.physics ? this.physics() : { meshes: [] }
       this.physicsObject = this.physics.meshes.length ? c3.physics.addObject(this) : undefined
       this.body = this.physicsObject ? this.physicsObject.body : undefined
-
+      
       this.create(this.attr)
    }
 
@@ -31,11 +30,12 @@ export class C3_Object {
          this.body.position.x = x + this.physicsObject.offset.x
          this.body.position.y = y + this.physicsObject.offset.y
          this.body.position.z = z + this.physicsObject.offset.z
+      } else {
+         this.mesh.position.y = y
+         this.mesh.position.z = z
+         this.mesh.position.x = x
       }
       
-      this.mesh.position.x = x
-      this.mesh.position.y = y
-      this.mesh.position.z = z
    }
    
    moveVec({ x, y, z }) {
@@ -55,11 +55,11 @@ export class C3_Object {
    }
 
    getPosition() {
-      return this.mesh.position
+      return this.mesh.position.clone()
    }
    
    getVelocity() {
-      return this.body.velocity
+      return this.body.velocity.clone()
    }
    
    setVelocity(x, y, z) {
@@ -132,6 +132,9 @@ export class C3_Object {
          this.mesh.rotation.y = this.rotation.y
          this.mesh.rotation.z = this.rotation.z
       } else {
+         // we need to make this work for offsets
+         
+         
          this.body.quaternion.setFromEuler(
             this.rotation.x, 
             this.rotation.y, 
