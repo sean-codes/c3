@@ -30,7 +30,7 @@ export class ObjectWeapon extends c3.Object {
       for (const collision of this.getCollisions()) {
          const { other } = collision
          
-         if (other.type === 'Dragon' && this.parent.isAttacking) {
+         if (other.type === c3.types.Dragon && this.parent.isAttacking) {
             other.killDragon()
          }
       }

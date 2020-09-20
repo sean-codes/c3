@@ -422,7 +422,7 @@ export class ObjectPlayer extends c3.Object {
          this.model.boneAdd('Arrow', nextSet.offHand)
       } else {
          this.model.boneAdd('Shield', nextSet.offHand)
-         this.model.boneAdd('Weapon', this.weapon.mesh)
+         this.model.boneAdd('Weapon', this.weapon.origin)
       }
       
       if (currSet.type === 'bow') {
