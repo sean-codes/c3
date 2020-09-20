@@ -34,7 +34,7 @@ export class ObjectArrow extends c3.Object {
    
    step() {
       const direction = this.getDirection()//.multiplyScalar(0.1)
-      this.mesh.position.add(direction)
+      this.moveVec(direction)
       
       // destroy after a bit
       this.lifeSpan -= 1

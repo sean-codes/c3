@@ -30,7 +30,7 @@ export class ObjectCamera extends c3.Object {
    
    step() {
       const { mesh } = this
-      mesh.position.copy(this.player.mesh.position)
+      this.setPositionVec(this.player.getPosition())
    }
    
    pointTowards(angle) {

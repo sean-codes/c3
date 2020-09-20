@@ -118,7 +118,7 @@ c3.init({
       c3.objects.create(c3.types.AmbientLight)
       c3.objects.create(c3.types.DirectionalLight)
 
-      const player = c3.objects.create(c3.types.Player, { pos: new c3.Vector(0, 2, 0) })
+      const player = c3.objects.create(c3.types.Player, { pos: new c3.Vector(0, 5, 0) })
       c3.objects.create(c3.types.Ground)
 
       for (let i = 0; i < 40; i++) {

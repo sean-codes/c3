@@ -46,6 +46,7 @@ export class ObjectPlayer extends c3.Object {
          material: 'PLAYER',
          fixedRotation: true,
          watchCollisions: true,
+         checkIsOnGround: true,
       }
    }
    
@@ -323,15 +324,12 @@ export class ObjectPlayer extends c3.Object {
    }
    
    stepJump() {
-      for (const collision of this.getCollisions()) {
-         this.isOnGround = this.isOnGround || collision.isOnGround
-      }
+      this.isOnGround = this.getIsOnGround()
       
       // Jump
       if (this.body.velocity.y > 5) this.isOnGround = false
       if (c3.keyboard.check('jump').down && this.isOnGround) {
          this.body.velocity.y = 25
-         this.isOnGround = false
       }
    }
    
