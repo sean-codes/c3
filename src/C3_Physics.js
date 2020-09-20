@@ -233,10 +233,13 @@ function createShapeConvexPolyhedron(object, scale) {
    geometry.rotateZ(mesh.rotation.z)
    
    // Do this  after rotating
-   // scale = scale || object.scale.clone().multiplyScalar(100)
-   scale = scale || getMeshScale(mesh)
-   
+   scale = scale || getMeshGeoScale(mesh)
    geometry.scale(scale.x, scale.y, scale.z)
+   geometry.center()
+   
+   geometry.rotateX(-mesh.rotation.x)
+   geometry.rotateY(-mesh.rotation.y)
+   geometry.rotateZ(-mesh.rotation.z)
 
    // We have to move the points around so they aren't perfectly aligned?
    var eps = 1e-2; // between 2-4 seems to work
@@ -342,7 +345,11 @@ function getShapeType(object) {
 
 function getMeshGeoInfo(mesh) {
    const gScale = getMeshGeoScale(mesh)
-   const tGeo = new THREE.BufferGeometry().copy(mesh.geometry)
+   const tGeo = new THREE.BufferGeometry()
+   mesh.geometry.type.includes('Buffer')
+      ? tGeo.copy(mesh.geometry)
+      : tGeo.fromGeometry(mesh.geometry)
+      
    tGeo.rotateX(mesh.rotation.x)
    tGeo.rotateY(mesh.rotation.y)
    tGeo.rotateZ(mesh.rotation.z)

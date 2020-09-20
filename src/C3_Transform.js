@@ -48,7 +48,6 @@ export class C3_Transform {
       
       this.controls.attach(this.pointer)
       this.gameObject = gameObject
-      console.log('wtf', this.pointer.position)
    }
    
    detach() {
