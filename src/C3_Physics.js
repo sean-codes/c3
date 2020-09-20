@@ -69,8 +69,7 @@ export class C3_Physics {
       const objectScale = object.getScale()
       const offset = new THREE.Vector3(0, 0, 0)
       for (let i = 0; i < meshes.length; i++) {
-         const { mesh, shape } = meshes[i]
-         
+         const { mesh, shape, offset } = meshes[i]
          const bodyShape = shape || getShapeType(mesh)
          let createdShapeData = undefined
          if (bodyShape === SHAPES.BOX) createdShapeData = createShapeBox(mesh)
@@ -81,35 +80,26 @@ export class C3_Physics {
          const innerMesh = getMesh(mesh)
          const scale = getMeshScale(innerMesh)
          const pScale = getMeshPositionScale(innerMesh)
+         const gScale = getMeshGeoScale(innerMesh)
          const childBodyQuarternion = new CANNON.Quaternion().setFromEuler(
             innerMesh.rotation.x, 
             innerMesh.rotation.y, 
             innerMesh.rotation.z, 'XYZ')
-         // console.log(objectScale)
-         // const childBodyOffset = mesh.position.clone().multiply(objectScale)//.sub(offset)
-         // console.log(scale)
-         console.log('rotating child', innerMesh.rotation)
+         
+         const tGeo = new THREE.BufferGeometry().copy(innerMesh.geometry)
+         tGeo.rotateX(innerMesh.rotation.x)
+         tGeo.rotateY(innerMesh.rotation.y)
+         tGeo.rotateZ(innerMesh.rotation.z)
+         
+         tGeo.computeBoundingBox()
+         const childCenter = tGeo.boundingBox.getCenter()
+         
          const childBodyOffset = innerMesh.position.clone().multiply(pScale)
+         childBodyOffset.add(childCenter.clone().multiply(gScale))
+         console.log(offset)
+         
          body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
-         
-         if (i === 0) {
-            // if (hug === HUG.BOTTOM) offset.y += createdShapeData.height / 2 * objectScale.y
-            // offset.applyEuler(innerMesh.rotation)
-            // console.log('hello', objectScale.y)
-         }
-         
-         // console.log(childBodyOffset)
       }
-      
-      body.computeAABB()
-      // console.log(object, body.aabb)
-      // if (hug === HUG.BOTTOM) {
-      //    const height = (body.aabb.upperBound.y - body.aabb.lowerBound.y)//s * objectScale.y
-      //    console.log(height)
-      //    offset.y += height / 2
-      // }
-      
-      console.log(object, offset)
       
       const physicObject = {
          object,
@@ -317,6 +307,15 @@ function getMeshScale(mesh) {
    return scale
 }
 
+function getMeshGeoScale(mesh) {
+   const scale = new THREE.Vector3(1, 1, 1).copy(mesh.scale)
+   mesh.traverseAncestors(a => {
+      scale.multiply(a.scale)
+   })
+   
+   // scale.applyEuler(mesh.rotation)
+   return scale
+}
 function getMeshPositionScale(mesh) {
    const scale = new THREE.Vector3(1, 1, 1)//.copy(mesh.scale)
    mesh.traverseAncestors(a => {
