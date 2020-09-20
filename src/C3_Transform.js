@@ -30,7 +30,6 @@ export class C3_Transform {
    
    attach(gameObject) {
       const currentPosition = gameObject.getPosition()
-      console.log(currentPosition.x)
       const currentRotation = gameObject.getRotation()
       const currentScale = gameObject.getScale()
       

@@ -9,8 +9,10 @@ export class C3_Object {
       this.attr = attr || {}
       this.type = type
       this.rotation = new THREE.Euler(0, 0, 0)
+      this.origin = new THREE.Object3D()
       this.mesh = this.mesh ? this.mesh() : c3.mesh.Blank()
-      this.mesh.C3_Object = this // might be handy for querying
+      this.origin.C3_Object = this // might be handy for querying
+      this.origin.add(this.mesh)
       this.physics = this.physics ? this.physics() : { meshes: [] }
       this.physicsObject = this.physics.meshes.length ? c3.physics.addObject(this) : undefined
       this.body = this.physicsObject ? this.physicsObject.body : undefined
@@ -31,9 +33,9 @@ export class C3_Object {
          this.body.position.y = y + this.physicsObject.offset.y
          this.body.position.z = z + this.physicsObject.offset.z
       } else {
-         this.mesh.position.y = y
-         this.mesh.position.z = z
-         this.mesh.position.x = x
+         this.origin.position.y = y
+         this.origin.position.z = z
+         this.origin.position.x = x
       }
       
    }
@@ -44,9 +46,9 @@ export class C3_Object {
          this.body.position.y += y
          this.body.position.z += z
       } else {
-         this.mesh.position.x += x
-         this.mesh.position.y += y
-         this.mesh.position.z += z
+         this.origin.position.x += x
+         this.origin.position.y += y
+         this.origin.position.z += z
       }
    }
    
@@ -55,7 +57,7 @@ export class C3_Object {
    }
 
    getPosition() {
-      return this.mesh.position.clone()
+      return this.origin.position.clone()
    }
    
    getVelocity() {
@@ -71,9 +73,9 @@ export class C3_Object {
    }
 
    rotate(x, y, z) {
-      this.mesh.rotation.x += x
-      this.mesh.rotation.y += y
-      this.mesh.rotation.z += z
+      this.origin.rotation.x += x
+      this.origin.rotation.y += y
+      this.origin.rotation.z += z
       this.rotateUpdate()
    }
 
@@ -105,12 +107,12 @@ export class C3_Object {
    }
    
    setScaleVec(scale) {
-      this.mesh.scale.copy(scale)
+      this.origin.scale.copy(scale)
       this.scaleUpdate()
    }
    
    getScale() {
-      return this.mesh.scale
+      return this.origin.scale
    }
 
    getRotation() {
@@ -118,7 +120,7 @@ export class C3_Object {
    }
 
    getDirection() {
-      return this.mesh.getWorldDirection(new THREE.Vector3())
+      return this.origin.getWorldDirection(new THREE.Vector3())
    }
 
    addRotationY(radians) {
@@ -128,9 +130,9 @@ export class C3_Object {
 
    rotateUpdate() {
       if (!this.body || (this.physics && this.physics.linkToMesh)) {
-         this.mesh.rotation.x = this.rotation.x
-         this.mesh.rotation.y = this.rotation.y
-         this.mesh.rotation.z = this.rotation.z
+         this.origin.rotation.x = this.rotation.x
+         this.origin.rotation.y = this.rotation.y
+         this.origin.rotation.z = this.rotation.z
       } else {
          // we need to make this work for offsets
          

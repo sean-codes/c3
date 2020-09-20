@@ -9,7 +9,7 @@ export class C3_Objects {
       const newObject = new GameObject(this.c3, this.idCounter, attr, GameObject)
 
       this.list.push(newObject)
-      this.c3.scene.add(newObject.mesh)
+      this.c3.scene.add(newObject.origin)
       this.idCounter += 1
       
       return newObject

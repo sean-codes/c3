@@ -43,6 +43,7 @@ export class C3_Physics {
          watchCollisions=false,
          debug=false,
          checkIsOnGround=false,
+         hug=HUG.CENTER,
       } = object.physics
       
       let {
@@ -58,7 +59,6 @@ export class C3_Physics {
       quaternion.setFromEuler(meshes[0].mesh.rotation.x, meshes[0].mesh.rotation.y, meshes[0].mesh.rotation.z, 'XYZ')
       
       let body = new CANNON.Body({
-         // shape: createdShapeData.shape,
          position: new CANNON.Vec3(0, 0, 0),
          material: this.materials[material],
          fixedRotation,
@@ -66,9 +66,10 @@ export class C3_Physics {
          mass,
       })
       
+      const objectScale = object.getScale()
       const offset = new THREE.Vector3(0, 0, 0)
       for (let i = 0; i < meshes.length; i++) {
-         const { mesh, shape, hug } = meshes[i]
+         const { mesh, shape } = meshes[i]
          
          const bodyShape = shape || getShapeType(mesh)
          let createdShapeData = undefined
@@ -79,20 +80,36 @@ export class C3_Physics {
 
          const innerMesh = getMesh(mesh)
          const scale = getMeshScale(innerMesh)
-
+         const pScale = getMeshPositionScale(innerMesh)
+         const childBodyQuarternion = new CANNON.Quaternion().setFromEuler(
+            innerMesh.rotation.x, 
+            innerMesh.rotation.y, 
+            innerMesh.rotation.z, 'XYZ')
+         // console.log(objectScale)
+         // const childBodyOffset = mesh.position.clone().multiply(objectScale)//.sub(offset)
+         // console.log(scale)
+         console.log('rotating child', innerMesh.rotation)
+         const childBodyOffset = innerMesh.position.clone().multiply(pScale)
+         body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
+         
          if (i === 0) {
-            if (hug === HUG.BOTTOM) offset.y += createdShapeData.height / 2
+            // if (hug === HUG.BOTTOM) offset.y += createdShapeData.height / 2 * objectScale.y
+            // offset.applyEuler(innerMesh.rotation)
+            // console.log('hello', objectScale.y)
          }
          
-         const objectPosition = object.getPosition()
-         const testPos = objectPosition.add(mesh.position.clone().sub(objectPosition))
-         const childScale = object.getScale()
-         const childBodyQuarternion = new CANNON.Quaternion()
-         childBodyQuarternion.setFromEuler(innerMesh.rotation.x, innerMesh.rotation.y, innerMesh.rotation.z, 'XYZ')
-         
-         const childBodyOffset = testPos.clone().multiply(childScale).sub(offset)
-         body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
+         // console.log(childBodyOffset)
       }
+      
+      body.computeAABB()
+      // console.log(object, body.aabb)
+      // if (hug === HUG.BOTTOM) {
+      //    const height = (body.aabb.upperBound.y - body.aabb.lowerBound.y)//s * objectScale.y
+      //    console.log(height)
+      //    offset.y += height / 2
+      // }
+      
+      console.log(object, offset)
       
       const physicObject = {
          object,
@@ -148,16 +165,14 @@ export class C3_Physics {
       const debugBodies = []
       for (const physicObjectId in this.list) {
          const { object, body, linkToMesh, debug, offset, checkIsOnGround } = this.list[physicObjectId]
-         const { mesh } = object
+         const { origin } = object
          if (linkToMesh) {
-            const meshWorldPosition = mesh.getWorldPosition(new THREE.Vector3())
+            const meshWorldPosition = origin.getWorldPosition(new THREE.Vector3())
             body.position.copy(meshWorldPosition)
             body.quaternion.copy(body.quaternion)
          } else {
-            // const rotatedOffset = offset.clone().applyEuler(object.getRotation())
-            // console.log(body.position)
-            mesh.position.copy(body.position)//.sub(rotatedOffset)
-            mesh.quaternion.copy(body.quaternion)
+            origin.position.copy(body.position).sub(offset)
+            origin.quaternion.copy(body.quaternion)
          }
          
          if (checkIsOnGround) {
@@ -190,7 +205,6 @@ export class C3_Physics {
 
 function createShapeBox(object) {
    const size = getSizeOfMesh(object)
-   
    return {
       shape: new CANNON.Box(new CANNON.Vec3(size.width/2, size.height/2, size.depth/2)),
       ...size
@@ -294,8 +308,20 @@ function getSizeOfMesh(object) {
 }
 
 function getMeshScale(mesh) {
-   const scale = new THREE.Vector3().copy(mesh.scale)
-   mesh.traverseAncestors(a => scale.multiply(a.scale))
+   const scale = new THREE.Vector3(1, 1, 1).copy(mesh.scale)
+   mesh.traverseAncestors(a => {
+      scale.multiply(a.scale)
+   })
+   
+   scale.applyEuler(mesh.rotation)
+   return scale
+}
+
+function getMeshPositionScale(mesh) {
+   const scale = new THREE.Vector3(1, 1, 1)//.copy(mesh.scale)
+   mesh.traverseAncestors(a => {
+      scale.multiply(a.scale)
+   })
    
    return scale
 }
@@ -303,11 +329,12 @@ function getMeshScale(mesh) {
 function getMesh(object) {
    let mesh = undefined
    if (object.type === 'Mesh') return object
-   object.traverse(part => mesh = part.type === 'Mesh' ? part : mesh)
+   object.traverse(part => mesh = !mesh && part.type === 'Mesh' ? part : mesh)
    return mesh
 }
 
-function getShapeType(mesh) { 
+function getShapeType(object) {
+   const mesh = getMesh(object)
    const geo = mesh.geometry ? mesh.geometry : mesh.children[0].children[0].geometry
    const geoType = geo.type
    
