@@ -2,7 +2,7 @@ import { c3 } from '../c3.js'
 
 export class ObjectGround extends c3.Object {
    mesh() {
-      const geo = new c3.three.PlaneBufferGeometry(200, 200)
+      const geo = new c3.three.BoxBufferGeometry(200, 3, 200)
       const mat = new c3.three.MeshPhongMaterial({ 
          color: '#4b7', 
          // map: textureGrass, 
@@ -27,6 +27,6 @@ export class ObjectGround extends c3.Object {
    }
    
    create() {
-      
+      this.setPosition(0, -1.5, 0)
    }
 }

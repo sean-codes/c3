@@ -61,6 +61,7 @@ export class C3_Physics {
       let body = new CANNON.Body({
          position: new CANNON.Vec3(0, 0, 0),
          material: this.materials[material],
+         collisionResponse,
          fixedRotation,
          quaternion,
          mass,
