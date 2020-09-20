@@ -69,7 +69,7 @@ export class C3_Physics {
       const objectScale = object.getScale()
       const offset = new THREE.Vector3(0, 0, 0)
       for (let i = 0; i < meshes.length; i++) {
-         const { mesh, shape, offset } = meshes[i]
+         const { mesh, shape, offsetY } = meshes[i]
          const bodyShape = shape || getShapeType(mesh)
          let createdShapeData = undefined
          if (bodyShape === SHAPES.BOX) createdShapeData = createShapeBox(mesh)
@@ -78,25 +78,22 @@ export class C3_Physics {
          if (bodyShape === SHAPES.MESH) createdShapeData = createShapeConvexPolyhedron(mesh)
 
          const innerMesh = getMesh(mesh)
-         const scale = getMeshScale(innerMesh)
+         
+         // offset
+         const geoInfo = getMeshGeoInfo(innerMesh)
          const pScale = getMeshPositionScale(innerMesh)
-         const gScale = getMeshGeoScale(innerMesh)
+         const childBodyOffset = innerMesh.position.clone().multiply(pScale)
+         childBodyOffset.add(geoInfo.center)
+         
+         if (offsetY) {
+            childBodyOffset.y -= geoInfo.height * offsetY
+         }
+         
+         // rotation
          const childBodyQuarternion = new CANNON.Quaternion().setFromEuler(
             innerMesh.rotation.x, 
             innerMesh.rotation.y, 
             innerMesh.rotation.z, 'XYZ')
-         
-         const tGeo = new THREE.BufferGeometry().copy(innerMesh.geometry)
-         tGeo.rotateX(innerMesh.rotation.x)
-         tGeo.rotateY(innerMesh.rotation.y)
-         tGeo.rotateZ(innerMesh.rotation.z)
-         
-         tGeo.computeBoundingBox()
-         const childCenter = tGeo.boundingBox.getCenter()
-         
-         const childBodyOffset = innerMesh.position.clone().multiply(pScale)
-         childBodyOffset.add(childCenter.clone().multiply(gScale))
-         console.log(offset)
          
          body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
       }
@@ -206,7 +203,7 @@ function createShapeSphere(object) {
    
    return {
       shape: new CANNON.Sphere(size.radius),
-      radius: size.radius
+      ...size
    }
 }
 
@@ -313,11 +310,11 @@ function getMeshGeoScale(mesh) {
       scale.multiply(a.scale)
    })
    
-   // scale.applyEuler(mesh.rotation)
    return scale
 }
+
 function getMeshPositionScale(mesh) {
-   const scale = new THREE.Vector3(1, 1, 1)//.copy(mesh.scale)
+   const scale = new THREE.Vector3(1, 1, 1)
    mesh.traverseAncestors(a => {
       scale.multiply(a.scale)
    })
@@ -341,4 +338,18 @@ function getShapeType(object) {
    if (geoType.startsWith('Cylinder')) return SHAPES.CYLINDER
    if (geoType.startsWith('BufferGeometry')) return SHAPES.MESH
    return SHAPES.BOX
+}
+
+function getMeshGeoInfo(mesh) {
+   const gScale = getMeshGeoScale(mesh)
+   const tGeo = new THREE.BufferGeometry().copy(mesh.geometry)
+   tGeo.rotateX(mesh.rotation.x)
+   tGeo.rotateY(mesh.rotation.y)
+   tGeo.rotateZ(mesh.rotation.z)
+   tGeo.computeBoundingBox()
+   
+   return {
+      center: tGeo.boundingBox.getCenter(new THREE.Vector3()).multiply(gScale),
+      height: (tGeo.boundingBox.max.y - tGeo.boundingBox.min.y) * gScale.y,
+   }
 }
