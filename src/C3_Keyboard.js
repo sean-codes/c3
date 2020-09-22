@@ -3,6 +3,7 @@ export class C3_Keyboard {
       this.keyMap = {}
       this.keys = {}
       this.events = []
+      this.metas = []
       this.listen()
    }
    
@@ -11,27 +12,35 @@ export class C3_Keyboard {
       this.keys = {}
       for (const keyName in this.keyMap) {
          const keyCode = this.keyMap[keyName]
-         this.keys[keyCode] = { up: false, down: false, held: false }
+         this.keys[keyCode] = { up: false, down: false, held: false, keyCode }
       }
    }
    
    listen() {
-      document.body.addEventListener('keydown', e => { !e.repeat && this.addEvent(e.keyCode, 'down')})
-      document.body.addEventListener('keyup', e => { this.addEvent(e.keyCode, 'up') })
+      document.body.addEventListener('keydown', e => { !e.repeat && this.addEvent(e, 'down')})
+      document.body.addEventListener('keyup', e => { this.addEvent(e, 'up') })
    }
    
-   addEvent(keyCode, type) {
+   addEvent(e, type) {
+      const metaKey = e.metaKey
+      const keyCode = e.keyCode
       if (!this.keys[keyCode]) return
+      
       this.events.push({
+         keyCode,
          key: this.keys[keyCode],
          type,
       })
+      
+      if (metaKey) {
+         this.metas.push(this.keys[keyCode])
+      }
    }
 
    execute() {
       for (let i = 0; i < this.events.length; i += 1) {
-         const { key, type } = this.events[i]
-         this.processEvent(key, type)
+         const { key, type, metaKey } = this.events[i]
+         this.processEvent(key, type, metaKey)
       }
       this.events = []
    }
@@ -41,6 +50,10 @@ export class C3_Keyboard {
          if (!key.held) return
          key.up = performance.now()
          key.held = false
+         
+         if (key.keyCode === 91) {
+            this.liftEverything()
+         }
          return
       }
       
@@ -89,5 +102,13 @@ export class C3_Keyboard {
       }
       
       this.execute()
+   }
+   
+   // something weird with meta key blocking keyups
+   liftEverything() {
+      for (let keyCode in this.keys) {
+         this.keys[keyCode].up = this.keys[keyCode.down] ? true : false
+         this.keys[keyCode].held = false
+      }
    }
 }

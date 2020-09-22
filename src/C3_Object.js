@@ -21,12 +21,12 @@ export class C3_Object {
    }
 
    destroy() {
-      this.c3.scene.remove(this.mesh)
+      this.c3.scene.remove(this.origin)
       if (this.physicsObject) this.c3.physics.removeObject(this.physicsObject)
       this.c3.objects.destroy(this)
       this.onDestroy && this.onDestroy()
    }
-
+   
    setPosition(x, y, z) {
       if (this.body && !this.physics.linkToMesh) {
          this.body.position.x = x + this.physicsObject.offset.x
