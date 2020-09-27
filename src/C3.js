@@ -1,4 +1,5 @@
 import * as THREE from '../node_modules/three/build/three.module.js'
+import * as CANNON from '../node_modules/cannon-es/dist/cannon-es.js'
 import { FBXLoader } from '../node_modules/three/examples/jsm/loaders/FBXLoader.js'
 import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoader.js'
 
@@ -50,6 +51,7 @@ export class C3 {
       this.mesh = new C3_Mesh(this)
       this.mouse = new C3_Mouse(this)
       this.three = THREE
+      this.CANNON = CANNON
       this.const = constants
       this.script = {}
       

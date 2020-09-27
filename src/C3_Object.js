@@ -162,6 +162,10 @@ export class C3_Object {
    getIsOnGround() {
       return this.physicsObject && this.physicsObject.isOnGround
    }
+   
+   setFriction(friction) {
+      if (this.physicsObject) this.physicsObject.material.friction = friction
+   }
 
    create() {}
    step() {}

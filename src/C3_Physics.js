@@ -44,8 +44,15 @@ export class C3_Physics {
          debug=false,
          checkIsOnGround=false,
          hug=HUG.CENTER,
+         friction = 0,
+         restitution = 0,
       } = object.physics
       
+      const phyMaterial = material 
+         ? this.materials[material] 
+         : new CANNON.Material({ friction, restitution })
+         console.log(phyMaterial)
+         
       let {
          meshes
       } = object.physics
@@ -60,7 +67,7 @@ export class C3_Physics {
       
       let body = new CANNON.Body({
          position: new CANNON.Vec3(0, 0, 0),
-         material: this.materials[material],
+         material: phyMaterial,
          collisionResponse,
          fixedRotation,
          quaternion,
@@ -109,7 +116,8 @@ export class C3_Physics {
          isOnGround: false,
          checkIsOnGround,
          tempCollisions: [],
-         collisions: []
+         collisions: [],
+         material: phyMaterial,
       }
       
       if (watchCollisions) {
