@@ -153,6 +153,8 @@ export class C3_Object {
          this.physicsObject = c3.physics.addObject(this)
          this.body = this.physicsObject.body
       }
+      
+      this.onResize()
    }
 
    getCollisions() {
@@ -166,7 +168,15 @@ export class C3_Object {
    setFriction(friction) {
       if (this.physicsObject) this.physicsObject.material.friction = friction
    }
+   
+   getSize() {
+      const box = new THREE.Box3()
+      box.setFromObject(this.origin)
+      
+      return box.getSize(new THREE.Vector3)
+   }
 
+   onResize() {}
    create() {}
    step() {}
 
