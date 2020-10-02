@@ -51,7 +51,6 @@ export class C3_Physics {
       const phyMaterial = material 
          ? this.materials[material] 
          : new CANNON.Material({ friction, restitution })
-         console.log(phyMaterial)
          
       let {
          meshes
