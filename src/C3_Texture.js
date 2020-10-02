@@ -4,6 +4,7 @@ export class C3_Texture {
    constructor({ c3, texture, loadInfo }) {
       this.c3 = c3
       this.texture = texture
+      this.texture.needsUpdate = true // required for clone
       this.loadInfo = loadInfo
       this.name = loadInfo.name
       
@@ -13,5 +14,18 @@ export class C3_Texture {
       if (loadInfo.pixelate) {
          texture.magFilter = THREE.NearestFilter
       }
+   }
+   
+   clone() {
+      return new C3_Texture({ 
+         c3: this.c3, 
+         texture: this.texture.clone(), 
+         loadInfo: this.loadInfo 
+      })
+   }
+   
+   setRepeat(x, y) {
+      this.texture.repeat.x = x
+      this.texture.repeat.y = y
    }
 }
