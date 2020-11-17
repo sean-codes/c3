@@ -99,9 +99,9 @@ c3.init({
       c3.camera.setNearFar(1, 75)
       c3.scene.setFog(45, 75)
 
-      c3.models.materialAdd('BOX', new c3.three.MeshLambertMaterial({ color: '#F55' }))
-      c3.models.materialAdd('TARGET', new c3.three.MeshLambertMaterial({ color: '#99f' }))
-      c3.models.materialAdd('WIREFRAME', new c3.three.MeshBasicMaterial({
+      c3.models.materialAdd('BOX', new c3.THREE.MeshLambertMaterial({ color: '#F55' }))
+      c3.models.materialAdd('TARGET', new c3.THREE.MeshLambertMaterial({ color: '#99f' }))
+      c3.models.materialAdd('WIREFRAME', new c3.THREE.MeshBasicMaterial({
          color: '#000',
          wireframe: true,
          opacity: 0.1,

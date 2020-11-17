@@ -2,9 +2,9 @@ import { c3 } from '../c3.js'
 
 export class ObjectPlatform extends c3.Object {
    mesh() {
-      const geo = new c3.three.BoxBufferGeometry(10, 0.5, 10)
+      const geo = new c3.THREE.BoxBufferGeometry(10, 0.5, 10)
       const mat = c3.models.materialFind('BOX')
-      const mes = new c3.three.Mesh(geo, mat)
+      const mes = new c3.THREE.Mesh(geo, mat)
       mes.receiveShadow = true
       mes.castShadow = true
       

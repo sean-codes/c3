@@ -50,7 +50,7 @@ export class C3 {
       this.light = new C3_Light
       this.mesh = new C3_Mesh(this)
       this.mouse = new C3_Mouse(this)
-      this.three = THREE
+      this.THREE = THREE
       this.CANNON = CANNON
       this.const = constants
       this.script = {}

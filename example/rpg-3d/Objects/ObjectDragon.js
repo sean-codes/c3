@@ -2,9 +2,9 @@ import { c3 } from '../c3.js'
 
 export class ObjectDragon extends c3.Object {
    mesh() {
-      const geo = new c3.three.SphereGeometry(2)
+      const geo = new c3.THREE.SphereGeometry(2)
       const mat = c3.models.materialFind('WIREFRAME')
-      const mes = new c3.three.Mesh(geo, mat)
+      const mes = new c3.THREE.Mesh(geo, mat)
       
       this.model = c3.models.find('dragon').clone()
       this.model.object.position.y -= 2
@@ -36,7 +36,7 @@ export class ObjectDragon extends c3.Object {
 
       if (distanceFromPlayer < 10) {
          const direction = player.mesh.position.clone().sub(this.mesh.position)
-         const targetAngle = c3.math.loopAngle(new c3.three.Vector2(-direction.x, direction.z).angle() - (Math.PI/2))
+         const targetAngle = c3.math.loopAngle(new c3.THREE.Vector2(-direction.x, direction.z).angle() - (Math.PI/2))
          const angleDiff = c3.math.angleToAngle(this.rotation.y, targetAngle)
          const newAngle = c3.math.loopAngle(this.rotation.y + angleDiff / 10)
          

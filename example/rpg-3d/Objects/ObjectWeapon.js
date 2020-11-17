@@ -2,9 +2,9 @@ import { c3 } from '../c3.js'
 
 export class ObjectWeapon extends c3.Object {
    mesh() {
-      const geo = new c3.three.BoxGeometry(0.5, 5, 1)
+      const geo = new c3.THREE.BoxGeometry(0.5, 5, 1)
       const mat = c3.models.materialFind('WIREFRAME')
-      const mesh = new c3.three.Mesh(geo, mat)
+      const mesh = new c3.THREE.Mesh(geo, mat)
       
       return mesh
    }

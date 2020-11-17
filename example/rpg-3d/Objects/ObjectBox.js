@@ -3,9 +3,9 @@ import { c3 } from '../c3.js'
 export class ObjectBox extends c3.Object {
    mesh() {
       const scale = c3.math.randomRange(0.5, 2)
-      const geo = new c3.three.BoxGeometry(scale, scale, scale)
-      const mat = new c3.three.MeshLambertMaterial({ color: '#F66' })
-      const mes = new c3.three.Mesh(geo, mat)
+      const geo = new c3.THREE.BoxGeometry(scale, scale, scale)
+      const mat = new c3.THREE.MeshLambertMaterial({ color: '#F66' })
+      const mes = new c3.THREE.Mesh(geo, mat)
       
       // c3.material.create("BOX", { type: "Lambert", color: "#F44" })
       // const mesh = c3.shape.create("BOX", { mat: "BOX", size: [1, 1, 1] })

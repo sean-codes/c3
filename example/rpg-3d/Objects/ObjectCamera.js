@@ -7,8 +7,8 @@ export class ObjectCamera extends c3.Object {
       camera.lookAt(0, 0, 0)
       
       
-      this.xRot = new c3.three.Object3D()
-      this.yRot = new c3.three.Object3D()
+      this.xRot = new c3.THREE.Object3D()
+      this.yRot = new c3.THREE.Object3D()
       this.xRot.rotation.x += 0.6
       this.xRot.position.y += 4
       this.yRot.add(this.xRot)

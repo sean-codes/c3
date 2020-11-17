@@ -2,9 +2,9 @@ import { c3 } from '../c3.js'
 
 export class ObjectArrow extends c3.Object {
    mesh() {
-      const geo = new c3.three.BoxGeometry(1, 1, 5)
+      const geo = new c3.THREE.BoxGeometry(1, 1, 5)
       const mat = c3.models.materialFind('WIREFRAME')
-      const mesh = new c3.three.Mesh(geo, mat)
+      const mesh = new c3.THREE.Mesh(geo, mat)
       
       const modelArrow = c3.models.find('arrow').clone()
       modelArrow.object.rotation.x += Math.PI/2

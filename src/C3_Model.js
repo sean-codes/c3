@@ -26,7 +26,7 @@ export class C3_Model {
                      if (overrides.opacity) {
                         material.opacity = overrides.opacity
                         material.transparent = true
-                        material.side = c3.three.DoubleSide
+                        material.side = c3.THREE.DoubleSide
                      }
                   }
                }

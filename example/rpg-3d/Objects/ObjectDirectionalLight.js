@@ -2,7 +2,7 @@ import { c3 } from '../c3.js'
 
 export class ObjectDirectionalLight extends c3.Object {
    mesh() {
-      const dirLight = new c3.three.DirectionalLight('#FFF', 1)
+      const dirLight = new c3.THREE.DirectionalLight('#FFF', 1)
       dirLight.castShadow = true
       dirLight.position.set(60, 60, 0)
       // dirLight.shadow.bias = -0.0000
@@ -14,7 +14,7 @@ export class ObjectDirectionalLight extends c3.Object {
       dirLight.shadow.camera.bottom = -80;
       dirLight.shadow.camera.far = 170;
       
-      // const dirLightCameraHelper = new c3.three.CameraHelper(dirLight.shadow.camera)
+      // const dirLightCameraHelper = new c3.THREE.CameraHelper(dirLight.shadow.camera)
       // dirLight.add(dirLightCameraHelper)
       
       return dirLight

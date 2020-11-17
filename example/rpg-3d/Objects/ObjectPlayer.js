@@ -3,19 +3,19 @@ import { c3 } from '../c3.js'
 export class ObjectPlayer extends c3.Object {
    mesh() {
       // Bodies for physics
-      const geoBodyBottom = new c3.three.SphereGeometry(0.9)
+      const geoBodyBottom = new c3.THREE.SphereGeometry(0.9)
       const matBodyBottom = c3.models.materialFind('WIREFRAME')
-      this.meshBodyBottom = new c3.three.Mesh(geoBodyBottom, matBodyBottom)
+      this.meshBodyBottom = new c3.THREE.Mesh(geoBodyBottom, matBodyBottom)
       
-      const geoBodyTop = new c3.three.CylinderGeometry( 1, 1, 5, 10 )
+      const geoBodyTop = new c3.THREE.CylinderGeometry( 1, 1, 5, 10 )
       const matBodyTop = c3.models.materialFind('WIREFRAME')
-      this.meshBodyTop = new c3.three.Mesh(geoBodyTop, matBodyTop)
+      this.meshBodyTop = new c3.THREE.Mesh(geoBodyTop, matBodyTop)
       this.meshBodyTop.position.y += 2
       this.meshBodyBottom.add(this.meshBodyTop)
       
-      const targetGeo = new c3.three.SphereGeometry()
-      const targetMat = new c3.three.MeshBasicMaterial({ color: '#FFF', depthTest: false, flatShading: true})
-      const targetMes = new c3.three.Mesh(targetGeo, targetMat)
+      const targetGeo = new c3.THREE.SphereGeometry()
+      const targetMat = new c3.THREE.MeshBasicMaterial({ color: '#FFF', depthTest: false, flatShading: true})
+      const targetMes = new c3.THREE.Mesh(targetGeo, targetMat)
       targetMes.renderOrder = 1000
       this.meshTarget = targetMes
       
@@ -103,7 +103,7 @@ export class ObjectPlayer extends c3.Object {
       this.stepMovement()
       this.stepJump()
       this.stepAnimation()
-      
+
       // testing equip
       // if (c3.keyboard.check('equip_helmet').down) {
       //    const modelHelmet = c3.models.find('helmet')
@@ -171,7 +171,7 @@ export class ObjectPlayer extends c3.Object {
       
       if (this.target && !this.target.dead) {
          const direction = this.target.mesh.position.clone().sub(this.mesh.position)
-         const angleToTarget = new c3.three.Vector2(-direction.x, direction.z).angle() - (Math.PI/2)
+         const angleToTarget = new c3.THREE.Vector2(-direction.x, direction.z).angle() - (Math.PI/2)
          
          baseAngle = this.isSprinting ? baseAngle : angleToTarget
          targetLookAngle = angleToTarget

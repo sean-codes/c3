@@ -60,6 +60,7 @@ export class C3_Object {
       return this.origin.position.clone()
    }
    
+   // mmmm... i dont like these here!
    getVelocity() {
       return this.body.velocity.clone()
    }
@@ -70,6 +71,13 @@ export class C3_Object {
    
    setVelocityVec(vec) {
       this.body.velocity.set(vec.x, vec.y, vec.z)
+   }
+   
+   setMass(mass) {
+      if (this.body) {
+         this.body.mass = mass
+         this.body.updateMassProperties()
+      }
    }
 
    rotate(x, y, z) {
@@ -135,8 +143,6 @@ export class C3_Object {
          this.origin.rotation.z = this.rotation.z
       } else {
          // we need to make this work for offsets
-         
-         
          this.body.quaternion.setFromEuler(
             this.rotation.x, 
             this.rotation.y, 

@@ -185,6 +185,7 @@ export class C3_Physics {
    }
    
    checkIsOnGround(body) {
+      // need to rework this to use a shape to set width/depth of ground check
       body.computeAABB()
       const rayPositionFrom = body.position.clone()
       rayPositionFrom.y = body.aabb.lowerBound.y-1

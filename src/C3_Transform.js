@@ -82,6 +82,7 @@ export class C3_Transform {
    
    handleChange() {
       if (!this.gameObject) return
+      
       this.gameObject.setScaleVec(this.pointer.scale)
       this.gameObject.setPositionVec(this.pointer.position)
       this.gameObject.setRotationVec(this.pointer.rotation)
