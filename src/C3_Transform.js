@@ -107,4 +107,18 @@ export class C3_Transform {
       this.pointer.rotation.copy(rotation)
       this.handleChange()
    }
+   
+   setTranslationSnap(translation) {
+      this.controls.setTranslationSnap(translation)
+      
+   }
+   
+   setRotationSnap(rotation) {
+      this.controls.setRotationSnap(rotation)
+   }
+   
+   moreControl(translation, rotation) {
+      this.controls.setTranslationSnap(translation)
+      this.controls.setRotationSnap(rotation)
+   }
 }
