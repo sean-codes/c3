@@ -68,7 +68,7 @@ export class C3_Mouse {
                object: a.C3_Object, 
                distance: distance, 
                point: point, 
-               normal: face.normal,
+               normal: face && face.normal,
             }
          })
          
