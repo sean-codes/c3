@@ -28,27 +28,26 @@ export class C3_Object {
    }
    
    setPosition(x, y, z) {
+      this.origin.position.y = y
+      this.origin.position.z = z
+      this.origin.position.x = x
+      
       if (this.body && !this.physics.linkToMesh) {
          this.body.position.x = x + this.physicsObject.offset.x
          this.body.position.y = y + this.physicsObject.offset.y
          this.body.position.z = z + this.physicsObject.offset.z
-      } else {
-         this.origin.position.y = y
-         this.origin.position.z = z
-         this.origin.position.x = x
       }
-      
    }
    
    moveVec({ x, y, z }) {
+      this.origin.position.x += x
+      this.origin.position.y += y
+      this.origin.position.z += z
+      
       if (this.body && !this.physics.linkToMesh) {
          this.body.position.x += x
          this.body.position.y += y
          this.body.position.z += z
-      } else {
-         this.origin.position.x += x
-         this.origin.position.y += y
-         this.origin.position.z += z
       }
    }
    
