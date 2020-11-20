@@ -20,6 +20,7 @@ export class C3_Transform {
          scale: new THREE.Vector3(),
          rotation: new THREE.Euler(),
       }
+      this.changed = false
       
       this.modeTranslate()
       this.controls.addEventListener('change', (e) => this.handleChange(e))
@@ -82,7 +83,7 @@ export class C3_Transform {
    
    handleChange() {
       if (!this.gameObject) return
-      
+      this.changed = true
       this.gameObject.setScaleVec(this.pointer.scale)
       this.gameObject.setPositionVec(this.pointer.position)
       this.gameObject.setRotationVec(this.pointer.rotation)
@@ -102,10 +103,7 @@ export class C3_Transform {
    
    undo() {
       const { position, rotation, scale } = this.gameObjectInitialTransform
-      this.pointer.scale.copy(scale)
-      this.pointer.position.copy(position)
-      this.pointer.rotation.copy(rotation)
-      this.handleChange()
+      this.manual(position, rotation, scale)
    }
    
    setTranslationSnap(translation) {
@@ -120,5 +118,16 @@ export class C3_Transform {
    moreControl(translation, rotation) {
       this.controls.setTranslationSnap(translation)
       this.controls.setRotationSnap(rotation)
+   }
+   
+   manual(position, rotation, scale) {
+      this.pointer.position.copy(position)
+      this.pointer.rotation.copy(new THREE.Euler(rotation.x, rotation.y, rotation.z))
+      this.pointer.scale.copy(scale)
+      this.handleChange()
+   }
+   
+   step() {
+      this.changed = false
    }
 }

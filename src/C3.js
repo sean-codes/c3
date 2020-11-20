@@ -124,6 +124,7 @@ export class C3 {
       this.network.read()
       this.mouse.loop()
       this.fps.step()
+      this.transform.step()
    }
 
    handleResize(e) {
