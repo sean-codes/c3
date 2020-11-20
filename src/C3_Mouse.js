@@ -12,9 +12,13 @@ export class C3_Mouse {
       this.up = false
       
       
-      window.addEventListener('mousemove', (e) => this.handleMousemove(e))
-      window.addEventListener('mousedown', (e) => this.handleMousedown(e))
-      window.addEventListener('mouseup', (e) => this.handleMouseup(e))
+      this.passThrough(window)
+   }
+   
+   passThrough(ele) {
+      ele.addEventListener('mousemove', (e) => this.handleMousemove(e))
+      ele.addEventListener('mousedown', (e) => this.handleMousedown(e))
+      ele.addEventListener('mouseup', (e) => this.handleMouseup(e))
    }
    
    handleMousemove(e) {
