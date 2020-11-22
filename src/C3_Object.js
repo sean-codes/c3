@@ -105,17 +105,27 @@ export class C3_Object {
       this.rotation.y = radians
       this.rotateUpdate()
    }
-
-   setRotationVec(rotation) {
-      this.rotation.x = rotation.x
-      this.rotation.y = rotation.y
-      this.rotation.z = rotation.z
+   
+   setRotation(x, y, z) {
+      this.rotation.x = x
+      this.rotation.y = y
+      this.rotation.z = z
       this.rotateUpdate()
    }
    
-   setScaleVec(scale) {
-      this.origin.scale.copy(scale)
+   setRotationVec({ x, y, z}) {
+      this.setRotation(x, y, z)
+   }
+   
+   setScale(x, y, z) {
+      this.origin.scale.x = x
+      this.origin.scale.y = y
+      this.origin.scale.z = z
       this.scaleUpdate()
+   }
+   
+   setScaleVec({ x, y, z}) {
+      this.setScale(x, y, z)
    }
    
    getScale() {
@@ -157,6 +167,7 @@ export class C3_Object {
          c3.physics.removeObject(this)
          this.physicsObject = c3.physics.addObject(this)
          this.body = this.physicsObject.body
+         this.rotateUpdate() // should probably be in ^ (i tried)
       }
       
       this.onResize()

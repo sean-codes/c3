@@ -136,6 +136,7 @@ export class C3_Physics {
          })
       }
       
+      body.position.copy(object.origin.position)
       this.world.addBody(body)
       this.list[body.id] = physicObject
       
