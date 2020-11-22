@@ -23,13 +23,12 @@ import { C3_Vector } from './C3_Vector.js'
 import { C3_Network } from './C3_Network.js'
 import { C3_Transform } from './C3_Transform.js'
 import { C3_Fps } from './C3_Fps.js'
-
-export { C3_Object } from './C3_Object.js'
+import { C3_Storage } from './C3_Storage.js'
 
 export class C3 {
    constructor(options = undefined) {
       this.clock = new THREE.Clock()
-
+      
       this.global = {}
       this.render = new C3_Render(this)
       this.camera = new C3_Camera(this)
@@ -50,11 +49,12 @@ export class C3 {
       this.light = new C3_Light
       this.mesh = new C3_Mesh(this)
       this.mouse = new C3_Mouse(this)
+      this.storage = new C3_Storage(this)
       this.THREE = THREE
       this.CANNON = CANNON
       this.const = constants
       this.script = {}
-      
+      this.version = 0
       this.loading = 0   
    }
    
@@ -62,17 +62,21 @@ export class C3 {
       types = {},
       models = [],
       textures = [],
+      storages = [],
       scripts = {},
       keyMap = {},
       progress = () => {},
       init = () => {},
       step = () => {},
+      version = Math.random(),
    } = {}) {
+      this.version = version
       this.keyMap = keyMap
       this.userInit = init
       this.userStep = step
       this.userProgress = progress
       this.types = types
+      this.storages = storages
       this.listModels = [...models]
       this.keyboard.applyKeyMap(keyMap)
       
@@ -86,8 +90,10 @@ export class C3 {
       
 
       this.loadModels(models)
+         .then(() => this.loadStorages(storages))
          .then(() => this.loadTextures(textures))
          .then(() => this.engineInit())
+         .catch(console.error)
    }
    
    clone(object) {
@@ -100,8 +106,10 @@ export class C3 {
       window.onresize = () => this.handleResize()
       this.handleResize()
 
+      this.storage.init(this.storages)
       this.userInit.call(this)
       this.engineStep()
+      
    }
 
    engineStep() {
@@ -180,6 +188,47 @@ export class C3 {
                loading -= 1
                if (!loading) yay()
             })
+         }
+      })
+   }
+   
+   loadStorages(storages) {
+      console.log('loading storages', storages)
+      return new Promise((yay, nay) => {
+         let loading = storages.length
+         !loading && yay()
+         
+         function handleLoadedStorage() {
+            loading -= 1
+            if (!loading) {
+               yay()
+            }
+         }
+         
+         for (const storage of storages) {
+            console.log('Loading Storage: ' + storage.file)
+            storage.data = {}
+
+            // attempt to use localstorage
+            if (!storage.file) {
+               storage.data = JSON.parse(window.localStorage.getItem(storage.location))
+               handleLoadedStorage()
+            }
+
+            // fetch the storage .json
+            if (storage.file) {
+               storage.request = new XMLHttpRequest()
+               storage.request.onreadystatechange = () => {
+                  if (storage.request.readyState === 4) {
+                     const data = JSON.parse(storage.request.responseText)
+                     storage.data = data
+                     handleLoadedStorage()
+                  }
+               }
+
+               storage.request.open('GET', './' + storage.file + '?v=' + this.version, true)
+               storage.request.send()
+            }
          }
       })
    }
