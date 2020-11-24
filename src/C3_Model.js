@@ -28,6 +28,10 @@ export class C3_Model {
                         material.transparent = true
                         material.side = c3.THREE.DoubleSide
                      }
+                     
+                     if (overrides.doubleSide) {
+                        material.side = c3.THREE.DoubleSide
+                     }
                   }
                }
             }
