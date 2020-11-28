@@ -7,4 +7,11 @@ export class C3_Light {
    } = {}) {
       return new THREE.DirectionalLight(color)
    }
+   
+   Ambient({
+      color = '#FFF',
+      intensity = 1
+   } = {}) {
+      return new THREE.AmbientLight(color, intensity)
+   }
 }
