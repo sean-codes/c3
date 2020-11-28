@@ -12,6 +12,7 @@ export class C3_Transform {
       this.controls = new TransformControls(
          c3.camera.object, 
          c3.render.renderer.domElement)
+      this.controls.enabled = false
       this.pointer = new THREE.Object3D()
       this.controls.attach(this.pointer)
       this.gameObject = undefined
@@ -28,6 +29,13 @@ export class C3_Transform {
       this.controls.addEventListener('mouseup', (e) => this.handleUp(e))
    }
    
+   enable() {
+      this.controls.enabled = true
+   }
+   
+   disable() {
+      this.controls.enabled = false
+   }
    
    attach(gameObject) {
       const currentPosition = gameObject.getPosition()
