@@ -36,6 +36,7 @@ export class C3_Objects {
 
    loop(delta) {
       for (const object of this.list) {
+         object.engineStep(delta)
          object.step(delta)
       }
    }

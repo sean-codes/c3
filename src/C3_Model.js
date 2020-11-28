@@ -113,6 +113,11 @@ export class C3_Model {
          clip.c3_weightDampen = 0.25
          this.clips[clipName] = clip
       })
+      
+      this.instanceData = {
+         count: 0,
+         mesh: undefined,
+      }
    }
    
    clone(name) {
@@ -128,47 +133,36 @@ export class C3_Model {
       return newModel
    }
    
-   instance(count) {
-      const clone = SkeletonUtils.clone(this.object.children[0])
-      clone.animations = this.object.children[0].animations
+
    
-      const newModel = this.c3.models.add({
-         loadInfo: { ...this.loadInfo, name },
-         object: clone,
-         isClone: true
-      })
+   instance() {
+      if (this.instanceData.mesh) {
+         c3.scene.remove(this.instanceData.mesh)
+      }
       
-      const parent = newModel.object.children[0].children[0]
-      const geo = parent.geometry.clone()
-      const mat = parent.material.map(material => {
-         const clone = material.clone()
-         return clone
-      })
+      const modelMesh = this.object.children[0]
+      const geo = this.getGeometry().clone()
+      const mat = this.getMaterial()
       
-      // match up scale
-      const scaleFix = parent.scale.x * this.loadInfo.scale
-      geo.scale(scaleFix, scaleFix, scaleFix)
-      const mes = new THREE.InstancedMesh(geo, mat, count)
-      mes.castShadow = true
-      mes.receiveShadow = true
+      // fix geometry
+      const geoScale = this.getGeoScale()
+      geo.scale(geoScale.x, geoScale.y, geoScale.z)
+      geo.rotateX(-Math.PI/2)
+      
+      this.instanceData.count += 1
+      this.instanceData.mesh = new THREE.InstancedMesh(geo, mat, this.instanceData.count)
+      this.instanceData.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+      c3.scene.add(this.instanceData.mesh)
       
       return {
-         count: count,
-         object: mes,
-         cursor: new THREE.Object3D(),
-         setPosAt: function(index, x, y, z) {
-            this.cursor.position.set(x, y, z)
-            this.updateAt(index)
-         },
-         setRotationAt: function(index, x, y, z) {
-            this.cursor.rotation.set(x, y, z)
-            this.updateAt(index)
-         },
-         updateAt: function(index) {
-            this.cursor.updateMatrix()
-            this.object.setMatrixAt(index, this.cursor.matrix)
-         }
+         isInstance: true,
+         model: this,
+         id: this.instanceData.count - 1
       }
+   }
+   
+   deleteInstance() {
+      
    }
    
    boneToggle(boneName, model) {
@@ -327,11 +321,29 @@ export class C3_Model {
    getPhysicsMeshes() {
       const meshes = []
       this.object.traverse(part => {
+         // these are meshes manually added in a 3d editor
          if (part.name.startsWith('c3_phy_mesh')) {
             meshes.push({ mesh: part })
          }
       })
       
       return meshes
+   }
+   
+   getGeometry() {
+      return this.object.children[0].children[0].geometry // lazy
+   }
+   
+   getMaterial() {
+      return this.object.children[0].children[0].material // lazy
+   }
+   
+   getGeoScale() {
+      const scale = new THREE.Vector3(1, 1, 1)
+      this.object.traverse(a => {
+         scale.multiply(a.scale)
+      })
+      
+      return scale
    }
 }

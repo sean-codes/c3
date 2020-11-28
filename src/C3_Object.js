@@ -10,9 +10,14 @@ export class C3_Object {
       this.type = type
       this.rotation = new THREE.Euler(0, 0, 0)
       this.origin = new THREE.Object3D()
-      this.mesh = this.mesh ? this.mesh() : c3.mesh.Blank()
       this.origin.C3_Object = this // might be handy for querying
-      this.origin.add(this.mesh)
+      
+      // turn this into something? 
+      this.mesh = this.mesh ? this.mesh() : c3.mesh.Blank()
+      if (!this.mesh.isInstance) {
+         this.origin.add(this.mesh.object || this.mesh)
+      }
+      
       this.physics = this.physics ? this.physics() : { meshes: [] }
       this.physicsObject = this.physics.meshes.length ? c3.physics.addObject(this) : undefined
       this.body = this.physicsObject ? this.physicsObject.body : undefined
@@ -191,7 +196,17 @@ export class C3_Object {
       
       return box.getSize(new THREE.Vector3)
    }
+   
+   engineStep() {
+      if (this.mesh && this.mesh.isInstance) {
+         const { instanceData } = this.mesh.model
+         const { id } = this.mesh
 
+         instanceData.mesh.setMatrixAt(id, this.origin.matrix)
+         instanceData.mesh.instanceMatrix.needsUpdate = true
+      }
+   }
+   
    onResize() {}
    create() {}
    step() {}
