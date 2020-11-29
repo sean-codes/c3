@@ -56,18 +56,41 @@ export class C3_Mouse {
       // console.log(c3.mouse.down, c3.mouse.up, c3.mouse.held)
    }
    
+   isDown() {
+      return this.down
+   }
+   
+   isUp() {
+      return this.isUp
+   }
+   
    raycast() {
       // TODO: cache this incase it's called more than once per step
       this.raycaster.setFromCamera(this.pos, this.c3.camera.object)
       const intersects = this.raycaster.intersectObjects(this.c3.scene.object.children, true)
       // console.log(intersects)
       // match the intersects up with C3_Objects
-      const returnIntersects = {}
+      const returnIntersects = {} // for unique
       for (const intersect of intersects) {
-         const { object, distance, point, face } = intersect
+         const { object, distance, point, face, instanceId, c3_model } = intersect
          let c3_object = undefined
+         
+         if (instanceId != null && intersect.object.c3_model) {
+            // console.log(instanceId)
+            const c3_object = intersect.object.c3_model.instanceData.objectMap[instanceId]
+            returnIntersects[c3_object.id] = c3_object
+         }
+         
          object.traverseAncestors((a) => {
             if (c3_object) return
+                  
+            if (a.instanceId && a.C3_Model) c3_object = {
+               object: a.C3_Model.instanceData.objectMap[a.instanceId],
+               distance: distance,
+               point: point,
+               normal: face && normal,
+            }
+            
             if (a.C3_Object) c3_object = { 
                object: a.C3_Object, 
                distance: distance, 
