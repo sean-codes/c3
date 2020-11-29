@@ -10,6 +10,7 @@ export const KEYMAP = {
    backward: 83,
    flyUp: 82,
    flyDown: 70,
+   del: 8,
 }
 
 c3.init({

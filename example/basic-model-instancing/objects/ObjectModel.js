@@ -19,25 +19,25 @@ export class ObjectModel extends c3.Object {
    }
    
    step() {
-      // this.rotateX(this.spinSpeed)
-      // this.rotateZ(this.spinSpeed)
-      // 
-      // const currScale = this.getScale()
-      // this.setScale(
-      //    currScale.x + this.scaleSpeed,
-      //    currScale.y + this.scaleSpeed,
-      //    currScale.z + this.scaleSpeed,
-      // )
-      // 
-      // if (currScale.x > 1.5 || currScale.x < 1) this.scaleSpeed  *= -1
-      // 
-      // const currPos = this.getPosition()
-      // 
-      // if (currPos.y > 5 || currPos.y < -5) this.moveSpeed *= -1
-      // this.setPosition(
-      //    currPos.x,
-      //    currPos.y + this.moveSpeed,
-      //    currPos.z,
-      // )
+      this.rotateX(this.spinSpeed)
+      this.rotateZ(this.spinSpeed)
+      
+      const currScale = this.getScale()
+      this.setScale(
+         currScale.x + this.scaleSpeed,
+         currScale.y + this.scaleSpeed,
+         currScale.z + this.scaleSpeed,
+      )
+      
+      if (currScale.x > 1.5 || currScale.x < 1) this.scaleSpeed  *= -1
+      
+      const currPos = this.getPosition()
+      
+      if (currPos.y > 5 || currPos.y < -5) this.moveSpeed *= -1
+      this.setPosition(
+         currPos.x,
+         currPos.y + this.moveSpeed,
+         currPos.z,
+      )
    }
 }

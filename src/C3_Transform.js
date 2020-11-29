@@ -135,6 +135,10 @@ export class C3_Transform {
       this.handleChange()
    }
    
+   getObject() {
+      return this.gameObject
+   }
+   
    step() {
       this.changed = false
    }

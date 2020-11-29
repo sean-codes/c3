@@ -33,6 +33,11 @@ export class C3_Object {
          this.mesh.model.deleteInstance(this.mesh.id)
       }
       
+      const transformObject = this.c3.transform.getObject() 
+      if (transformObject && transformObject.id === this.id) {
+         this.c3.transform.detach()
+      }
+      
       this.onDestroy && this.onDestroy()
    }
    

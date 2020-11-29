@@ -74,7 +74,16 @@ export class ObjectCamera extends c3.Object {
          object.setRotation(0, 0, 0)
          object.setScale(2, 2, 2)
          if (c3.mouse.isDown()) {
-            object.destroy()
+            c3.transform.enable()
+            c3.transform.attach(object)
+         }
+      }
+      
+      if (c3.keyboard.check(KEYMAP.del).down) {
+         const transformObject = c3.transform.getObject()
+         if (transformObject) {
+            transformObject.destroy()
+            // c3.transform.detach()
          }
       }
    }
