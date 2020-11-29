@@ -29,6 +29,10 @@ export class C3_Object {
       this.c3.scene.remove(this.origin)
       if (this.physicsObject) this.c3.physics.removeObject(this.physicsObject)
       this.c3.objects.destroy(this)
+      if (this.mesh.isInstance) {
+         this.mesh.model.deleteInstance(this.mesh.id)
+      }
+      
       this.onDestroy && this.onDestroy()
    }
    
@@ -200,9 +204,8 @@ export class C3_Object {
    engineStep() {
       if (this.mesh && this.mesh.isInstance) {
          const { instanceData } = this.mesh.model
-         const { id } = this.mesh
-
-         instanceData.mesh.setMatrixAt(id, this.origin.matrix)
+         const instanceId = instanceData.idMap[this.mesh.id]
+         instanceData.mesh.setMatrixAt(instanceId, this.origin.matrix)
          instanceData.mesh.instanceMatrix.needsUpdate = true
       }
    }

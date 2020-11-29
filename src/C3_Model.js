@@ -115,8 +115,11 @@ export class C3_Model {
       })
       
       this.instanceData = {
+         id: 0,
          count: 0,
          mesh: undefined,
+         idMap: {}, // helps with deleting indexes
+         objectMap: [], // helps find a C3_Object
       }
    }
    
@@ -133,14 +136,45 @@ export class C3_Model {
       return newModel
    }
    
-
-   
-   instance() {
-      if (this.instanceData.mesh) {
-         c3.scene.remove(this.instanceData.mesh)
-      }
+   // we can cut a lot of load time by only calling new InstancedMesh once per step
+   // note all the instances and store all the changes in the lifespam of the step
+   // at the end of the step update the instance
+   instance(object) {
+      this.instanceData.id += 1
+      this.instanceData.count += 1
+      this.instanceData.idMap[this.instanceData.id] = this.instanceData.id - 1
+      this.instanceData.objectMap.push(object)
+      this.updateInstance()
       
-      const modelMesh = this.object.children[0]
+      return {
+         isInstance: true,
+         model: this,
+         id: this.instanceData.id
+      }
+   }
+   
+   deleteInstance(id) {
+      const { instanceData } = this
+      instanceData.count -= 1
+      const mapId = instanceData.idMap[id]
+      
+      // idk this doesn't feel right
+      instanceData.objectMap = instanceData.objectMap.filter((o, i) => i != mapId)
+      instanceData.idMap = {}
+      
+      let count = 0
+      for (let object of instanceData.objectMap) {
+         instanceData.idMap[object.mesh.id] = count
+         count++
+      }
+
+      this.updateInstance()
+   }
+   
+   updateInstance() {
+      c3.scene.remove(this.instanceData.mesh)
+      if (!this.instanceData.count) return
+      
       const geo = this.getGeometry().clone()
       const mat = this.getMaterial()
       
@@ -149,20 +183,11 @@ export class C3_Model {
       geo.scale(geoScale.x, geoScale.y, geoScale.z)
       geo.rotateX(-Math.PI/2)
       
-      this.instanceData.count += 1
       this.instanceData.mesh = new THREE.InstancedMesh(geo, mat, this.instanceData.count)
       this.instanceData.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+      this.instanceData.mesh.c3_model = this
+      
       c3.scene.add(this.instanceData.mesh)
-      
-      return {
-         isInstance: true,
-         model: this,
-         id: this.instanceData.count - 1
-      }
-   }
-   
-   deleteInstance() {
-      
    }
    
    boneToggle(boneName, model) {

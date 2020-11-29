@@ -66,6 +66,17 @@ export class ObjectCamera extends c3.Object {
       if (c3.keyboard.check(KEYMAP.flyDown).held) {
          this.moveVec(new c3.Vector(0, -1, 0))
       }
+      
+      const objects = c3.mouse.raycast()
+      // console.log(objects)
+
+      for (let object of objects) {
+         object.setRotation(0, 0, 0)
+         object.setScale(2, 2, 2)
+         if (c3.mouse.isDown()) {
+            object.destroy()
+         }
+      }
    }
    
    lookAt(pos) {
