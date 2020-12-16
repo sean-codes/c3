@@ -72,13 +72,17 @@ export class C3_Mouse {
       // match the intersects up with C3_Objects
       const returnIntersects = {} // for unique
       for (const intersect of intersects) {
-         const { object, distance, point, face, instanceId, c3_model } = intersect
+         const { object, distance, point, face, normal, instanceId, c3_model } = intersect
          let c3_object = undefined
          
          if (instanceId != null && intersect.object.c3_model) {
-            // console.log(instanceId)
             const c3_object = intersect.object.c3_model.instanceData.objectMap[instanceId]
-            returnIntersects[c3_object.id] = c3_object
+            returnIntersects[c3_object.id] = { 
+               object: c3_object,
+               distance: distance,
+               point: point,
+               normal: face && normal,
+            }
          }
          
          object.traverseAncestors((a) => {
@@ -91,7 +95,7 @@ export class C3_Mouse {
                normal: face && normal,
             }
             
-            if (a.C3_Object) c3_object = { 
+            if (a.C3_Object) c3_object = { // duplicate me again i dare you
                object: a.C3_Object, 
                distance: distance, 
                point: point, 

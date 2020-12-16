@@ -175,13 +175,16 @@ export class C3_Model {
       c3.scene.remove(this.instanceData.mesh)
       if (!this.instanceData.count) return
       
-      const geo = this.getGeometry().clone()
       const mat = this.getMaterial()
+      const geo = this.getGeometry().clone()
       
       // fix geometry
       const geoScale = this.getGeoScale()
+      const rotation = this.getMesh().rotation
       geo.scale(geoScale.x, geoScale.y, geoScale.z)
-      geo.rotateX(-Math.PI/2)
+      geo.rotateX(rotation.x)
+      geo.rotateY(rotation.y)
+      geo.rotateZ(rotation.z)
       
       this.instanceData.mesh = new THREE.InstancedMesh(geo, mat, this.instanceData.count)
       this.instanceData.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
@@ -356,11 +359,15 @@ export class C3_Model {
    }
    
    getGeometry() {
-      return this.object.children[0].children[0].geometry // lazy
+      return this.getMesh().geometry // lazy
    }
    
    getMaterial() {
-      return this.object.children[0].children[0].material // lazy
+      return this.getMesh().material // lazy
+   }
+   
+   getMesh() {
+      return this.object.children[0].children[0]
    }
    
    getGeoScale() {
