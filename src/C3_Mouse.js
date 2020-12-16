@@ -77,6 +77,7 @@ export class C3_Mouse {
          
          if (instanceId != null && intersect.object.c3_model) {
             const c3_object = intersect.object.c3_model.instanceData.objectMap[instanceId]
+            // console.log('fish', instanceId, )
             returnIntersects[c3_object.id] = { 
                object: c3_object,
                distance: distance,

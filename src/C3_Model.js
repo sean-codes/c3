@@ -143,6 +143,7 @@ export class C3_Model {
       this.instanceData.id += 1
       this.instanceData.count += 1
       this.instanceData.idMap[this.instanceData.id] = this.instanceData.id - 1
+      console.log('pushing', object)
       this.instanceData.objectMap.push(object)
       this.updateInstance()
       
