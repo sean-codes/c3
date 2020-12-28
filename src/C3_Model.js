@@ -143,14 +143,14 @@ export class C3_Model {
       this.instanceData.id += 1
       this.instanceData.count += 1
       this.instanceData.idMap[this.instanceData.id] = this.instanceData.id - 1
-      console.log('pushing', object)
       this.instanceData.objectMap.push(object)
       this.updateInstance()
       
       return {
          isInstance: true,
          model: this,
-         id: this.instanceData.id
+         id: this.instanceData.id,
+         object: object,
       }
    }
    
@@ -175,22 +175,25 @@ export class C3_Model {
    updateInstance() {
       c3.scene.remove(this.instanceData.mesh)
       if (!this.instanceData.count) return
-      
-      const mat = this.getMaterial()
+      const mesh = this.getMesh()
+      const mat = this.getMaterial().clone()
       const geo = this.getGeometry().clone()
       
       // fix geometry
       const geoScale = this.getGeoScale()
-      const rotation = this.getMesh().rotation
+      const rotation = mesh.rotation
       geo.scale(geoScale.x, geoScale.y, geoScale.z)
-      geo.rotateX(rotation.x)
-      geo.rotateY(rotation.y)
       geo.rotateZ(rotation.z)
-      
+      geo.rotateY(rotation.y)
+      geo.rotateX(rotation.x)
+      const offset = mesh.position.clone().multiply(geoScale)
+      geo.translate(offset.x, offset.y, offset.z)
+      console.log('wtf', mesh)
+
       this.instanceData.mesh = new THREE.InstancedMesh(geo, mat, this.instanceData.count)
       this.instanceData.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
+      // this.instanceData.offset = mesh.position.clone().multiply(geoScale)
       this.instanceData.mesh.c3_model = this
-      
       c3.scene.add(this.instanceData.mesh)
    }
    
@@ -368,12 +371,15 @@ export class C3_Model {
    }
    
    getMesh() {
-      return this.object.children[0].children[0]
+      // get the mesh that isnt a c3_phyiscs
+      return this.object.children[0].children.find(a => !a.name.startsWith('c3_'))
    }
    
    getGeoScale() {
-      const scale = new THREE.Vector3(1, 1, 1)
-      this.object.traverse(a => {
+      const mesh = this.getMesh()
+      // const scale = new THREE.Vector3(1, 1, 1)
+      const scale = mesh.scale.clone()
+      mesh.traverseAncestors(a => {
          scale.multiply(a.scale)
       })
       

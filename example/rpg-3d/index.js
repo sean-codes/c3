@@ -124,11 +124,11 @@ c3.init({
       for (let i = 0; i < 40; i++) {
          c3.objects.create(c3.types.Box)
       }
-
+      
       for (let i = 0; i < 100; i++) {
          c3.objects.create(c3.types.Resource)
       }
-
+      
       for (let x = 0; x < 2; x++) {
          for (let y = 0; y < 2; y++) {
             c3.objects.create(c3.types.Dragon, { pos: new c3.Vector(15+x*6, 2, -15+y*6) })
@@ -136,7 +136,7 @@ c3.init({
       }
       
       c3.objects.create(c3.types.Cylinder, { pos: new c3.Vector(0, 10, 10)})
-
+      // 
       c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-15, 3, -15) })
       c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-20, 6, -15) })
       c3.objects.create(c3.types.Target, { pos: new c3.Vector(-8, 4, 8) })

@@ -208,10 +208,17 @@ export class C3_Object {
    
    engineStep() {
       if (this.mesh && this.mesh.isInstance) {
+         
          const { instanceData } = this.mesh.model
+         // const offsetScaled = instanceData.offset.clone().multiply(this.getScale())
+         // this.origin.position.add(offsetScaled)
+         // console.log(instanceData)
+         // console.log(this.origin.position, this.origin.scale)
+         this.origin.updateMatrix()
          const instanceId = instanceData.idMap[this.mesh.id]
          instanceData.mesh.setMatrixAt(instanceId, this.origin.matrix)
          instanceData.mesh.instanceMatrix.needsUpdate = true
+         // this.origin.position.sub(offsetScaled)
       }
    }
    

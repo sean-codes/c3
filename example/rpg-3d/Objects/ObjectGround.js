@@ -12,7 +12,7 @@ export class ObjectGround extends c3.Object {
       })
       const mes = new c3.THREE.Mesh(geo, mat)
       mes.receiveShadow = true
-      mes.rotation.x -= Math.PI * 0.5
+      // mes.rotation.x -= Math.PI * 0.5
       mes.position.y -= 0.001
       
       return mes
@@ -20,9 +20,10 @@ export class ObjectGround extends c3.Object {
    
    physics() {
       return {
-         meshes: [{ mesh: this.mesh }],
+         meshes: [{ mesh: this.mesh, type: 'BOX' }],
          material: 'GROUND',
-         mass: 0
+         mass: 0,
+         debug: true
       }
    }
    

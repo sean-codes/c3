@@ -47,6 +47,7 @@ export class ObjectPlayer extends c3.Object {
          fixedRotation: true,
          watchCollisions: true,
          checkIsOnGround: true,
+         debug: true
       }
    }
    
@@ -103,7 +104,7 @@ export class ObjectPlayer extends c3.Object {
       this.stepMovement()
       this.stepJump()
       this.stepAnimation()
-
+   
       // testing equip
       // if (c3.keyboard.check('equip_helmet').down) {
       //    const modelHelmet = c3.models.find('helmet')
