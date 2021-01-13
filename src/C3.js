@@ -193,7 +193,6 @@ export class C3 {
    }
    
    loadStorages(storages) {
-      console.log('loading storages', storages)
       return new Promise((yay, nay) => {
          let loading = storages.length
          !loading && yay()
@@ -206,7 +205,6 @@ export class C3 {
          }
          
          for (const storage of storages) {
-            console.log('Loading Storage: ' + storage.file)
             storage.data = {}
 
             // attempt to use localstorage
