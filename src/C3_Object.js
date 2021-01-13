@@ -177,14 +177,14 @@ export class C3_Object {
    scaleUpdate() {
       const { c3 } = this
       // we need to update physics if there is a body
+      this.onResize()
       if (this.body) {
          c3.physics.removeObject(this)
+   
          this.physicsObject = c3.physics.addObject(this)
          this.body = this.physicsObject.body
          this.rotateUpdate() // should probably be in ^ (i tried)
       }
-      
-      this.onResize()
    }
 
    getCollisions() {
