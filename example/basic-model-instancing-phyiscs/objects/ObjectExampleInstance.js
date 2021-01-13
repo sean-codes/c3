@@ -13,7 +13,7 @@ export class ObjectExampleInstance extends c3.Object {
    
    physics() {
       return {
-         meshes: [{ mesh: this.mesh, shape: 'SPHERE' }],
+         meshes: [{ mesh: this.mesh, shape: 'SPHERE', offsetY: 0.5 }],
          debug: true,
          mass: 0,
       }
@@ -21,7 +21,7 @@ export class ObjectExampleInstance extends c3.Object {
    
    create({ pos, scale=1 }) {
       // const scale = Math.ceil(Math.random() * 3)
-      // this.setScale(scale, scale, scale)
+      this.setScale(scale, scale, scale)
       
       // this.rotateX(1)
       // this.setPositionVec(pos)

@@ -54,7 +54,6 @@ export class C3_Physics {
          : new CANNON.Material({ friction, restitution })
       
       const meshData = getPhysicsMeshes(meshes, object)
-      console.log('meshData', meshes, meshData, object)
       const quaternion = new CANNON.Quaternion()
       quaternion.setFromEuler(meshData[0].rotation.x, meshData[0].rotation.y, meshData[0].rotation.z, 'XYZ')
       
@@ -71,12 +70,12 @@ export class C3_Physics {
       const offset = new THREE.Vector3(0, 0, 0)
       for (let i = 0; i < meshData.length; i++) {
          const { mesh, shape, offsetY } = meshData[i]
-         console.log('meow', shape, offsetY)
+
          let createdShapeData = undefined
          if (shape === SHAPES.BOX) createdShapeData = createShapeBox(meshData[i])
          if (shape === SHAPES.MESH) createdShapeData = createShapeConvexPolyhedron(meshData[i])
          // need to update these
-         if (shape === SHAPES.SPHERE) createdShapeData = createShapeSphere(mesh)
+         if (shape === SHAPES.SPHERE) createdShapeData = createShapeSphere(meshData[i])
          if (shape === SHAPES.CYLINDER) createdShapeData = createShapeCylinder(mesh)
 
          const innerMesh = getMesh(mesh)
@@ -209,9 +208,10 @@ function createShapeBox(physicsMeshData) {
    }
 }
 
-function createShapeSphere(object) {
-   const size = getSizeOfMesh(object)
-   
+function createShapeSphere(physicsMeshData) {
+   // const size = getSizeOfMesh(object)
+   const size = getSizeOfPhysicsMesh(physicsMeshData)
+   console.log(size)
    return {
       shape: new CANNON.Sphere(size.radius),
       ...size
@@ -284,7 +284,7 @@ function getPhysicsMeshes(meshes, object) {
    const pushData = function(meshData, part) {
       const shape = meshData.shape || getShapeType(part)
       const { mesh: { isInstance, model }, offsetY } = meshData // :(
-      // const shape = 
+
       meshesData.push({
          isInstance: isInstance,
          model: model,
@@ -305,14 +305,11 @@ function getPhysicsMeshes(meshes, object) {
       
       if (meshData.traverse) {
          mainMesh.traverse(part => {
-            console.log(part.geometry && part.geometry.type)
             if (part.name.startsWith('c3_phy_mesh')) {
-               // const shape = meshData.shape || part.name.toLowerCase().includes('convex') ? SHAPES.MESH : SHAPES.BOX
                pushData(meshData, part)
             }
          })
       } else {
-         // const shape = getShapeType
          pushData(meshData, mainMesh)
       }
    }

@@ -188,7 +188,6 @@ export class C3_Model {
       geo.rotateX(rotation.x)
       const offset = mesh.position.clone().multiply(geoScale)
       geo.translate(offset.x, offset.y, offset.z)
-      console.log('wtf', mesh)
 
       this.instanceData.mesh = new THREE.InstancedMesh(geo, mat, this.instanceData.count)
       this.instanceData.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
