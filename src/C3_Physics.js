@@ -69,7 +69,7 @@ export class C3_Physics {
       // const objectScale = object.getScale()
       const offset = new THREE.Vector3(0, 0, 0)
       for (let i = 0; i < meshData.length; i++) {
-         const { mesh, shape, offsetY } = meshData[i]
+         const { mesh, shape, offsetY, isInstance } = meshData[i]
 
          let createdShapeData = undefined
          if (shape === SHAPES.BOX) createdShapeData = createShapeBox(meshData[i])
@@ -82,9 +82,12 @@ export class C3_Physics {
 
          // offset
          const geoInfo = getMeshGeoInfo(innerMesh)
+
          const pScale = getMeshPositionScale(innerMesh)
          if  (meshData[i].isInstance) {
-            pScale.multiply(object.getScale())
+            const oScale = object.getScale()
+            geoInfo.center.multiply(oScale)
+            pScale.multiply(oScale)
          }
 
          const childBodyOffset = innerMesh.position.clone().multiply(pScale)
@@ -100,7 +103,7 @@ export class C3_Physics {
          // .setFromEuler(
          //    innerMesh.rotation.x, 
          //    innerMesh.rotation.y, 
-         //    innerMesh.rotation.z, 'XYZ') // 
+         //    innerMesh.rotation.z, 'XYZ')
          body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
       }
       
@@ -211,7 +214,6 @@ function createShapeBox(physicsMeshData) {
 function createShapeSphere(physicsMeshData) {
    // const size = getSizeOfMesh(object)
    const size = getSizeOfPhysicsMesh(physicsMeshData)
-   console.log(size)
    return {
       shape: new CANNON.Sphere(size.radius),
       ...size
@@ -279,6 +281,7 @@ function createShapeConvexPolyhedron(physicsMeshData) {
 
 // I wrote this in the future. Some places are using this object incorrectly
 function getPhysicsMeshes(meshes, object) {
+   console.log(object)
    const meshesData = []
    
    const pushData = function(meshData, part) {
@@ -403,18 +406,19 @@ function getShapeType(object) {
 
 function getMeshGeoInfo(mesh) {
    const gScale = getMeshGeoScale(mesh)
+   
    const tGeo = new THREE.BufferGeometry()
    mesh.geometry.type.includes('Buffer')
       ? tGeo.copy(mesh.geometry)
       : tGeo.fromGeometry(mesh.geometry)
-      
+   
+   
    tGeo.rotateX(mesh.rotation.x)
    tGeo.rotateY(mesh.rotation.y)
    tGeo.rotateZ(mesh.rotation.z)
    tGeo.computeBoundingBox()
-   
    return {
-      center: tGeo.boundingBox.getCenter(new THREE.Vector3()).multiply(gScale),
+      center: tGeo.boundingBox.getCenter(new THREE.Vector3()).multiply(gScale), 
       height: (tGeo.boundingBox.max.y - tGeo.boundingBox.min.y) * gScale.y,
    }
 }

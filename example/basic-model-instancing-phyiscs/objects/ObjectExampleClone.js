@@ -1,14 +1,14 @@
 import { c3 } from '../c3.js'
 
-export class ObjectExampleInstance extends c3.Object {
+export class ObjectExampleClone extends c3.Object {
    mesh() {
       // const model = c3.models.find('rock')
       const model = c3.models.find('boxrock')
 
       // const clone = model.clone()
       // return clone
-      const instance = model.instance(this)
-      return instance
+      const clone = model.clone()
+      return clone
    }
    
    physics() {
