@@ -107,6 +107,7 @@ export class C3_Physics {
          body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
       }
       
+      // can we move this into a class?
       const physicObject = {
          object,
          body, 
@@ -281,7 +282,6 @@ function createShapeConvexPolyhedron(physicsMeshData) {
 
 // I wrote this in the future. Some places are using this object incorrectly
 function getPhysicsMeshes(meshes, object) {
-   console.log(object)
    const meshesData = []
    
    const pushData = function(meshData, part) {
