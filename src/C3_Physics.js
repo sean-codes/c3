@@ -25,7 +25,7 @@ export class C3_Physics {
       this.HUG = HUG
       this.world = new CANNON.World()
       this.world.gravity.set(0, -60, 0)
-      this.debug = true
+      this.debug = false
       this.debugger = new CannonDebugRenderer(this.c3.scene.object, this.world)
    }
    
@@ -178,14 +178,12 @@ export class C3_Physics {
             this.list[physicObjectId].isOnGround = this.checkIsOnGround(body)
          }
          
-         if (debug) {
+         if (debug || this.debug) {
             debugBodies.push(body)
          }
       }
       
-      if (this.debug) {
-         this.debugger.update(debugBodies)
-      }
+      this.debugger.update(debugBodies)
    }
    
    checkIsOnGround(body) {
