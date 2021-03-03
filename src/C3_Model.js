@@ -140,6 +140,7 @@ export class C3_Model {
    // note all the instances and store all the changes in the lifespam of the step
    // at the end of the step update the instance
    instance(object) {
+      if (!object) console.error('[C3_Model] creating instance without passing object');
       this.instanceData.id += 1
       this.instanceData.count += 1
       this.instanceData.idMap[this.instanceData.id] = this.instanceData.id - 1
