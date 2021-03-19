@@ -332,9 +332,11 @@ export class C3_Model {
    }
    
    animateGetTime(clipName) {
-       // 0 = start 1 = end
-      const clip = this.clips[clipName].getClip()
-      return this.clips[clipName].time / clip.duration
+      // 0 = start 1 = end
+      const clip = this.clips[clipName]
+      const duration = clip.getClip().duration
+      if (clip.getEffectiveWeight() === 0) return 0
+      return clip.time / duration
    }
    
    animateGetWeightTarget(clipName) {
