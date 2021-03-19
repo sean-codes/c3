@@ -273,7 +273,12 @@ export class C3_Model {
    // this was from legacy system
    animateStop(clipName) {
       // const clip = this.clips[clipName]
-      this.animateWeight(clipName, 0)
+      this.animateWeight(clipName, 0, true)
+   }
+   
+   animatePause(clipName) {
+      const clip = this.clips[clipName]
+      clip.paused = true
    }
    
    animateOnce(clipName, onEnd) {
@@ -306,11 +311,15 @@ export class C3_Model {
       this.clips[clipName].timeScale = scale
    }
    
-   animateWeight(clipName, weight, iSaidRightMeow = false) {
+   animateWeight(clipName, weight, iSaidRightMeow = false, dampen=null) {
       // this.clips[clipName].setEffectiveWeight(weight)
       this.clips[clipName].c3_weightTarget = weight
       if (iSaidRightMeow) {
          this.clips[clipName].c3_weightCurrent = weight
+      }
+      
+      if (dampen !== null) {
+         this.clips[clipName].c3_weightDampen = dampen
       }
    }
    
@@ -320,6 +329,12 @@ export class C3_Model {
    
    animateGetWeight(clipName) {
       return this.clips[clipName].getEffectiveWeight()
+   }
+   
+   animateGetTime(clipName) {
+       // 0 = start 1 = end
+      const clip = this.clips[clipName].getClip()
+      return this.clips[clipName].time / clip.duration
    }
    
    animateGetWeightTarget(clipName) {
@@ -337,13 +352,11 @@ export class C3_Model {
          const clip = this.clips[clipName]
          
          const dampen = clip.c3_weightDampen
-         
-         const currentWeight = this.clips[clipName].c3_weightCurrent
-         const targetWeight = this.clips[clipName].c3_weightTarget
-         
+          
+         const currentWeight = clip.c3_weightCurrent
+         const targetWeight = clip.c3_weightTarget
          const diffWeight = targetWeight - currentWeight
-         const newWeight = currentWeight + diffWeight * dampen // need math
-         
+         let newWeight = currentWeight + diffWeight * dampen // need math
          clip.c3_weightCurrent = newWeight
          clip.weight = newWeight
          clip.setEffectiveWeight(newWeight)
