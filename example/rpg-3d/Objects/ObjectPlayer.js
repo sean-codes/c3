@@ -281,7 +281,7 @@ export class ObjectPlayer extends c3.Object {
          if (this.gear.type == '1hand') {
             this.isAttacking = true
             // yikes this is dependent on an animation speed
-            this.model.animateOnce('Arms.Attack', () => { this.isAttacking = false })
+            this.model.animateOnce('Arms.Attack', 1, () => { this.isAttacking = false })
          }
       }
       
@@ -308,16 +308,16 @@ export class ObjectPlayer extends c3.Object {
       if (c3.keyboard.check('sheath').down) {
          this.isSheathing = true
          
-         this.model.animateOnce('Arms.EquipWeapon', () => { 
+         this.model.animateOnce('Arms.EquipWeapon', 0.25, () => { 
             this.swapGear()
-            this.model.animateOnce('Arms.EquipWeaponEnd', () => {
+            this.model.animateOnce('Arms.EquipWeaponEnd', 0.25, () => {
                this.isSheathing = false
             })
          })
          
 
-         this.model.animateOnce('Arms.EquipShield', () => { 
-            this.model.animateOnce('Arms.EquipShieldEnd', () => {
+         this.model.animateOnce('Arms.EquipShield', 0.25, () => { 
+            this.model.animateOnce('Arms.EquipShieldEnd', 0.25, () => {
                this.isSheathing = false
             })
          })

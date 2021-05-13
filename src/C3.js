@@ -80,6 +80,7 @@ export class C3 {
       this.listModels = [...models]
       this.keyboard.applyKeyMap(keyMap)
       this.running = true
+      this.loops = 0
       
       // applying cs to scripts
       for (const scriptName in scripts) {
@@ -116,10 +117,6 @@ export class C3 {
    engineStep() {
       if (!this.running) return
       
-      typeof window !== 'undefined' ?
-         requestAnimationFrame(() => this.engineStep()) :
-         setTimeout(() => this.engineStep(), 1000 / 60)
-
       const delta = this.clock.getDelta()
       
       this.physics.loopApplyCollisions()
@@ -136,6 +133,13 @@ export class C3 {
       this.mouse.loop()
       this.fps.step()
       this.transform.step()
+      
+      this.loops += 1
+      typeof window !== 'undefined' ?
+         requestAnimationFrame(() => this.engineStep()) :
+         setTimeout(() => this.engineStep(), 1000 / 60)
+
+      
    }
    
    stop() {

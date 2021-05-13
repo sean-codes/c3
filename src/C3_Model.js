@@ -11,6 +11,7 @@ export class C3_Model {
       this.object.add(object)
       this.bones = {}
       this.currentClip = undefined
+      this.endFuncs = []
 
       object.traverse((part) => {
          // flat shading
@@ -92,7 +93,7 @@ export class C3_Model {
             }
             
             if (definedClip.pose) {
-               const { at } = definedClip.pose
+               const { at } = definedClip.pose // no used yet?
                adjustedClip = THREE.AnimationUtils.subclip( animation, animation.name, 2, 3, 24 )
             }
             
@@ -110,7 +111,8 @@ export class C3_Model {
          clip.c3_startAt = definedClip ? definedClip.startAt || 0 : 0
          clip.c3_weightCurrent = 0
          clip.c3_weightTarget = 0
-         clip.c3_weightDampen = 0.25
+         clip.c3_weightDampen = 1 / (60 * 0.15) // 0.2 sec
+         clip.c3_then = false // function called when weight target met
          this.clips[clipName] = clip
       })
       
@@ -128,7 +130,7 @@ export class C3_Model {
       clone.animations = this.object.children[0].animations
    
       const newModel = this.c3.models.add({
-         loadInfo: { ...this.loadInfo, name },
+         loadInfo: { ...this.loadInfo, name: name || this.name },
          object: clone,
          isClone: true
       })
@@ -242,34 +244,6 @@ export class C3_Model {
       this.currentClip = clip
    }
    
-   animateTo(clipName, time) {
-      const outClip = this.currentClip
-      const inClip = this.clips[clipName]
-      if (outClip === inClip) return
-      
-      
-      inClip.time = 0
-      inClip.enabled = true
-      inClip.setEffectiveWeight(1)
-      inClip.crossFadeFrom(outClip, time)
-      
-      this.currentClip = inClip
-   }
-   
-   // this was from legacy system
-   animateAdd(clipName, { fade=0, syncWith=undefined }) {
-      const clip = this.clips[clipName]
-      clip.enabled = true
-      clip.reset()
-      clip.play()
-      clip.setEffectiveWeight(1)
-      clip.fadeIn(fade)
-      
-      if (syncWith) {
-         clip.time = this.clips[syncWith].time
-      }
-   }
-   
    // this was from legacy system
    animateStop(clipName) {
       // const clip = this.clips[clipName]
@@ -281,25 +255,49 @@ export class C3_Model {
       clip.paused = true
    }
    
-   animateOnce(clipName, onEnd) {
+   // shouldnt need to be a pose
+   // if its a animation then pause it
+   animateTo(clipName, time, then) {
+      this.animateWeight(clipName, 1, time, () => {
+         this.animateWeight(clipName, 0, 0)
+         then && then()
+      })
+   }
+   
+   animateOut(clipName, time, then) {
+      this.animateWeight(clipName, 0, time, () => {
+         this.animateWeight(clipName, 0, 0)
+         then && then()
+      })
+   }
+   
+   animateOnceTo(clipName, onEnd) {
+      this.animateOnce(clipName, onEnd, true)
+   }
+   
+   animateOnce(clipName, time, onEnd, dontResetWeightOnEnd) {
+      // console.log(time)
       const clip = this.clips[clipName]
+      clip.setDuration(time)
       clip.reset()
       clip.enabled = true
       clip.clampWhenFinished = true // keeps at last frame when finished
       clip.setLoop(THREE.LoopOnce, 1)
       clip.time = 0
-      this.animateWeight(clipName, 1, true)
+      this.animateWeight(clipName, 1, 0)
+      
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
             const weight = this.animateGetWeightTarget(clipName)
             const endedEarly = weight == 0
             onEnd && onEnd(endedEarly)
-            
-            this.animateWeight(clipName, 0, true)
-            this.mixer.removeEventListener('finished', stopAnimation)
+            if (!dontResetWeightOnEnd) {
+               this.animateWeight(clipName, 0, 0)
+               this.mixer.removeEventListener('finished', stopAnimation)
+            }
          }
       }
-
+         
       this.mixer.addEventListener('finished', stopAnimation)
    }
    
@@ -311,15 +309,19 @@ export class C3_Model {
       this.clips[clipName].timeScale = scale
    }
    
-   animateWeight(clipName, weight, iSaidRightMeow = false, dampen=null) {
-      // this.clips[clipName].setEffectiveWeight(weight)
+   animateWeight(clipName, weight, time=null, then) {
       this.clips[clipName].c3_weightTarget = weight
-      if (iSaidRightMeow) {
+
+      if (time == 0) {
          this.clips[clipName].c3_weightCurrent = weight
       }
       
-      if (dampen !== null) {
-         this.clips[clipName].c3_weightDampen = dampen
+      if (time) {
+         this.clips[clipName].c3_weightDampen = 1 / (60 * time)
+      }
+      
+      if (then) {
+         this.clips[clipName].c3_then = then
       }
    }
    
@@ -328,7 +330,8 @@ export class C3_Model {
    }
    
    animateGetWeight(clipName) {
-      return this.clips[clipName].getEffectiveWeight()
+      return this.clips[clipName].c3_weightCurrent
+      // return this.clips[clipName].getEffectiveWeight()
    }
    
    animateGetTime(clipName) {
@@ -343,25 +346,49 @@ export class C3_Model {
       return this.clips[clipName].c3_weightTarget
    }
    
+   animateGetPercentDone(clipName) {
+      const clip = this.clips[clipName]
+      return clip.getEffectiveWeight() ? (clip.time / clip.getClip().duration) : 0
+   }
+   
    loop(delta) {
       this.loopClipWeights(delta)
       this.mixer.update(delta)
+      
+      for (let endFunc of this.endFuncs) {
+         endFunc()
+      }
+      this.endFuncs = []
    }
    
    loopClipWeights(delta) {
       // delta should probably be used in here somewhere
-      for (const clipName in this.clips) {
+
+
+      for (const clipName of Object.keys(this.clips)) {
          const clip = this.clips[clipName]
-         
          const dampen = clip.c3_weightDampen
-          
          const currentWeight = clip.c3_weightCurrent
          const targetWeight = clip.c3_weightTarget
-         const diffWeight = targetWeight - currentWeight
-         let newWeight = currentWeight + diffWeight * dampen // need math
+         
+         let newWeight = clip.c3_weightTarget
+         
+         if (currentWeight > targetWeight) {
+            newWeight = Math.max(targetWeight, currentWeight - dampen)
+         }
+         
+         if (currentWeight < targetWeight) {
+            newWeight = Math.min(targetWeight, currentWeight + dampen)
+         }
+            
          clip.c3_weightCurrent = newWeight
          clip.weight = newWeight
          clip.setEffectiveWeight(newWeight)
+         
+         if (currentWeight === targetWeight && clip.c3_then) {
+            this.endFuncs.push(clip.c3_then)
+            clip.c3_then = false
+         }
       }
    }
    
