@@ -16,13 +16,13 @@ export class C3_Render {
   }
 
   loop(scene, camera, delta) {
-    this.renderer.render(scene.object, camera.object)
+    this.renderer.render(scene.object, camera.object) 
   }
 
-  handleResize(width, height) {
+  handleResize(width, height) { 
     this.renderer.domElement.width = width
     this.renderer.domElement.height = height
-    
+     
     this.renderer.setSize(width, height, false)
   }
 }

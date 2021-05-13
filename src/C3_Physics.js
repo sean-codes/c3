@@ -25,7 +25,7 @@ export class C3_Physics {
       this.HUG = HUG
       this.world = new CANNON.World()
       this.world.gravity.set(0, -60, 0)
-      this.debug = true
+      this.debug = false
       this.debugger = new CannonDebugRenderer(this.c3.scene.object, this.world)
    }
    
@@ -46,23 +46,16 @@ export class C3_Physics {
          hug=HUG.CENTER,
          friction = 0,
          restitution = 0,
+         meshes
       } = object.physics
       
       const phyMaterial = material 
          ? this.materials[material] 
          : new CANNON.Material({ friction, restitution })
-         
-      let {
-         meshes
-      } = object.physics
       
-      const physicsMeshes = getPhysicsMeshes(meshes[0].mesh)
-      if (physicsMeshes.length) {
-         meshes = physicsMeshes
-      }
-      
+      const meshData = getPhysicsMeshes(meshes, object)
       const quaternion = new CANNON.Quaternion()
-      quaternion.setFromEuler(meshes[0].mesh.rotation.x, meshes[0].mesh.rotation.y, meshes[0].mesh.rotation.z, 'XYZ')
+      quaternion.setFromEuler(meshData[0].rotation.x, meshData[0].rotation.y, meshData[0].rotation.z, 'XYZ')
       
       let body = new CANNON.Body({
          position: new CANNON.Vec3(0, 0, 0),
@@ -73,38 +66,48 @@ export class C3_Physics {
          mass,
       })
       
-      const objectScale = object.getScale()
+      // const objectScale = object.getScale()
       const offset = new THREE.Vector3(0, 0, 0)
-      for (let i = 0; i < meshes.length; i++) {
-         const { mesh, shape, offsetY } = meshes[i]
-         const bodyShape = shape || getShapeType(mesh)
+      for (let i = 0; i < meshData.length; i++) {
+         const { mesh, shape, offsetY, isInstance } = meshData[i]
+
          let createdShapeData = undefined
-         if (bodyShape === SHAPES.BOX) createdShapeData = createShapeBox(mesh)
-         if (bodyShape === SHAPES.SPHERE) createdShapeData = createShapeSphere(mesh)
-         if (bodyShape === SHAPES.CYLINDER) createdShapeData = createShapeCylinder(mesh)
-         if (bodyShape === SHAPES.MESH) createdShapeData = createShapeConvexPolyhedron(mesh)
+         if (shape === SHAPES.BOX) createdShapeData = createShapeBox(meshData[i])
+         if (shape === SHAPES.MESH) createdShapeData = createShapeConvexPolyhedron(meshData[i])
+         // need to update these
+         if (shape === SHAPES.SPHERE) createdShapeData = createShapeSphere(meshData[i])
+         if (shape === SHAPES.CYLINDER) createdShapeData = createShapeCylinder(mesh)
 
          const innerMesh = getMesh(mesh)
-         
+
          // offset
          const geoInfo = getMeshGeoInfo(innerMesh)
+
          const pScale = getMeshPositionScale(innerMesh)
+         if  (meshData[i].isInstance) {
+            const oScale = object.getScale()
+            geoInfo.center.multiply(oScale)
+            pScale.multiply(oScale)
+         }
+
          const childBodyOffset = innerMesh.position.clone().multiply(pScale)
          childBodyOffset.add(geoInfo.center)
          
          if (offsetY) {
             childBodyOffset.y -= geoInfo.height * offsetY
          }
-         
-         // rotation
-         const childBodyQuarternion = new CANNON.Quaternion().setFromEuler(
-            innerMesh.rotation.x, 
-            innerMesh.rotation.y, 
-            innerMesh.rotation.z, 'XYZ')
-         
+
+         // rotation. i can not figure out why I dont need this anymore
+         // i think you are applying the rotation to the geometry itself
+         const childBodyQuarternion = new CANNON.Quaternion()
+         // .setFromEuler(
+         //    innerMesh.rotation.x, 
+         //    innerMesh.rotation.y, 
+         //    innerMesh.rotation.z, 'XYZ')
          body.addShape(createdShapeData.shape, childBodyOffset, childBodyQuarternion)
       }
       
+      // can we move this into a class?
       const physicObject = {
          object,
          body, 
@@ -175,14 +178,12 @@ export class C3_Physics {
             this.list[physicObjectId].isOnGround = this.checkIsOnGround(body)
          }
          
-         if (debug) {
+         if (debug || this.debug) {
             debugBodies.push(body)
          }
       }
       
-      if (this.debug) {
-         this.debugger.update(debugBodies)
-      }
+      this.debugger.update(debugBodies)
    }
    
    checkIsOnGround(body) {
@@ -200,17 +201,18 @@ export class C3_Physics {
    }
 }
 
-function createShapeBox(object) {
-   const size = getSizeOfMesh(object)
+function createShapeBox(physicsMeshData) {
+   const size = getSizeOfPhysicsMesh(physicsMeshData)
+
    return {
       shape: new CANNON.Box(new CANNON.Vec3(size.width/2, size.height/2, size.depth/2)),
       ...size
    }
 }
 
-function createShapeSphere(object) {
-   const size = getSizeOfMesh(object)
-   
+function createShapeSphere(physicsMeshData) {
+   // const size = getSizeOfMesh(object)
+   const size = getSizeOfPhysicsMesh(physicsMeshData)
    return {
       shape: new CANNON.Sphere(size.radius),
       ...size
@@ -233,8 +235,8 @@ function createShapeCylinder(object) {
    }
 }
 
-function createShapeConvexPolyhedron(object, scale) {
-   let mesh = getMesh(object)
+function createShapeConvexPolyhedron(physicsMeshData) {
+   let mesh = physicsMeshData.mesh//(object)
    mesh.updateMatrixWorld()
    const geometry = new THREE.Geometry()
    geometry.fromBufferGeometry(mesh.geometry)
@@ -243,7 +245,11 @@ function createShapeConvexPolyhedron(object, scale) {
    geometry.rotateZ(mesh.rotation.z)
    
    // Do this  after rotating
-   scale = scale || getMeshGeoScale(mesh)
+   const scale = getMeshGeoScale(mesh)
+   if (physicsMeshData.isInstance) {
+      scale.multiply(physicsMeshData.object.getScale())
+   }
+
    geometry.scale(scale.x, scale.y, scale.z)
    geometry.center()
    
@@ -272,30 +278,70 @@ function createShapeConvexPolyhedron(object, scale) {
    }
 }
 
-function getPhysicsMeshes(object) {
-   const meshes = []
-   object.traverse(part => {
-      if (part.name.startsWith('c3_phy_mesh')) {
-         const shape = part.name.toLowerCase().includes('convex') ? SHAPES.MESH : SHAPES.BOX
-         meshes.push({ mesh: part, shape })
-      }
-   })
+// I wrote this in the future. Some places are using this object incorrectly
+function getPhysicsMeshes(meshes, object) {
+   const meshesData = []
    
-   return meshes
+   const pushData = function(meshData, part) {
+      const shape = meshData.shape || getShapeType(part)
+      const { mesh: { isInstance, model }, offsetY } = meshData // :(
+
+      meshesData.push({
+         isInstance: isInstance,
+         model: model,
+         scale: isInstance ? object.getScale() : new THREE.Vector3(1, 1, 1),
+         rotation: isInstance ? object.getRotation() : new THREE.Euler(0, 0, 0),
+         shape: shape,//getShapeType(isInstance ? model.object : mesh),
+         mesh: part,//getMesh(isInstance ? model.object : part),
+         object: object,
+         offsetY: offsetY,
+      })
+   }
+   
+   for (let meshData of meshes) {
+      // working with regular mesh, c3_model, and instance :<
+      let mainMesh = meshData.mesh
+      if (mainMesh.isInstance) mainMesh = mainMesh.model.object
+      if (mainMesh.object) mainMesh = mainMesh.object
+      
+      if (meshData.traverse) {
+         mainMesh.traverse(part => {
+            if (part.name.startsWith('c3_phy_mesh')) {
+               pushData(meshData, part)
+            }
+         })
+      } else {
+         pushData(meshData, mainMesh)
+      }
+   }
+   return meshesData
+}
+
+function getSizeOfPhysicsMesh(physicsMeshData) {
+   const mesh = physicsMeshData.mesh
+   if (physicsMeshData.isInstance) {
+      const saveScale = mesh.scale.clone()
+      mesh.scale.copy(mesh.scale.clone().multiply(physicsMeshData.scale))
+      
+      const size = getSizeOfMesh(mesh)
+      mesh.scale.copy(saveScale)
+      return size
+   }
+   
+   return getSizeOfMesh(mesh)
 }
 
 function getSizeOfMesh(object) {
    const mesh = getMesh(object)
    const scale = getMeshScale(mesh)
-   
    const geo = new THREE.BufferGeometry()
    mesh.geometry.type.includes('Buffer')
       ? geo.copy(mesh.geometry)
       : geo.fromGeometry(mesh.geometry)
-   
+
    const mes = new THREE.Mesh(geo)
    mes.scale.copy(scale)
-
+   mes.rotation.copy (mesh.rotation)
    const box = new THREE.Box3().setFromObject(mes)
    const size = {
       width: (box.max.x - box.min.x),
@@ -337,6 +383,7 @@ function getMeshPositionScale(mesh) {
 
 function getMesh(object) {
    let mesh = undefined
+   if (object.object) object = object.object
    if (object.type === 'Mesh') return object
    object.traverse(part => mesh = !mesh && part.type === 'Mesh' ? part : mesh)
    return mesh
@@ -346,6 +393,8 @@ function getShapeType(object) {
    const mesh = getMesh(object)
    const geo = mesh.geometry ? mesh.geometry : mesh.children[0].children[0].geometry
    const geoType = geo.type
+   // pls fix
+   // if (part.name.toLowerCase().includes('c3_phy_mesh') ? SHAPES.MESH : SHAPES.BOX
    
    if (geoType.startsWith('Sphere')) return SHAPES.SPHERE
    if (geoType.startsWith('Cylinder')) return SHAPES.CYLINDER
@@ -355,18 +404,19 @@ function getShapeType(object) {
 
 function getMeshGeoInfo(mesh) {
    const gScale = getMeshGeoScale(mesh)
+   
    const tGeo = new THREE.BufferGeometry()
    mesh.geometry.type.includes('Buffer')
       ? tGeo.copy(mesh.geometry)
       : tGeo.fromGeometry(mesh.geometry)
-      
+   
+   
    tGeo.rotateX(mesh.rotation.x)
    tGeo.rotateY(mesh.rotation.y)
    tGeo.rotateZ(mesh.rotation.z)
    tGeo.computeBoundingBox()
-   
    return {
-      center: tGeo.boundingBox.getCenter(new THREE.Vector3()).multiply(gScale),
+      center: tGeo.boundingBox.getCenter(new THREE.Vector3()).multiply(gScale), 
       height: (tGeo.boundingBox.max.y - tGeo.boundingBox.min.y) * gScale.y,
    }
 }

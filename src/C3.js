@@ -79,6 +79,8 @@ export class C3 {
       this.storages = storages
       this.listModels = [...models]
       this.keyboard.applyKeyMap(keyMap)
+      this.running = true
+      this.loops = 0
       
       // applying cs to scripts
       for (const scriptName in scripts) {
@@ -113,10 +115,8 @@ export class C3 {
    }
 
    engineStep() {
-      typeof window !== 'undefined' ?
-         requestAnimationFrame(() => this.engineStep()) :
-         setTimeout(() => this.engineStep(), 1000 / 60)
-
+      if (!this.running) return
+      
       const delta = this.clock.getDelta()
       
       this.physics.loopApplyCollisions()
@@ -133,6 +133,24 @@ export class C3 {
       this.mouse.loop()
       this.fps.step()
       this.transform.step()
+      
+      this.loops += 1
+      typeof window !== 'undefined' ?
+         requestAnimationFrame(() => this.engineStep()) :
+         setTimeout(() => this.engineStep(), 1000 / 60)
+
+      
+   }
+   
+   stop() {
+      this.running = false
+   }
+   
+   start() {
+      if (!this.running) {
+         this.running = true
+         this.engineStep()
+      }
    }
 
    handleResize(e) {
@@ -193,7 +211,6 @@ export class C3 {
    }
    
    loadStorages(storages) {
-      console.log('loading storages', storages)
       return new Promise((yay, nay) => {
          let loading = storages.length
          !loading && yay()
@@ -206,7 +223,6 @@ export class C3 {
          }
          
          for (const storage of storages) {
-            console.log('Loading Storage: ' + storage.file)
             storage.data = {}
 
             // attempt to use localstorage
