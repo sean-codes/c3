@@ -94,7 +94,7 @@ export class C3_Model {
             
             if (definedClip.pose) {
                const { at } = definedClip.pose // no used yet?
-               adjustedClip = THREE.AnimationUtils.subclip( animation, animation.name, 2, 3, 24 )
+               adjustedClip = THREE.AnimationUtils.subclip( animation, animation.name, 1, 2, 24 )
             }
             
             if(definedClip.stringed) {
