@@ -135,6 +135,8 @@ export class C3_Model {
          isClone: true
       })
       
+      
+      
       return newModel
    }
    
@@ -196,6 +198,10 @@ export class C3_Model {
       this.instanceData.mesh.instanceMatrix.setUsage(THREE.DynamicDrawUsage)
       // this.instanceData.offset = mesh.position.clone().multiply(geoScale)
       this.instanceData.mesh.c3_model = this
+      if (!this.loadInfo.noCastShadow) {
+         this.instanceData.mesh.castShadow = true
+         this.instanceData.mesh.receiveShadow = true
+      }
       c3.scene.add(this.instanceData.mesh)
    }
    
