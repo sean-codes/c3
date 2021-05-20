@@ -311,6 +311,11 @@ export class C3_Model {
       this.clips[clipName].time = time
    }
    
+   animateSetDuration(clipName, time) {
+      const clip = this.clips[clipName]
+      clip.setDuration(time)
+   }
+   
    animateScale(clipName, scale) {
       this.clips[clipName].timeScale = scale
    }
