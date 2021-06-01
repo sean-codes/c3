@@ -49,6 +49,15 @@ export function choose(array) {
 }
 
 /**
+ * @param {number} angle1
+ * @param {number} angle2
+ * @return {number} the angle from a vector
+ */
+export function angleVec(x, y) {
+   return loopAngle(Math.atan2(x + 0, y + 0))
+}
+
+/**
  * Gets the angle between two angles
  * @param {number} angle1
  * @param {number} angle2
@@ -59,7 +68,7 @@ export function angleBetween(a1, a2) {
 }
 
 /**
- * Finds the small angle to get from 1 -> 2
+ * Finds the smallest angle to get from 1 -> 2
  * @param {number} angle1
  * @param {number} angle2
  */

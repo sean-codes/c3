@@ -24,6 +24,7 @@ import { C3_Network } from './C3_Network.js'
 import { C3_Transform } from './C3_Transform.js'
 import { C3_Fps } from './C3_Fps.js'
 import { C3_Storage } from './C3_Storage.js'
+import { C3_Gamepad } from './C3_Gamepad.js'
 
 export class C3 {
    constructor(options = undefined) {
@@ -39,6 +40,7 @@ export class C3 {
       this.models = new C3_Models(this)
       this.textures = new C3_Textures(this)
       this.keyboard = new C3_Keyboard(this)
+      this.gamepad = new C3_Gamepad(this)
       this.network = new C3_Network(this)
       this.transform = new C3_Transform(this)
       this.math = C3_Math
