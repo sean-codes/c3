@@ -130,6 +130,7 @@ export class C3 {
       this.physics.loop(delta)
       this.models.loop(delta)
       this.keyboard.resetKeys()
+      this.gamepad.loop()
       this.network.updateMetrics()
       this.network.read()
       this.mouse.loop()
@@ -137,11 +138,10 @@ export class C3 {
       this.transform.step()
       
       this.loops += 1
-      typeof window !== 'undefined' ?
-         requestAnimationFrame(() => this.engineStep()) :
-         setTimeout(() => this.engineStep(), 1000 / 60)
-
       
+      typeof window !== 'undefined' 
+         ? requestAnimationFrame(() => this.engineStep()) 
+         : setTimeout(() => this.engineStep(), 1000 / 60)
    }
    
    stop() {
