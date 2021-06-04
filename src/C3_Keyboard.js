@@ -1,5 +1,6 @@
 export class C3_Keyboard {
-   constructor() {
+   constructor(c3) {
+      this.c3 = c3
       this.keyMap = {}
       this.keys = {}
       this.events = []
@@ -46,10 +47,12 @@ export class C3_Keyboard {
    }
    
    processEvent(key, type) {
+      this.c3.lastInputType = this.c3.const.INPUT_KEYBOARD
+      
       if (type === 'up') {
          if (!key.held) return
-         key.up = performance.now()
-         key.held = false
+         key.up = Date.now()
+         // key.held = false
          
          if (key.keyCode === 91) {
             this.liftEverything()
@@ -58,7 +61,7 @@ export class C3_Keyboard {
       }
       
       // type is down
-      key.down = performance.now()
+      key.down = Date.now()
    }
    
    // onKeyDown(keyCode) {
@@ -95,8 +98,8 @@ export class C3_Keyboard {
    resetKeys() {
       for (const keyId in this.keys) {
          const key = this.keys[keyId]
-         if (key.down) key.held = performance.now()
-         
+         if (key.down) key.held = Date.now()
+         if (key.up) key.held = false
          key.up = false
          key.down = false
       }

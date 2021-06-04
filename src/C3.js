@@ -55,6 +55,7 @@ export class C3 {
       this.THREE = THREE
       this.CANNON = CANNON
       this.const = constants
+      this.lastInputType = constants.INPUT_KEYBOARD
       this.script = {}
       this.version = 0
       this.loading = 0   
