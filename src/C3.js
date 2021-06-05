@@ -71,6 +71,7 @@ export class C3 {
       progress = () => {},
       init = () => {},
       step = () => {},
+      onInput = () => {},
       version = Math.random(),
    } = {}) {
       this.version = version
@@ -78,6 +79,7 @@ export class C3 {
       this.userInit = init
       this.userStep = step
       this.userProgress = progress
+      this.userOnInput = onInput
       this.types = types
       this.storages = storages
       this.listModels = [...models]
@@ -118,6 +120,13 @@ export class C3 {
    }
 
    engineStep() {
+      typeof window !== 'undefined' 
+         ? requestAnimationFrame(() => this.engineStep()) 
+         : setTimeout(() => this.engineStep(), 1000 / 60)
+         
+      // I want to run this even if stopped
+      this.gamepad.loop()
+      
       if (!this.running) return
       
       const delta = this.clock.getDelta()
@@ -131,7 +140,7 @@ export class C3 {
       this.physics.loop(delta)
       this.models.loop(delta)
       this.keyboard.resetKeys()
-      this.gamepad.loop()
+      
       this.network.updateMetrics()
       this.network.read()
       this.mouse.loop()
@@ -139,10 +148,6 @@ export class C3 {
       this.transform.step()
       
       this.loops += 1
-      
-      typeof window !== 'undefined' 
-         ? requestAnimationFrame(() => this.engineStep()) 
-         : setTimeout(() => this.engineStep(), 1000 / 60)
    }
    
    stop() {
@@ -150,10 +155,7 @@ export class C3 {
    }
    
    start() {
-      if (!this.running) {
-         this.running = true
-         this.engineStep()
-      }
+      this.running = true
    }
 
    handleResize(e) {

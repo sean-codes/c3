@@ -4,22 +4,15 @@
 export class C3_Gamepad {
    constructor(c3) {
       this.c3 = c3
-      this.listen()
-      this.gamepadCount = 0
       this.map = new GamepadMap(c3)
    }
    
-   listen() {
-      window.addEventListener('gamepadconnected', (e) => { this.gamepadCount += 1})
-      window.addEventListener('gamepaddisconnected', (e) => { this.gamepadCount -= 1 })
-   }
-   
    loop() {
-      if (!this.gamepadCount) return undefined
+      const gamepads = navigator.getGamepads()
+      if (!gamepads.length) return undefined
       
-      const gamepad = navigator.getGamepads()[0]
-      if (gamepad) {
-         this.map.update(gamepad)
+      if (gamepads[0]) {
+         this.map.update(gamepads[0])
       }
    }
    
@@ -93,7 +86,10 @@ class GamepadButton {
       if (button.pressed) {
          this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
 
-         if (!this.held) this.down = Date.now()
+         if (!this.held) {
+            this.down = Date.now()
+            this.c3.userOnInput && this.c3.userOnInput()
+         }
          this.held = this.held || Date.now()
       } else {
          if (this.up) { this.held = false; this.up = false } // yikes
@@ -121,6 +117,7 @@ class GamepadAnolog {
       
       if (this.x || this.y) {
          this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
+         this.c3.userOnInput && this.c3.userOnInput()
       }
    }
 }
