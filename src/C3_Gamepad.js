@@ -106,7 +106,7 @@ class GamepadAnolog {
       this.rawX = 0
       this.rawY = 0
       // pls make this adjustable
-      this.deadzone = 0.2
+      this.deadzone = 0.3
    }
    
    update(x, y) {

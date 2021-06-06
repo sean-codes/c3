@@ -111,7 +111,7 @@ export class C3_Model {
          clip.c3_startAt = definedClip ? definedClip.startAt || 0 : 0
          clip.c3_weightCurrent = 0
          clip.c3_weightTarget = 0
-         clip.c3_weightDampen = 1 / (60 * 0.15) // 0.2 sec
+         clip.c3_weightDampen = 1 / (60 * 0.15) // 0.15 sec
          clip.c3_then = false // function called when weight target met
          this.clips[clipName] = clip
       })
@@ -374,8 +374,6 @@ export class C3_Model {
    
    loopClipWeights(delta) {
       // delta should probably be used in here somewhere
-
-
       for (const clipName of Object.keys(this.clips)) {
          const clip = this.clips[clipName]
          const dampen = clip.c3_weightDampen
