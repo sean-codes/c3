@@ -112,8 +112,9 @@ class GamepadAnolog {
    update(x, y) {
       this.rawX = x
       this.rawY = y
-      this.x = Math.abs(x) > this.deadzone ? x : 0
-      this.y = Math.abs(y) > this.deadzone ? y : 0
+      const pastDeadzone = Math.max(Math.abs(x), Math.abs(y)) > this.deadzone
+      this.x = pastDeadzone ? x : 0
+      this.y = pastDeadzone ? y : 0
       
       if (this.x || this.y) {
          this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
