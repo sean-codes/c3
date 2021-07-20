@@ -6,7 +6,7 @@ export class C3_Model {
       this.c3 = c3
       this.loadInfo = loadInfo
       this.name = loadInfo.name
-      // makes it easier to scale rorate etc without breaking animations
+      // makes it easier to scale rotate etc without breaking animations
       this.object = new THREE.Object3D()
       this.object.add(object)
       this.bones = {}
@@ -86,19 +86,20 @@ export class C3_Model {
       object.animations && object.animations.forEach((animation) => {
          const definedClip = loadInfo.clips && loadInfo.clips.find(c => c.map === animation.name)
          let clipName = definedClip ? definedClip.name : animation.name
-         let adjustedClip = animation
+         let adjustedClip = THREE.AnimationUtils.subclip(animation, animation.name, 0, Math.round(animation.time * 24), 24)
          if (definedClip) {
             if (definedClip.add) {  
-               THREE.AnimationUtils.makeClipAdditive(adjustedClip)
+               var addToClip =  object.animations.find(c => c.name === definedClip.add)
+               THREE.AnimationUtils.makeClipAdditive(adjustedClip, 0, addToClip || undefined)
             }
             
             if (definedClip.pose) {
                const { at } = definedClip.pose // no used yet?
-               adjustedClip = THREE.AnimationUtils.subclip( animation, animation.name, 0.1, 2, 24 )
+               adjustedClip = THREE.AnimationUtils.subclip(animation, animation.name, 0, 1, 24 )
             }
             
             if(definedClip.stringed) {
-               adjustedClip = THREE.AnimationUtils.subclip( animation, animation.name, 0.1, Math.round(animation.time * 24), 24 )
+               adjustedClip = THREE.AnimationUtils.subclip(animation, animation.name, 0.1, Math.round(animation.time * 24), 24 )
             }
          }
             
@@ -277,15 +278,45 @@ export class C3_Model {
       })
    }
    
-   animateOnceTo(clipName, onEnd) {
-      this.animateOnce(clipName, onEnd, true)
+   animateOnceTo(clipName, time, onEnd) {
+      this.animateOnce(clipName, time, onEnd, true)
+   }
+   
+   animateReverse(clipName, time, onEnd, dontResetWeightOnEnd) {
+      // console.log(time)
+      const clip = this.clips[clipName]
+      const currTime = clip.time
+      clip.reset()
+      clip.setDuration(-time)
+      clip.enabled = true
+      clip.clampWhenFinished = true // keeps at last frame when finished
+      clip.setLoop(THREE.LoopOnce, 1)
+      clip.time = currTime
+      // clip.timeScale = -1
+      this.animateWeight(clipName, 1, 0)
+      
+      const stopAnimation = (e) => {
+         if (e.action.getClip().name === clip._clip.name) {
+            console.log('ending animation', clip._clip.name)
+            const weight = this.animateGetWeightTarget(clipName)
+            const endedEarly = weight == 0
+            onEnd && onEnd(endedEarly)
+            if (!dontResetWeightOnEnd) {
+               console.log('killing weight')
+               this.animateWeight(clipName, 0, 0)
+               this.mixer.removeEventListener('finished', stopAnimation)
+            }
+         }
+      }
+         
+      this.mixer.addEventListener('finished', stopAnimation)
    }
    
    animateOnce(clipName, time, onEnd, dontResetWeightOnEnd) {
       // console.log(time)
       const clip = this.clips[clipName]
-      clip.setDuration(time)
       clip.reset()
+      clip.setDuration(time)
       clip.enabled = true
       clip.clampWhenFinished = true // keeps at last frame when finished
       clip.setLoop(THREE.LoopOnce, 1)
