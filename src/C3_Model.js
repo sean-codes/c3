@@ -302,7 +302,6 @@ export class C3_Model {
       
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
-            console.log('ending animation', clip._clip.name)
             const weight = this.animateGetWeightTarget(clipName)
             const endedEarly = weight == 0
             onEnd && onEnd(endedEarly)
