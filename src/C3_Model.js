@@ -83,8 +83,10 @@ export class C3_Model {
       //animations
       this.mixer = new THREE.AnimationMixer(object)
       this.clips = {}
-      object.animations && object.animations.forEach((animation) => {
-         const definedClip = loadInfo.clips && loadInfo.clips.find(c => c.map === animation.name)
+
+      for (let definedClip of loadInfo.clips || []) {
+         const animation = object.animations.find(c => definedClip.map === c.name)
+
          let clipName = definedClip ? definedClip.name : animation.name
          let adjustedClip = THREE.AnimationUtils.subclip(animation, animation.name, 0, Math.round(animation.time * 24), 24)
          if (definedClip) {
@@ -94,7 +96,6 @@ export class C3_Model {
             }
             
             if (definedClip.pose) {
-               const { at } = definedClip.pose // no used yet?
                adjustedClip = THREE.AnimationUtils.subclip(animation, animation.name, 0, 1, 24 )
             }
             
@@ -115,7 +116,7 @@ export class C3_Model {
          clip.c3_weightDampen = 1 / (60 * 0.15) // 0.15 sec
          clip.c3_then = false // function called when weight target met
          this.clips[clipName] = clip
-      })
+      }
       
       this.instanceData = {
          id: 0,
@@ -302,7 +303,6 @@ export class C3_Model {
             const endedEarly = weight == 0
             onEnd && onEnd(endedEarly)
             if (!dontResetWeightOnEnd) {
-               console.log('killing weight')
                this.animateWeight(clipName, 0, 0)
                this.mixer.removeEventListener('finished', stopAnimation)
             }
@@ -315,8 +315,8 @@ export class C3_Model {
    animateOnce(clipName, time, onEnd, dontResetWeightOnEnd) {
       // console.log(time)
       const clip = this.clips[clipName]
-      clip.reset()
       clip.setDuration(time)
+      clip.reset()
       clip.enabled = true
       clip.clampWhenFinished = true // keeps at last frame when finished
       clip.setLoop(THREE.LoopOnce, 1)
