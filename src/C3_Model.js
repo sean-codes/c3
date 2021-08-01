@@ -48,6 +48,7 @@ export class C3_Model {
 
          if (part.type === 'Mesh' || part.type === 'SkinnedMesh') {
             if (part.name.startsWith('c3_phy_mesh')) part.visible = false
+            if (part.name.startsWith('hidden_')) part.visible = false
             if (!loadInfo.noReceiveShadow) part.receiveShadow = true
             if (!loadInfo.noCastShadow) part.castShadow = true
             if (loadInfo.meshOverrides) {
