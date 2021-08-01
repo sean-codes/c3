@@ -84,6 +84,9 @@ export class C3_Model {
       this.mixer = new THREE.AnimationMixer(object)
       this.clips = {}
 
+      // we order by defined clips to handle multi level additive animations
+      // for some reason if some animations were added first it was causing glitches on the first frame
+      // this likely means we are doing some kind of destructive mutation to the clips... will look into it in more detail later
       for (let definedClip of loadInfo.clips || []) {
          const animation = object.animations.find(c => definedClip.map === c.name)
 
