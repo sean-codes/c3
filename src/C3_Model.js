@@ -132,11 +132,14 @@ export class C3_Model {
    }
    
    clone(name) {
-      const clone = SkeletonUtils.clone(this.object.children[0])
-      clone.animations = this.object.children[0].animations
+      const cloneObject = name
+         ? this.object.children[0].children.find(o => o.name === name)
+         : this.object.children[0]
+      const clone = SkeletonUtils.clone(cloneObject)
+      clone.animations = cloneObject.animations
    
       const newModel = this.c3.models.add({
-         loadInfo: { ...this.loadInfo, name: name || this.name },
+         loadInfo: { ...this.loadInfo, name: this.name },
          object: clone,
          isClone: true
       })

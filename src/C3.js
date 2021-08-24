@@ -184,8 +184,19 @@ export class C3 {
             const loader = isGltf ? gltfLoader : fbxLoader
             
             loader.load(loadInfo.file, (object) => {
-               if (isGltf) { object = object.scene }
-               this.models.add({ c3: this, loadInfo, object })
+               if (isGltf) { object = object.scene; }
+               // multiple models in a single file
+               if (loadInfo.models) {
+                  for (let modelLoadInfo of loadInfo.models) {
+                     let modelObject = undefined
+                     object.traverse(p => {
+                        if(p.name === modelLoadInfo.name) modelObject = p
+                     })
+                     this.models.add({ c3: this, loadInfo: modelLoadInfo, object: modelObject })
+                  }
+               } else {
+                  this.models.add({ c3: this, loadInfo, object })
+               }
                if (loadInfo.log) console.log('Loaded Model', loadInfo.name, object)
                
                loading -= 1
