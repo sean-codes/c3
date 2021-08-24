@@ -8,11 +8,15 @@ export class C3_Texture {
       this.loadInfo = loadInfo
       this.name = loadInfo.name
       
-      texture.wrapS = THREE.RepeatWrapping
-      texture.wrapT = THREE.RepeatWrapping
-      texture.repeat.set(loadInfo.repeatX || 1, loadInfo.repeatY || 1);
+      if (loadInfo.repeatX || loadInfo.repeatY) {
+         texture.wrapS = THREE.RepeatWrapping
+         texture.wrapT = THREE.RepeatWrapping
+         texture.repeat.set(loadInfo.repeatX || 1, loadInfo.repeatY || 1);
+      }
+      
       if (loadInfo.pixelate) {
          texture.magFilter = THREE.NearestFilter
+         texture.minFilter = THREE.NearestFilter
       }
    }
    
