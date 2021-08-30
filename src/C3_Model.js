@@ -487,6 +487,7 @@ export class C3_Model {
       this.object.traverse((child) => {
          if (child.geometry !== undefined) child.geometry.dispose()
          if (child.texture !== undefined) child.texture.dispose()
+         if (child.skeleton !== undefined) child.skeleton.dispose()
          if (child.material !== undefined) {
             let arrOfMaterials = Array.isArray(child.material) ? child.material : [child.material]
             for (let childMaterial of arrOfMaterials) {
