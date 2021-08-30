@@ -2,10 +2,12 @@ import * as THREE from '../node_modules/three/build/three.module.js'
 import { SkeletonUtils } from '../node_modules/three/examples/jsm/utils/SkeletonUtils.js'
 
 export class C3_Model {
-   constructor({ c3, loadInfo, object, isClone = false }) {
+   constructor({ c3, loadInfo, object, isClone = false, id }) {
       this.c3 = c3
+      this.id = id
+      this.destroyed = false
       this.loadInfo = loadInfo
-      this.name = loadInfo.name
+      this.name = loadInfo.rename || loadInfo.name
       // makes it easier to scale rotate etc without breaking animations
       this.object = new THREE.Object3D()
       this.object.add(object)
@@ -63,18 +65,24 @@ export class C3_Model {
          }
       })
       
-      if (loadInfo.offset) {
-         object.translateX(loadInfo.offset[0] / loadInfo.scale)
-         object.translateY(loadInfo.offset[1] / loadInfo.scale)
-         object.translateZ(loadInfo.offset[2] / loadInfo.scale)
+      if (loadInfo.noWorldOffset) {
+         object.position.x = 0
+         object.position.y = 0
+         object.position.z = 0
       }
-
+      
       if (!isClone && loadInfo.rotation) {
          object.rotateX(loadInfo.rotation[0])
          object.rotateY(loadInfo.rotation[1])
          object.rotateZ(loadInfo.rotation[2])
       }
 
+      if (loadInfo.offset) {
+         object.translateX(loadInfo.offset[0] / loadInfo.scale)
+         object.translateY(loadInfo.offset[1] / loadInfo.scale)
+         object.translateZ(loadInfo.offset[2] / loadInfo.scale)
+      }
+      
       // scale
       // scale after so we can adjust axis
       this.object.scale.x = loadInfo.scale
@@ -472,5 +480,22 @@ export class C3_Model {
       })
       
       return scale
+   }
+   
+   destroy() {
+      this.destroyed = true
+      this.object.traverse((child) => {
+         if (child.geometry !== undefined) child.geometry.dispose()
+         if (child.texture !== undefined) child.texture.dispose()
+         if (child.material !== undefined) {
+            let arrOfMaterials = Array.isArray(child.material) ? child.material : [child.material]
+            for (let childMaterial of arrOfMaterials) {
+               childMaterial.dispose()
+            }
+         }
+      })
+      
+      if (this.object.parent) this.object.parent.remove(this.object)
+      this.c3.models.remove(this)
    }
 }
