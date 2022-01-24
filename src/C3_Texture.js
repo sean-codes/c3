@@ -18,6 +18,10 @@ export class C3_Texture {
          texture.magFilter = THREE.NearestFilter
          texture.minFilter = THREE.NearestFilter
       }
+      
+      // not sure. probably delete
+      // texture.anisotropy = c3.render.renderer.capabilities.getMaxAnisotropy()
+      // texture.offset = new THREE.Vector2(0.002, 0)
    }
    
    clone() {
@@ -31,5 +35,9 @@ export class C3_Texture {
    setRepeat(x, y) {
       this.texture.repeat.x = x
       this.texture.repeat.y = y
+   }
+   
+   destroy() {
+      this.texture.dispose()
    }
 }
