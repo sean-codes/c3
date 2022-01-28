@@ -72,28 +72,31 @@ class GamepadButton {
    constructor(c3, index) {
       this.c3 = c3
       this.index = index
-      this.down = false
-      this.up = false
-      this.held = false
+      
       this.value = 0
+      this.status = {
+         up: false,
+         held: false,
+         down: false,
+      }
    }
    
    update(gamepad) {
       // line order here matters. i am confused
       const button = gamepad.buttons[this.index]
-      this.down = false
+      this.status.down = false
       
       if (button.pressed) {
          this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
 
-         if (!this.held) {
-            this.down = Date.now()
+         if (!this.status.held) {
+            this.status.down = Date.now()
             this.c3.userOnInput && this.c3.userOnInput()
          }
-         this.held = this.held || Date.now()
+         this.status.held = this.status.held || Date.now()
       } else {
-         if (this.up) { this.held = false; this.up = false } // yikes
-         if (this.held) this.up = Date.now()
+         if (this.status.up) { this.status.held = false; this.status.up = false } // yikes
+         if (this.status.held) this.status.up = Date.now()
       }
    }
 }

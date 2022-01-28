@@ -152,8 +152,6 @@ export class C3_Model {
          isClone: true
       })
       
-      
-      
       return newModel
    }
    
