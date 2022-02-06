@@ -60,6 +60,8 @@ export class C3 {
       this.version = 0
       this.loading = 0   
       this.engineSpeed = 1000/60
+      this.screenWidth = 0
+      this.screenHeight = 0
    }
    
    init({
@@ -164,7 +166,8 @@ export class C3 {
       const pixelRatio = 1 //window.devicePixelRatio
       const width = window.innerWidth * pixelRatio
       const height = window.innerHeight * pixelRatio
-
+      this.screenWidth = width
+      this.screenHeight = height
       this.render.handleResize(width, height)
       this.camera.handleResize(width, height)
    }
