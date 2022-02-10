@@ -53,7 +53,16 @@ c3.init({
       { name: 'rock', file: './Assets/environment/Rock.fbx', scale: 0.035, },
       { name: 'bush', file: './Assets/environment/Bush.fbx', scale: 0.035, },
       { name: 'fence', file: './Assets/environment/Fence.fbx', scale: 0.035, },
-      { name: 'dragon', file: './Assets/Dragon.fbx', scale: 0.01, offset: [0, 0.2, 0.15] },
+      { 
+         name: 'dragon', 
+         file: './Assets/Dragon.fbx', 
+         scale: 0.01, 
+         offset: [0, 0.2, 0.15],
+         clips: [
+            { name: 'DragonModel|Dragon_Flying', map: 'DragonModel|Dragon_Flying'},
+            { name: 'DragonModel|Dragon_Death', map: 'DragonModel|Dragon_Death'},
+         ],
+      },
       { log: true, name: 'arrow', file: './Assets/equipment/Arrow.fbx', scale: 0.015, rotation: [-Math.PI*0.5, 0, 0], offset: [0, 0, 0] },
       { 
          name: 'bow', 
@@ -81,8 +90,8 @@ c3.init({
             { name: 'Arms.EquipWeaponEnd', map: 'Armature|Arms.EquipWeaponEnd', add: true, stringed: true },
             { name: 'Arms.EquipShield', map: 'Armature|Arms.EquipShield', add: true },
             { name: 'Arms.EquipShieldEnd', map: 'Armature|Arms.EquipShieldEnd', add: true, stringed: true },
-            { name: 'Legs.Jump', map: 'Armature|Legs.Jump', add: true, pose: true },
-            { name: 'Arms.Jump', map: 'Armature|Arms.Jump', add: true, pose: true },
+            { name: 'Legs.Jump', map: 'Armature|Legs.Jump', add: 'Armature|Idle', pose: true },
+            { name: 'Arms.Jump', map: 'Armature|Arms.Jump', add: 'Armature|Idle', pose: true },
          ]
       },
    ],

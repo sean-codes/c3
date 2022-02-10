@@ -61,7 +61,7 @@ export class ObjectDragon extends c3.Object {
    killDragon() {
       if (this.dead) return
       this.dead = true
-      this.model.animateOnce('DragonModel|Dragon_Death', () => {
+      this.model.animateOnce('DragonModel|Dragon_Death', 1, () => {
          this.destroy()
       })
    }

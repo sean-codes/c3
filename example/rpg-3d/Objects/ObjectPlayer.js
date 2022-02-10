@@ -251,14 +251,11 @@ export class ObjectPlayer extends c3.Object {
       this.addRotationY(c3.math.angleToAngle(this.rotation.y, this.targetLookAngle)/5)
 
       // Run / Idle Animation
-      if (c3.keyboard.check(['forward', 'backward', 'left', 'right']).down
-         && !c3.keyboard.check(['forward', 'backward', 'left', 'right']).held
+      this.isRunning = false
+      if (
+         c3.keyboard.check(['forward', 'backward', 'left', 'right']).held
       ) {
          this.isRunning = true
-      } else if (c3.keyboard.check(['forward', 'backward', 'left', 'right']).up
-         && !c3.keyboard.check(['forward', 'backward', 'left', 'right']).held
-      ) {
-         this.isRunning = false
       }
       
       // clamp speed
