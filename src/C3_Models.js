@@ -1,3 +1,5 @@
+import { C3_Model } from "./C3_Model.js"
+
 export class C3_Models {
    constructor(c3) {
       this.c3 = c3
@@ -7,7 +9,7 @@ export class C3_Models {
    }
    
    add({ loadInfo, object, isClone }) {
-      const newModel = new this.c3.Model({ c3: this.c3, id: this.id, loadInfo, object, isClone })
+      const newModel = new C3_Model({ c3: this.c3, id: this.id, loadInfo, object, isClone })
       this.list.push(newModel)
       this.id++
       
@@ -23,6 +25,10 @@ export class C3_Models {
       if (!modelToRemove.destroyed) modelToRemove.destroy()
    }
    
+   /**
+    * @param {string} modelName name of model
+    * @returns {C3_Model}
+    */   
    find(modelName) {
       return this.list.find(m => m.name === modelName)
    }

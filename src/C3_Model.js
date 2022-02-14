@@ -139,13 +139,17 @@ export class C3_Model {
       }
    }
    
-   clone(name) {
-      const cloneObject = name
-         ? this.object.children[0].children.find(o => o.name === name)
+   /**
+    * @param {string} [partName] inner part to clone
+    * @returns {C3_Model}
+    */   
+   clone(partName) {
+      const cloneObject = partName
+         ? this.object.children[0].children.find(o => o.name === partName)
          : this.object.children[0]
       const clone = SkeletonUtils.clone(cloneObject)
       clone.animations = cloneObject.animations
-   
+      
       const newModel = this.c3.models.add({
          loadInfo: { ...this.loadInfo, name: this.name },
          object: clone,
