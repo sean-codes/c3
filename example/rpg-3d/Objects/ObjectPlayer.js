@@ -117,13 +117,12 @@ export class ObjectPlayer extends c3.Object {
          if (this.target) {
             this.target = undefined
          } else {
-            const dragons = c3.objects.findAll(['Dragon', 'Target'])
+            const dragons = c3.objects.findAll([c3.types.Dragon, c3.types.Target])
             let closestDragon = undefined
             let closestDistance = 100000000000
             for (const dragon of dragons) {
                if (dragon.dead) continue
-               
-               const distanceFromPlayer = this.mesh.position.distanceTo(dragon.mesh.position)
+               const distanceFromPlayer = this.mesh.position.distanceTo(dragon.getPosition())
    
                if (distanceFromPlayer < 20 && distanceFromPlayer < closestDistance) {
                   closestDragon = dragon
@@ -140,7 +139,7 @@ export class ObjectPlayer extends c3.Object {
       
       if (this.target) {
          !this.meshTarget.parent && c3.scene.add(this.meshTarget)
-         this.meshTarget.position.copy(this.target.mesh.position)
+         this.meshTarget.position.copy(this.target.getPosition())
          const distanceFromCamera = c3.camera.distanceFrom(this.meshTarget)
          const targetScale = distanceFromCamera/100
          this.meshTarget.scale.set(targetScale, targetScale, targetScale)
@@ -171,7 +170,7 @@ export class ObjectPlayer extends c3.Object {
       let baseAngle = this.camera.yRot.rotation.y
       
       if (this.target && !this.target.dead) {
-         const direction = this.target.mesh.position.clone().sub(this.mesh.position)
+         const direction = this.target.getPosition().clone().sub(this.getPosition())
          const angleToTarget = new c3.THREE.Vector2(-direction.x, direction.z).angle() - (Math.PI/2)
          
          baseAngle = this.isSprinting ? baseAngle : angleToTarget
@@ -199,7 +198,7 @@ export class ObjectPlayer extends c3.Object {
          
          if (this.target && !this.isSprinting) {
             this.isStrafing = true
-            const distanceFromTarget = this.target.mesh.position.distanceTo(this.mesh.position)
+            const distanceFromTarget = this.target.getPosition().distanceTo(this.getPosition())
             const distanceAdjust = Math.min(distanceFromTarget, 20)
             const maxAdjust = 0.6 // this probably depends on speed
             const adjust = maxAdjust * ((20 - distanceAdjust) / 20)
@@ -217,7 +216,7 @@ export class ObjectPlayer extends c3.Object {
          
          if (this.target && !this.isSprinting) {
             this.isStrafing = true
-            const distanceFromTarget = this.target.mesh.position.distanceTo(this.mesh.position)
+            const distanceFromTarget = this.target.getPosition().distanceTo(this.getPosition())
             const distanceAdjust = Math.min(distanceFromTarget, 20)
             const maxAdjust = 0.6 // this probably depends on speed
             const adjust = maxAdjust * ((20 - distanceAdjust) / 20)
