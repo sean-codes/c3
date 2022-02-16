@@ -26,9 +26,9 @@ export class C3_Models {
    }
    
    /**
-    * @param {string} modelName name of model
-    * @returns {C3_Model}
-    */   
+   * @param {string} modelName name of model
+   * @returns {C3_Model}
+   */   
    find(modelName) {
       return this.list.find(m => m.name === modelName)
    }

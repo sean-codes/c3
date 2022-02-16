@@ -1,6 +1,6 @@
-import * as THREE from '../node_modules/three/build/three.module.js'
-import { C3_Vector } from './C3_Vector.js'
-import * as C3_Mesh from './C3_Mesh.js'
+import * as THREE_IMPORT from '../node_modules/three/build/three.module.js'
+ /** @type {import("../node_modules/three") } */
+const THREE = THREE_IMPORT
 
 export class C3_Object {
    constructor(c3, id, attr, type) {
@@ -69,6 +69,9 @@ export class C3_Object {
       this.setPosition(x, y, z)
    }
 
+   /**
+   * @returns {THREE.Vector3}
+   */
    getPosition() {
       return this.origin.position.clone()
    }
