@@ -254,6 +254,14 @@ export class C3_Model {
       }
    }
    
+   getClip(clipName) {
+      if (this.clips[clipName]) {
+         return this.clips[clipName]
+      } 
+      
+      console.error(`clip [${clipName}] not found! `)
+   }
+   
    animateSetClipTime(clipName, time) {
       const clip = this.clips[clipName]
       clip.time = time
@@ -329,8 +337,7 @@ export class C3_Model {
    }
    
    animateOnce(clipName, time, onEnd, dontResetWeightOnEnd) {
-      // console.log(time)
-      const clip = this.clips[clipName]
+      const clip = this.getClip(clipName)
       clip.setDuration(time)
       clip.reset()
       clip.enabled = true
