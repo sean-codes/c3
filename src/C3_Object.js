@@ -1,6 +1,4 @@
-import * as THREE_IMPORT from '../node_modules/three/build/three.module.js'
- /** @type {import("../node_modules/three") } */
-const THREE = THREE_IMPORT
+import * as THREE from '../node_modules/three/build/three.module.js'
 
 export class C3_Object {
    constructor(c3, id, attr, type) {

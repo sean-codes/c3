@@ -165,10 +165,12 @@ export class C3_Physics {
       for (const physicObjectId in this.list) {
          const { object, body, linkToMesh, debug, offset, checkIsOnGround } = this.list[physicObjectId]
          const { origin } = object
+         
          if (linkToMesh) {
             const meshWorldPosition = origin.getWorldPosition(new THREE.Vector3())
+            const meshWorldQuat = origin.getWorldQuaternion(new THREE.Quaternion())
             body.position.copy(meshWorldPosition)
-            body.quaternion.copy(body.quaternion)
+            body.quaternion.copy(meshWorldQuat)
          } else {
             origin.position.copy(body.position).sub(offset)
             origin.quaternion.copy(body.quaternion)
