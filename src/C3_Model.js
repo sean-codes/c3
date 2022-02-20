@@ -101,6 +101,7 @@ export class C3_Model {
 
          let clipName = definedClip ? definedClip.name : animation.name
          let adjustedClip = THREE.AnimationUtils.subclip(animation, animation.name, 0, Math.round(animation.time * 24), 24)
+         
          if (definedClip) {
             if (definedClip.add) {  
                var addToClip =  object.animations.find(c => c.name === definedClip.add)
@@ -280,7 +281,7 @@ export class C3_Model {
    // this was from legacy system
    animateStop(clipName) {
       // const clip = this.clips[clipName]
-      this.animateWeight(clipName, 0, true)
+      this.animateWeight(clipName, 0, 0)
    }
    
    animatePause(clipName) {
@@ -306,6 +307,10 @@ export class C3_Model {
    
    animateOnceTo(clipName, time, onEnd) {
       this.animateOnce(clipName, time, onEnd, true)
+   }
+   
+   animateOnceSmooth(clipName, time, smooth, onEnd) {
+      this.animateOnce(clipName, time, onEnd, false, smooth)
    }
    
    animateReverse(clipName, time, onEnd, dontResetWeightOnEnd) {
@@ -336,7 +341,8 @@ export class C3_Model {
       this.mixer.addEventListener('finished', stopAnimation)
    }
    
-   animateOnce(clipName, time, onEnd, dontResetWeightOnEnd) {
+   
+   animateOnce(clipName, time, onEnd, dontResetWeightOnEnd = false, smooth = 0) {
       const clip = this.getClip(clipName)
       clip.setDuration(time)
       clip.reset()
@@ -344,7 +350,7 @@ export class C3_Model {
       clip.clampWhenFinished = true // keeps at last frame when finished
       clip.setLoop(THREE.LoopOnce, 1)
       clip.time = 0
-      this.animateWeight(clipName, 1, 0)
+      this.animateWeight(clipName, 1, smooth)
       
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
