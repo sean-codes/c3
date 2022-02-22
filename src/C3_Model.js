@@ -279,9 +279,10 @@ export class C3_Model {
    }
    
    // this was from legacy system
-   animateStop(clipName) {
+   animateStop(clipName, smooth=0) {
       // const clip = this.clips[clipName]
-      this.animateWeight(clipName, 0, 0)
+      this.animatePause(clipName)
+      this.animateWeight(clipName, 0, smooth)
    }
    
    animatePause(clipName) {
@@ -309,8 +310,16 @@ export class C3_Model {
       this.animateOnce(clipName, time, onEnd, true)
    }
    
-   animateOnceSmooth(clipName, time, smooth, onEnd) {
+   animateOnceSmoothIn(clipName, time, smooth, onEnd) {
       this.animateOnce(clipName, time, onEnd, false, smooth)
+   }
+   
+   animateOnceSmoothOut(clipName, time, smooth, onEnd) {
+      this.animateOnce(clipName, time, onEnd, false, 0, smooth)
+   }
+   
+   animateOnceSmooth(clipName, time, smooth, onEnd) {
+      this.animateOnce(clipName, time, onEnd, false, smooth, smooth)
    }
    
    animateReverse(clipName, time, onEnd, dontResetWeightOnEnd) {
@@ -342,7 +351,7 @@ export class C3_Model {
    }
    
    
-   animateOnce(clipName, time, onEnd, dontResetWeightOnEnd = false, smooth = 0) {
+   animateOnce(clipName, time, onEnd, dontResetWeightOnEnd = false, smoothIn = 0, smoothOut = 0) {
       const clip = this.getClip(clipName)
       clip.setDuration(time)
       clip.reset()
@@ -350,7 +359,7 @@ export class C3_Model {
       clip.clampWhenFinished = true // keeps at last frame when finished
       clip.setLoop(THREE.LoopOnce, 1)
       clip.time = 0
-      this.animateWeight(clipName, 1, smooth)
+      this.animateWeight(clipName, 1, smoothIn)
       
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
@@ -358,7 +367,7 @@ export class C3_Model {
             const endedEarly = weight == 0
             onEnd && onEnd(endedEarly)
             if (!dontResetWeightOnEnd) {
-               this.animateWeight(clipName, 0, 0)
+               this.animateWeight(clipName, 0, smoothOut)
                this.mixer.removeEventListener('finished', stopAnimation)
             }
          }
