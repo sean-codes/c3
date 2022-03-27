@@ -7,6 +7,7 @@ export class C3_Network {
 
       this.ws = {}
       this.status = false
+      this.connecting = false
       this.buffer = []
 
       this.metrics = {
@@ -55,6 +56,7 @@ export class C3_Network {
       port=1180,
    }) {
       try {
+         this.connecting = true
          let url = 'wss://' + host + ':' + port
 
          if (ssl === undefined || ssl === false) {
@@ -64,6 +66,7 @@ export class C3_Network {
          const ws = new WebSocket(url)
          
          ws.onopen = () => {
+            this.connecting = false
             this.onConnect()
          }
          // ws.onerror = (e) => {}
@@ -71,6 +74,7 @@ export class C3_Network {
          ws.onmessage = (event) => { this.onMessage(event.data) }
          this.cs.network.ws = ws
       } catch (e) {
+         this.connecting = false
          console.log(e)
       }
    }
@@ -106,6 +110,7 @@ export class C3_Network {
    }
 
    onDisconnect() {
+      this.connecting = false
       this.cs.network.status = false
       if (this.user.disconnect) this.user.disconnect({ cs: this.cs })
    }
