@@ -26,7 +26,7 @@ export class C3_Object {
    destroy() {
       this.c3.scene.remove(this.origin)
       if (this.physicsObject) this.c3.physics.removeObject(this.physicsObject)
-      this.c3.objects.destroy(this)
+      this.c3.objects.removeFromList(this)
       if (this.mesh.isInstance) {
          this.mesh.model.deleteInstance(this.mesh.id)
       }

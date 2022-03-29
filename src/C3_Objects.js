@@ -20,8 +20,10 @@ export class C3_Objects {
       return newObject
    }
    
-   destroy(gameObject) {
-      return gameObject
+   removeFromList(gameObject) {
+      this.list = this.list.filter(o => {
+         return gameObject.id !== o.id
+      })
    }
 
    /**
