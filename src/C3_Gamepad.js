@@ -8,8 +8,9 @@ export class C3_Gamepad {
    }
    
    loop() {
+      const isScreenFocused = document.hasFocus()
       const gamepads = navigator.getGamepads()
-      if (!gamepads.length) return undefined
+      if (!gamepads.length || !isScreenFocused) return undefined
       
       if (gamepads[0]) {
          this.map.update(gamepads[0])
@@ -18,6 +19,11 @@ export class C3_Gamepad {
    
    read() {
       return this.map
+   }
+   
+   setDeadzone(deadzone) {
+      this.map.anolog_left.deadzone = deadzone
+      this.map.anolog_right.deadzone = deadzone
    }
 }
 
@@ -109,7 +115,7 @@ class GamepadAnolog {
       this.rawX = 0
       this.rawY = 0
       // pls make this adjustable
-      this.deadzone = 0.3
+      this.deadzone = 0.5
    }
    
    update(x, y) {
