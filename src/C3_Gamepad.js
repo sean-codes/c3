@@ -9,7 +9,7 @@ export class C3_Gamepad {
    
    loop() {
       const isScreenFocused = document.hasFocus()
-      const gamepads = navigator.getGamepads()
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : []
       if (!gamepads.length || !isScreenFocused) return undefined
       
       if (gamepads[0]) {
