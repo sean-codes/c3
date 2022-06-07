@@ -114,6 +114,8 @@ class GamepadAnolog {
       this.y = 0
       this.rawX = 0
       this.rawY = 0
+      this.angleRadians = 0
+      this.angleDegrees = 0
       // pls make this adjustable
       this.deadzone = 0.5
    }
@@ -124,7 +126,9 @@ class GamepadAnolog {
       const pastDeadzone = Math.max(Math.abs(x), Math.abs(y)) > this.deadzone
       this.x = pastDeadzone ? x : 0
       this.y = pastDeadzone ? y : 0
-      
+      this.angleRadians = Math.atan2(-this.x, this.y)
+      this.angleDegrees = this.angleRadians / Math.PI * 180 + 180 // 0 top clockwise
+
       if (this.x || this.y) {
          this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
          this.c3.userOnInput && this.c3.userOnInput()
