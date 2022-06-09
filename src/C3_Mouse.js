@@ -11,7 +11,8 @@ export class C3_Mouse {
       this.held = false
       this.up = false
       
-      
+      this.scrollX = 0
+      this.scrollY = 0
       this.passThrough(window)
    }
    
@@ -19,6 +20,13 @@ export class C3_Mouse {
       ele.addEventListener('mousemove', (e) => this.handleMousemove(e))
       ele.addEventListener('mousedown', (e) => this.handleMousedown(e))
       ele.addEventListener('mouseup', (e) => this.handleMouseup(e))
+      ele.addEventListener('mousewheel', (e) => {
+         e.preventDefault()
+         e.stopPropagation()
+         
+         this.scrollX += e.deltaX
+         this.scrollY += e.deltaY
+      })
    }
    
    handleMousemove(e) {
@@ -45,7 +53,8 @@ export class C3_Mouse {
       this.down = false
       if (this.up) this.held = false
       this.up = false
-      
+      this.scrollX = 0
+      this.scrollY = 0
       for (const event of this.events) {
          for (const eventName in event) {
             this[eventName] = event[eventName]
