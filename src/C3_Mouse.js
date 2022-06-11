@@ -20,10 +20,7 @@ export class C3_Mouse {
       ele.addEventListener('mousemove', (e) => this.handleMousemove(e))
       ele.addEventListener('mousedown', (e) => this.handleMousedown(e))
       ele.addEventListener('mouseup', (e) => this.handleMouseup(e))
-      ele.addEventListener('mousewheel', (e) => {
-         e.preventDefault()
-         e.stopPropagation()
-         
+      ele.addEventListener('mousewheel', (e) => {         
          this.scrollX += e.deltaX
          this.scrollY += e.deltaY
       })
