@@ -406,7 +406,7 @@ export class C3_Model {
    }
    
    animateIsPlaying(clipName) {
-      return this.clips[clipName].getEffectiveWeight() > 0
+      return this.clips[clipName].getEffectiveWeight() > 0 || this.clips[clipName].c3_weightTarget > 0
    }
    
    animateGetWeight(clipName) {
@@ -504,6 +504,15 @@ export class C3_Model {
       })
       
       return scale
+   }
+   
+   getActiveClips() {
+      const activeClips = []
+      for (const clipName in this.clips) {
+         if (this.animateIsPlaying(clipName))  activeClips.push(clipName)
+      }
+      
+      return activeClips
    }
    
    destroy() {

@@ -25,6 +25,7 @@ import { C3_Transform } from './C3_Transform.js'
 import { C3_Fps } from './C3_Fps.js'
 import { C3_Storage } from './C3_Storage.js'
 import { C3_Gamepad } from './C3_Gamepad.js'
+import { C3_Html } from './C3_Html.js'
 
 export class C3 {
    constructor(options = undefined) {
@@ -43,6 +44,7 @@ export class C3 {
       this.gamepad = new C3_Gamepad(this)
       this.network = new C3_Network(this)
       this.transform = new C3_Transform(this)
+      this.html = new C3_Html(this)
       this.math = C3_Math
       this.Model = C3_Model
       this.Object = C3_Object
@@ -139,6 +141,7 @@ export class C3 {
       
       this.userStep.call(this, this, delta)
       this.render.loop(this.scene, this.camera, delta)
+      this.html.loop(this.scene, this.camera, delta)
       this.objects.loop(delta)
       
       this.physics.loop(delta)
@@ -170,6 +173,7 @@ export class C3 {
       this.screenHeight = height
       this.render.handleResize(width, height)
       this.camera.handleResize(width, height)
+      this.html.handleResize(width, height)
    }
    
    // should move tihs to C3_Models.js
