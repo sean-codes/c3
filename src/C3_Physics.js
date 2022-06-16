@@ -27,7 +27,22 @@ export class C3_Physics {
       this.world.gravity.set(0, -60, 0)
       this.debug = false
       this.debugger = new CannonDebugRenderer(this.c3.scene.object, this.world)
+      
+      this.world.addEventListener('endContact', ({ bodyA, bodyB }) => {
+         if (bodyA && bodyB) {
+            this.list[bodyA.id].contacts.delete(this.list[bodyB.id])
+            this.list[bodyB.id].contacts.delete(this.list[bodyA.id])
+         }
+      })
+      
+      this.world.addEventListener('beginContact', ({ bodyA, bodyB }) => {
+         if (bodyA && bodyB) {
+            this.list[bodyA.id].contacts.add(this.list[bodyB.id])
+            this.list[bodyB.id].contacts.add(this.list[bodyA.id])
+         }
+      })
    }
+   
    
    addMaterial(name, options) {
       this.materials[name] = new CANNON.Material(options)
@@ -119,6 +134,7 @@ export class C3_Physics {
          checkIsOnGround,
          tempCollisions: [],
          collisions: [],
+         contacts: new Set(),
          material: phyMaterial,
       }
       
@@ -163,8 +179,15 @@ export class C3_Physics {
 
       const debugBodies = []
       for (const physicObjectId in this.list) {
-         const { object, body, linkToMesh, debug, offset, checkIsOnGround } = this.list[physicObjectId]
+         const { object, body, linkToMesh, debug, offset, checkIsOnGround, contacts } = this.list[physicObjectId]
          const { origin } = object
+         
+         // remove dead contacts
+         for (var contact of contacts) {
+            if (!contact.body.world) {
+               contacts.delete(contact)
+            }
+         }
          
          if (linkToMesh) {
             const meshWorldPosition = origin.getWorldPosition(new THREE.Vector3())

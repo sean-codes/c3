@@ -193,7 +193,12 @@ export class C3_Object {
    }
 
    getCollisions() {
-      return this.physicsObject.collisions
+      let collisions = []
+      for (var item of this.physicsObject.contacts) {
+         collisions.push(item.object)
+      }
+      
+      return collisions
    }
    
    getIsOnGround() {

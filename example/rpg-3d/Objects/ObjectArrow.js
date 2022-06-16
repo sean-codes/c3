@@ -18,7 +18,7 @@ export class ObjectArrow extends c3.Object {
       return {
          meshes: [{ mesh: this.mesh }],
          fixedRotation: true,
-         mass: 0,
+         mass: 1,
          collisionResponse: false,
          linkToMesh: true,
          watchCollisions: true
@@ -44,10 +44,8 @@ export class ObjectArrow extends c3.Object {
       
       
       for (const collision of this.getCollisions()) {
-         const { other } = collision
-         
-         if (other.type === c3.types.Dragon) {
-            other.killDragon()
+         if (collision.type === c3.types.Dragon) {
+            collision.killDragon()
             this.destroy()
          }
       }

@@ -27,11 +27,9 @@ export class ObjectWeapon extends c3.Object {
    }
    
    step() {
-      for (const collision of this.getCollisions()) {
-         const { other } = collision
-         
-         if (other.type === c3.types.Dragon && this.parent.isAttacking) {
-            other.killDragon()
+      for (const collision of this.getCollisions()) {         
+         if (collision.type === c3.types.Dragon && this.parent.isAttacking) {
+            collision.killDragon()
          }
       }
    }
