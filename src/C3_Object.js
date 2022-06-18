@@ -11,7 +11,7 @@ export class C3_Object {
       this.origin.C3_Object = this // might be handy for querying
       
       // turn this into something? 
-      this.mesh = this.mesh ? this.mesh() : c3.mesh.Blank()
+      this.mesh = this.mesh ? this.mesh(attr) : c3.mesh.Blank()
       if (!this.mesh.isInstance) {
          this.origin.add(this.mesh.object || this.mesh)
       }
@@ -99,9 +99,9 @@ export class C3_Object {
    }
 
    rotate(x, y, z) {
-      this.origin.rotation.x += x
-      this.origin.rotation.y += y
-      this.origin.rotation.z += z
+      this.rotation.x += x
+      this.rotation.y += y
+      this.rotation.z += z
       this.rotateUpdate()
    }
 
