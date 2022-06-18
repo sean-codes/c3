@@ -29,8 +29,9 @@ c3.init({
    
    models: [
       { name: 'rock', file: './Assets/rock.fbx', scale: 0.035, },
-      { name: 'house', file: './Assets/wood_house_two_story.glb', scale: 0.5, },
+      { name: 'house', file: './Assets/wood_house_two_story.glb', scale: 0.5},
       { name: 'boxrock', file: './Assets/box_rock_1.fbx', scale: 0.025, },
+      { name: 'hammer', file: './Assets/Hammer_Double.glb', scale: 1.5, },
    ],
    
    init: function() {
@@ -44,8 +45,8 @@ c3.init({
       // this.objects.create(c3.types.exampleInstanceTraverse, { pos: new c3.Vector(0, 4, 0), scale: 1, })
       // this.objects.create(c3.types.exampleInstance, { pos: new c3.Vector(-10, 4, 0), scale: 1, })
       // this.objects.create(c3.types.exampleInstance, { pos: new c3.Vector(0, 0, 0), scale: 0.75, })
-      // this.objects.create(c3.types.exampleCloneTraverse, { pos: new c3.Vector(0, -4, 0), scale: 1, })
-      this.objects.create(c3.types.exampleClone, { pos: new c3.Vector(0, -8, 0), scale: 1, })
+      this.objects.create(c3.types.exampleCloneTraverse, { pos: new c3.Vector(0, -4, 0), scale: 1, })
+      // this.objects.create(c3.types.exampleClone, { pos: new c3.Vector(0, -8, 0), scale: 1, })
       // const count = 3s
       // const space = 10
       // const offsetX = -(count * space)/2

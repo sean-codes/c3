@@ -3,6 +3,7 @@ import { c3 } from '../c3.js'
 export class ObjectExampleCloneTraverse extends c3.Object {
    mesh() {
       // const model = c3.models.find('rock')
+      // const model = c3.models.find('hammer')
       const model = c3.models.find('house')
 
       const clone = model.clone()
@@ -53,5 +54,6 @@ export class ObjectExampleCloneTraverse extends c3.Object {
       //    currPos.y + this.moveSpeed,
       //    currPos.z,
       // )
+      // this.rotate(0, 0.1, 0)
    }
 }
