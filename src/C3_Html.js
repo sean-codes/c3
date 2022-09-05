@@ -22,4 +22,13 @@ export class C3_Html {
    handleResize(width, height) {
       this.renderer.setSize(width, height)
    }
+   
+   addStyle(key, style) {
+      const isAlreadyAStylesheet = document.querySelector('.C3_STYLE_' + key)
+      const element = isAlreadyAStylesheet ? isAlreadyAStylesheet : document.createElement('style')
+      
+      element.innerHTML = style
+      element.class = 'C3_STYLE_' + key
+      document.head.appendChild(element)
+   }
 }
