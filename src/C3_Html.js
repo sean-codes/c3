@@ -3,11 +3,20 @@ import { CSS2DRenderer, CSS2DObject } from '../node_modules/three/examples/jsm/r
 export class C3_Html {
    constructor(c3) {
       this.c3 = c3
-      this.renderer = new CSS2DRenderer()
-      this.renderer.setSize( window.innerWidth, window.innerHeight )
-      this.renderer.domElement.style.position = 'absolute'
-      this.renderer.domElement.style.top = '0px'
-      document.body.appendChild(this.renderer.domElement)
+      const htmlC3HtmlContainer = document.createElement('div')
+      htmlC3HtmlContainer.classList.add('C3_HTML_Container')
+      htmlC3HtmlContainer.setAttribute('style', `
+         position: fixed;
+         top: 0px; 
+         left: 0px;
+      `)
+
+      this.renderer = new CSS2DRenderer({
+         element: htmlC3HtmlContainer
+      })
+
+      this.renderer.setSize(window.innerWidth, window.innerHeight)
+      document.body.appendChild(htmlC3HtmlContainer)
    }
    
    create(html) {
@@ -28,7 +37,7 @@ export class C3_Html {
       const element = isAlreadyAStylesheet ? isAlreadyAStylesheet : document.createElement('style')
       
       element.innerHTML = style
-      element.class = 'C3_STYLE_' + key
+      element.classList.add('C3_STYLE_' + key)
       document.head.appendChild(element)
    }
 }
