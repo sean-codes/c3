@@ -19,6 +19,7 @@ export class C3_Texture {
          texture.minFilter = THREE.NearestFilter
       }
       
+      texture.flipY = false // for glft textures
       // not sure. probably delete
       // texture.anisotropy = c3.render.renderer.capabilities.getMaxAnisotropy()
       // texture.offset = new THREE.Vector2(0.002, 0)

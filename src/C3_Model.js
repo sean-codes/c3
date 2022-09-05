@@ -22,6 +22,7 @@ export class C3_Model {
                material.flatShading = true
                material.reflectivity = 0
                material.shininess = 0
+               material.metalness = 0 // metal textures need different lighting?
                
                if (loadInfo.materialOverrides) {
                   const overrides = loadInfo.materialOverrides[material.name]
@@ -48,9 +49,9 @@ export class C3_Model {
             this.bones[part.name] = part
          }
 
+         if (part.name.startsWith('hidden_')) part.visible = false
          if (part.type === 'Mesh' || part.type === 'SkinnedMesh') {
             if (part.name.startsWith('c3_phy_mesh')) part.visible = false
-            if (part.name.startsWith('hidden_')) part.visible = false
             if (!loadInfo.noReceiveShadow) part.receiveShadow = true
             if (!loadInfo.noCastShadow) part.castShadow = true
             if (loadInfo.meshOverrides) {
@@ -98,10 +99,9 @@ export class C3_Model {
       // this likely means we are doing some kind of destructive mutation to the clips... will look into it in more detail later
       for (let definedClip of loadInfo.clips || []) {
          const animation = object.animations.find(c => definedClip.map === c.name)
-
+         
          let clipName = definedClip ? definedClip.name : animation.name
          let adjustedClip = THREE.AnimationUtils.subclip(animation, animation.name, 0, Math.round(animation.time * 24), 24)
-         
          if (definedClip) {
             if (definedClip.add) {  
                var addToClip =  object.animations.find(c => c.name === definedClip.add)
@@ -513,6 +513,14 @@ export class C3_Model {
       }
       
       return activeClips
+   }
+   
+   hide() {
+      this.object.visible = false   
+   }
+   
+   show() {
+      this.object.visible = true
    }
    
    destroy() {

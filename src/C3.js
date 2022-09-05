@@ -191,7 +191,14 @@ export class C3 {
             const loader = isGltf ? gltfLoader : fbxLoader
             
             loader.load(loadInfo.file, (object) => {
-               if (isGltf) { object = object.scene; }
+               if (isGltf) { 
+                  // need to revist, animations for gltf not working right
+                  const obj = new THREE.Object3D()
+                  obj.add(object.scene)
+                  obj.animations = object.animations
+                  object = obj; 
+               }
+               
                // multiple models in a single file
                if (loadInfo.models) {
                   for (let modelLoadInfo of loadInfo.models) {
