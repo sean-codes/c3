@@ -515,6 +515,10 @@ export class C3_Model {
       return activeClips
    }
    
+   setVisible(visible) {
+      this.object.visible = visible
+   }
+   
    hide() {
       this.object.visible = false   
    }

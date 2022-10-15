@@ -92,10 +92,10 @@ export class C3 {
       this.running = true
       this.loops = 0
       
-      // applying cs to scripts
+      // applying c3 to scripts
       for (const scriptName in scripts) {
          if (typeof scripts[scriptName] === 'object') {
-            scripts[scriptName].cs = this
+            scripts[scriptName].c3 = this
          }
          this.script[scriptName] = scripts[scriptName]
       }
@@ -114,7 +114,6 @@ export class C3 {
 
    engineInit() {
       this.scene.add(this.camera.object)
-
       window.onresize = () => this.handleResize()
       this.handleResize()
 

@@ -235,7 +235,11 @@ export class C3_Object {
          // this.origin.position.sub(offsetScaled)
       }
    }
-   
+
+   setVisible(visible) {
+      this.origin.visible = visible
+   }
+  
    onResize() {}
    create() {}
    step() {}
