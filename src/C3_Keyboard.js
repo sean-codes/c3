@@ -23,11 +23,12 @@ export class C3_Keyboard {
    }
    
    addEvent(e, type) {
-      e.preventDefault()
-      
       const metaKey = e.metaKey
       const keyCode = e.keyCode
+      
       if (!this.keys[keyCode]) return
+      
+      e.preventDefault()
       
       this.events.push({
          keyCode,

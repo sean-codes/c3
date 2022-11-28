@@ -9,7 +9,7 @@ export class C3_Object {
       this.rotation = new THREE.Euler(0, 0, 0)
       this.origin = new THREE.Object3D()
       this.origin.C3_Object = this // might be handy for querying
-      
+
       // turn this into something? 
       this.mesh = this.mesh ? this.mesh(attr) : c3.mesh.Blank()
       if (!this.mesh.isInstance) {
