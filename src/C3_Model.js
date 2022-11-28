@@ -86,9 +86,9 @@ export class C3_Model {
       
       // scale
       // scale after so we can adjust axis
-      this.object.scale.x = loadInfo.scale
-      this.object.scale.y = loadInfo.scale
-      this.object.scale.z = loadInfo.scale
+      this.object.scale.x = loadInfo.scale || 1
+      this.object.scale.y = loadInfo.scale || 1
+      this.object.scale.z = loadInfo.scale || 1
 
       //animations
       this.mixer = new THREE.AnimationMixer(object)
@@ -490,9 +490,14 @@ export class C3_Model {
       return this.getMesh().material // lazy
    }
    
+   getGroup(object) {
+      if (object.type === 'Group') return object
+      return this.getGroup(object.children[0])
+   }
+
    getMesh() {
-      // get the mesh that isnt a c3_phyiscs
-      return this.object.children[0].children.find(a => !a.name.startsWith('c3_'))
+      const group = this.getGroup(this.object)
+      return group.children.find(m => !m.name.startsWith('c3'))
    }
    
    getGeoScale() {
