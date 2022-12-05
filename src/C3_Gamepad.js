@@ -12,8 +12,8 @@ export class C3_Gamepad {
       const gamepads = navigator.getGamepads ? navigator.getGamepads() : []
       if (!gamepads.length || !isScreenFocused) return undefined
       
-      if (gamepads[0]) {
-         this.map.update(gamepads[0])
+      if (gamepads[1] || gamepads[0]) {
+         this.map.update(gamepads[1] || gamepads[0])
       }
    }
    
