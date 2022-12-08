@@ -8,17 +8,36 @@ export class C3_Gamepad {
    }
    
    loop() {
-      const isScreenFocused = document.hasFocus()
-      const gamepads = navigator.getGamepads ? navigator.getGamepads() : []
-      if (!gamepads.length || !isScreenFocused) return undefined
+      const gamepad = this.getGamepad()
       
-      if (gamepads[1] || gamepads[0]) {
-         this.map.update(gamepads[1] || gamepads[0])
+      if (gamepad) {
+         this.map.update(gamepad)
       }
    }
    
+   getGamepad() {
+      const isScreenFocused = document.hasFocus()
+      if (!isScreenFocused) return
+
+      const gamepads = navigator.getGamepads ? navigator.getGamepads() : []
+      if (!gamepads.length) return
+      
+      // temporary
+      return gamepads[1] || gamepads[0]
+   }
+
    read() {
       return this.map
+   }
+
+   vibrate(duration, scale = 1) {
+      const gamepad = this.getGamepad()
+      const viber = gamepad && gamepad.vibrationActuator
+      if (gamepad && viber) {
+         viber.playEffect('dual-rumble', {
+            startDelay: 0, duration: duration, weakMagnitude: 1.0*scale, strongMagnitude: 1.0*scale 
+         })
+      }
    }
    
    setDeadzone(deadzone) {
