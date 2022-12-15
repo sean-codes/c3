@@ -131,6 +131,7 @@ export class C3_Physics {
          debug,
          offset,
          isOnGround: false,
+         distanceToGround: 0,
          checkIsOnGround,
          tempCollisions: [],
          collisions: [],
@@ -200,7 +201,9 @@ export class C3_Physics {
          }
          
          if (checkIsOnGround) {
-            this.list[physicObjectId].isOnGround = this.checkIsOnGround(body)
+            const isOnGroundResult = this.checkIsOnGround(body)
+            this.list[physicObjectId].isOnGround = isOnGroundResult.isOnGround
+            this.list[physicObjectId].distanceToGround = isOnGroundResult.distanceToGround
          }
          
          if (debug || this.debug) {
@@ -212,17 +215,24 @@ export class C3_Physics {
    }
    
    checkIsOnGround(body) {
-      // need to rework this to use a shape to set width/depth of ground check
       body.computeAABB()
       const rayPositionFrom = body.position.clone()
-      rayPositionFrom.y = body.aabb.lowerBound.y-1
+      rayPositionFrom.y = body.aabb.lowerBound.y + 1
       const rayPositionTo = rayPositionFrom.clone()
-      rayPositionTo.y += 1.05
+      rayPositionTo.y -= 10 // positive = up, negative = down
       
       const ray = new CANNON.Ray(rayPositionFrom, rayPositionTo)
-      const bodiesWithoutself = this.world.bodies.filter(b => b.id !== body.id)
-      ray.intersectBodies(bodiesWithoutself, ray.result)
-      if (ray.result.hasHit) return true
+      ray.mode = CANNON.Ray.CLOSEST
+      const bodiesWithoutSelf = this.world.bodies.filter(b => b.id !== body.id)
+      ray.intersectBodies(bodiesWithoutSelf, ray.result)
+
+      let distance = ray.result.hasHit ? ray.result.distance-1 : 999
+
+
+      return {
+         isOnGround: distance < 0.1,
+         distanceToGround: distance
+      }
    }
 }
 
