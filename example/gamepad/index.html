@@ -1,0 +1,75 @@
+<!doctype html>
+<html>
+
+<head>
+   <title>C3 Example: Basic Cube</title>
+   <meta charset="utf-8">
+   <meta name="viewport"
+      content="width=device-width, height=device-height, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no">
+
+   <style>
+      html, body {
+         margin: 0;
+         padding: 0;
+      }
+
+      * {
+         font-family: monospace;
+      }
+      
+      canvas {
+         display: block;
+         position: fixed;
+      }
+      
+      .test {
+         position: fixed;
+         z-index: 100;
+         padding: 2rem;
+         top: 0;
+         left: 0;
+      }
+
+      .test table td{
+         min-width: 100px;
+         text-align: center;
+      }
+
+      .test table td:first-of-type{
+         text-align:right;
+      }
+   </style>
+</head>
+
+<body>
+   <script type="module" src="./c3.js"></script>
+
+   <div class="test">
+      <h1>Anolog</h1>
+      <table>
+         <tr>
+            <td></td>
+            <td>x</td>
+            <td>y</td>
+            <td>rawX</td>
+            <td>rawY</td>
+         </tr>
+         <tr id="anologx">
+            <td>anolog left</td>
+            <td class="x">0</td>
+            <td class="y">0</td>
+            <td class="rawX">0</td>
+            <td class="rawY">0</td>
+         </tr>
+         <tr id="anology">
+            <td>anolog right</td>
+            <td class="x">0</td>
+            <td class="y">0</td>
+            <td class="rawX">0</td>
+            <td class="rawY">0</td>
+         </tr>
+      </table>
+   </div>
+</body>
+
+</html>

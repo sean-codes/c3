@@ -135,31 +135,52 @@ class GamepadAnolog {
       this.rawY = 0
       this.angleRadians = 0
       this.angleDegrees = 0
+      this.len = 0
       // pls make this adjustable
       this.deadzone = 0.5
    }
    
    update(x, y) {
-      this.rawX = x
-      this.rawY = y
-      const pastDeadzoneX = Math.abs(x) > this.deadzone
-      const pastDeadzoneY = Math.abs(y) > this.deadzone
-      const pastDeadzone = pastDeadzoneX || pastDeadzoneY
-
-      // 0 - 1 from outside deadzone -> max
-      const range = 1 - this.deadzone
-      const xPercent = pastDeadzoneX ? ((Math.abs(x) - this.deadzone) / range)*Math.sign(x) : x
-      const yPercent = pastDeadzoneY ? ((Math.abs(y) - this.deadzone) / range)*Math.sign(y) : y
-      
-      this.x = pastDeadzoneX ? xPercent : 0
-      this.y = pastDeadzoneY ? yPercent : 0
-      
-      this.angleRadians = Math.atan2(-this.x, this.y)
-      this.angleDegrees = this.angleRadians / Math.PI * 180 + 180 // 0 top clockwise
-
-      if (this.x || this.y) {
+      if (x || y) {
+         // set input type
          this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
          this.c3.userOnInput && this.c3.userOnInput()
+      }
+
+      var xR = Math.round(x*100)/100
+      var yR = Math.round(y*100)/100
+      this.rawX = xR
+      this.rawY = yR
+
+      // reset
+      this.len = 0
+      this.x = 0
+      this.y = 0
+      this.angleRadians = 0
+      this.anfleDegress = 0
+      
+      if (xR || yR) {
+         
+         const len = Math.min(Math.round(Math.sqrt(xR*xR+yR*yR)*100)/100, 1)
+         const pastDeadzone = len > this.deadzone       
+         this.len = len
+         
+         if (pastDeadzone) {
+            // pull the deadzone out of x/y
+            // this gives you a smoother range:
+            const uv = [xR*(1/len), yR*(1/len)]
+            const range = 1 - this.deadzone
+            const removeDeadzone = len - this.deadzone
+            const wtf = removeDeadzone / range
+            
+            // "0 - 1" vs "deadzone - 1"
+            this.x = Math.round(uv[0]*wtf*100)/100
+            this.y = Math.round(uv[1]*wtf*100)/100
+
+            // set angle
+            this.angleRadians = Math.atan2(-x, y)
+            this.angleDegrees = this.angleRadians / Math.PI * 180 + 180 // 0 top clockwise
+         }
       }
    }
 }

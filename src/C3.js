@@ -127,10 +127,10 @@ export class C3 {
       // rever later? animationframe >:(
       const oneSec = 1000/60
       const timeScale = 1/ (this.engineSpeed / oneSec)
-      setTimeout(() => this.engineStep(), this.engineSpeed)
-      // typeof window !== 'undefined' 
-      //    ? requestAnimationFrame(() => this.engineStep()) 
-      //    : setTimeout(() => this.engineStep(), this.engineSpeed)
+      // setTimeout(() => this.engineStep(), this.engineSpeed)
+      typeof window !== 'undefined' 
+         ? requestAnimationFrame(() => this.engineStep()) 
+         : setTimeout(() => this.engineStep(), this.engineSpeed)
          
       // I want to run this even if stopped
       this.gamepad.loop()
