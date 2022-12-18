@@ -27,8 +27,8 @@ export class C3_Keyboard {
       if (e.ctrlKey || e.metaKey) keyCode = 'cmd+'+keyCode
       
       if (!this.keys[keyCode]) return
-      
       e.preventDefault()
+
       this.events.push({
          keyCode,
          key: this.keys[keyCode],
@@ -69,14 +69,13 @@ export class C3_Keyboard {
          : [keyNameOrArrayOfKeys]
          
          for (const keyName of keyNames) {
-            // if key is a string map it to a keycode. else use as is
             const map = this.keyMap[keyName]
-            const status = this.keys[map]
-         if (!status) continue
-         
-         returnVal.up = returnVal.up || status.up
-         returnVal.down = returnVal.down || status.down
-         returnVal.held = returnVal.held || status.held
+            const status = this.keys[map] || this.keys[keyName]
+            if (!status) continue
+            
+            returnVal.up = returnVal.up || status.up
+            returnVal.down = returnVal.down || status.down
+            returnVal.held = returnVal.held || status.held
       }
       
       return returnVal
