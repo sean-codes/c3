@@ -142,9 +142,18 @@ class GamepadAnolog {
    update(x, y) {
       this.rawX = x
       this.rawY = y
-      const pastDeadzone = Math.max(Math.abs(x), Math.abs(y)) > this.deadzone
-      this.x = pastDeadzone ? x : 0
-      this.y = pastDeadzone ? y : 0
+      const pastDeadzoneX = Math.abs(x) > this.deadzone
+      const pastDeadzoneY = Math.abs(y) > this.deadzone
+      const pastDeadzone = pastDeadzoneX || pastDeadzoneY
+
+      // 0 - 1 from outside deadzone -> max
+      const range = 1 - this.deadzone
+      const xPercent = pastDeadzoneX ? ((Math.abs(x) - this.deadzone) / range)*Math.sign(x) : x
+      const yPercent = pastDeadzoneY ? ((Math.abs(y) - this.deadzone) / range)*Math.sign(y) : y
+      
+      this.x = pastDeadzone ? xPercent : 0
+      this.y = pastDeadzone ? yPercent : 0
+      
       this.angleRadians = Math.atan2(-this.x, this.y)
       this.angleDegrees = this.angleRadians / Math.PI * 180 + 180 // 0 top clockwise
 
