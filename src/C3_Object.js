@@ -31,7 +31,7 @@ export class C3_Object {
          this.mesh.model.deleteInstance(this.mesh.id)
       }
       
-      this.mesh.traverse(o => {
+      this.mesh.traverse && this.mesh.traverse(o => {
          o.dispatchEvent( { type: 'removed' } );
       })
       

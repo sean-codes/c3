@@ -9,6 +9,7 @@ export class C3_Html {
          position: fixed;
          top: 0px; 
          left: 0px;
+         pointer-events: none;
       `)
 
       this.renderer = new CSS2DRenderer({

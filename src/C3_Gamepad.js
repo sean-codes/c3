@@ -151,8 +151,8 @@ class GamepadAnolog {
       const xPercent = pastDeadzoneX ? ((Math.abs(x) - this.deadzone) / range)*Math.sign(x) : x
       const yPercent = pastDeadzoneY ? ((Math.abs(y) - this.deadzone) / range)*Math.sign(y) : y
       
-      this.x = pastDeadzone ? xPercent : 0
-      this.y = pastDeadzone ? yPercent : 0
+      this.x = pastDeadzoneX ? xPercent : 0
+      this.y = pastDeadzoneY ? yPercent : 0
       
       this.angleRadians = Math.atan2(-this.x, this.y)
       this.angleDegrees = this.angleRadians / Math.PI * 180 + 180 // 0 top clockwise

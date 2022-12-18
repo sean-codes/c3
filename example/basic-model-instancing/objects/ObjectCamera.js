@@ -73,6 +73,7 @@ export class ObjectCamera extends c3.Object {
       for (let { object } of objects) {
          object.setRotation(0, 0, 0)
          object.setScale(2, 2, 2)
+
          if (c3.mouse.isDown()) {
             c3.transform.enable()
             c3.transform.attach(object)

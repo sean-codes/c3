@@ -17,17 +17,17 @@ c3.init({
    node_modules: '../../node_modules',
    path: '../C3',
    keyMap: {
-      forward: 87,
-      left: 65,
-      right: 68,
-      backward: 83,
-      attack: 69,
-      equip_helmet: 49,
-      jump: 32, 
-      block: 81, // q
-      target: 84, // t
-      sheath: 88, // x
-      sprint: 16, // shift
+      forward: 'w',
+      left: 'a',
+      right: 'd',
+      backward: 's',
+      attack: 'e',
+      equip_helmet: '1',
+      jump: ' ', 
+      block: 'q', // q
+      target: 't', // t
+      sheath: 'x', // x
+      sprint: 'shift', // shift
    },
 
    types: {

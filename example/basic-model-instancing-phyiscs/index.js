@@ -7,13 +7,13 @@ import { ObjectLight } from './objects/ObjectLight.js'
 import { ObjectCamera } from './objects/ObjectCamera.js'
 
 export const KEYMAP = {
-   forward: 87,
-   left: 65,
-   right: 68,
-   backward: 83,
-   flyUp: 82,
-   flyDown: 70,
-   del: 8,
+   forward: 'w',
+   left: 'a',
+   right: 'd',
+   backward: 's',
+   flyUp: 'r',
+   flyDown: 'f',
+   del: 'delete',
 }
 
 c3.init({

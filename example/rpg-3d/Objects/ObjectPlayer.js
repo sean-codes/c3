@@ -325,6 +325,7 @@ export class ObjectPlayer extends c3.Object {
       
       // Jump
       if (this.body.velocity.y > 5) this.isOnGround = false
+
       if (c3.keyboard.check('jump').down && this.isOnGround) {
          this.body.velocity.y = 25
       }
