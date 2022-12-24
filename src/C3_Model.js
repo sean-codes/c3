@@ -151,6 +151,12 @@ export class C3_Model {
       const clone = SkeletonUtils.clone(cloneObject)
       clone.animations = cloneObject.animations
       
+      clone.traverse((part) => {
+         if(part.type.includes('SkinnedMesh')) {
+            part.material = new THREE[part.material.type](part.material)
+         }
+      })
+      
       const newModel = this.c3.models.add({
          loadInfo: { ...this.loadInfo, name: this.name },
          object: clone,
