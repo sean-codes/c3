@@ -23,7 +23,7 @@ export class C3_Gamepad {
       if (!gamepads.length) return
       
       // temporary
-      return gamepads[1] || gamepads[0]
+      return gamepads[0] || gamepads[1]
    }
 
    read() {
@@ -141,11 +141,6 @@ class GamepadAnolog {
    }
    
    update(x, y) {
-      if (x || y) {
-         // set input type
-         this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
-         this.c3.userOnInput && this.c3.userOnInput()
-      }
 
       var xR = Math.round(x*100)/100
       var yR = Math.round(y*100)/100
@@ -180,6 +175,10 @@ class GamepadAnolog {
             // set angle
             this.angleRadians = Math.atan2(-x, y)
             this.angleDegrees = this.angleRadians / Math.PI * 180 + 180 // 0 top clockwise
+
+            // set input type
+            this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
+            this.c3.userOnInput && this.c3.userOnInput()
          }
       }
    }
