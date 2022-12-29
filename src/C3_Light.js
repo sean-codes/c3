@@ -10,7 +10,7 @@ export class C3_Light {
    
    Ambient({
       color = '#FFF',
-      intensity = 1
+      intensity = 0.5
    } = {}) {
       return new THREE.AmbientLight(color, intensity)
    }

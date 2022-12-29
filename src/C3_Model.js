@@ -152,8 +152,11 @@ export class C3_Model {
       clone.animations = cloneObject.animations
       
       clone.traverse((part) => {
-         if(part.type.includes('SkinnedMesh')) {
-            part.material = new THREE[part.material.type](part.material)
+         if(part.type.includes('SkinnedMesh') && part.material) {
+            const materials = Array.isArray(part.material) ? part.material : [part.material]
+            for (var mat of materials) {
+               mat = new THREE[mat.type](mat)
+            }
          }
       })
       
