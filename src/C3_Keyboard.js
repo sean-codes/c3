@@ -5,6 +5,7 @@ export class C3_Keyboard {
       this.keys = {}
       this.events = []
       this.metas = []
+      this.debug = false
       this.listen()
    }
    
@@ -17,6 +18,10 @@ export class C3_Keyboard {
       }
    }
    
+   toggleDebug(toggle) {
+      this.debug = toggle ?? true
+   }
+
    listen() {
       document.body.addEventListener('keydown', e => { !e.repeat && this.addEvent(e, 'down')})
       document.body.addEventListener('keyup', e => { this.addEvent(e, 'up') })
@@ -24,6 +29,7 @@ export class C3_Keyboard {
    
    addEvent(e, type) {
       let keyCode = e.key.toLowerCase()
+      if (this.debug) console.log('C3 Keyboard: ', keyCode)
       if (e.ctrlKey || e.metaKey) keyCode = 'cmd+'+keyCode
       
       if (!this.keys[keyCode]) return
