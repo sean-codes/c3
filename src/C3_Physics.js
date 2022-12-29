@@ -230,7 +230,7 @@ export class C3_Physics {
 
 
       return {
-         isOnGround: distance < 0.1,
+         isOnGround: distance < 0.85,
          distanceToGround: distance
       }
    }
