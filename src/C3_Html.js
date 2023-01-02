@@ -1,4 +1,4 @@
-import { CSS2DRenderer, CSS2DObject } from '../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js'
+import { CSS2DRenderer, CSS2DObject } from '../libs/three/examples/jsm/renderers/CSS2DRenderer.mjs'
 
 export class C3_Html {
    constructor(c3) {

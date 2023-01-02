@@ -1,4 +1,4 @@
-import * as THREE from '../node_modules/three/build/three.module.js'
+import * as THREE from '../libs/three/build/three.module.mjs'
 
 export class C3_Texture {
    constructor({ c3, texture, loadInfo }) {

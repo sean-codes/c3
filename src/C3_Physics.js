@@ -1,7 +1,7 @@
-import * as CANNON from '../node_modules/cannon-es/dist/cannon-es.js'
-import * as THREE from '../node_modules/three/build/three.module.js'
-import { ConvexGeometry } from '../node_modules/three/examples/jsm/geometries/ConvexGeometry.js'
-import { CannonDebugRenderer } from '../node_modules/cannon-es-debugger-jsm/index.js'
+import * as CANNON from '../libs/cannon-es/dist/cannon-es.mjs'
+import * as THREE from '../libs/three/build/three.module.mjs'
+import { ConvexGeometry } from '../libs/three/examples/jsm/geometries/ConvexGeometry.mjs'
+import { CannonDebugRenderer } from './cannon-es-debugger.mjs'
 
 export const SHAPES = {
    BOX: 'BOX',
@@ -215,7 +215,7 @@ export class C3_Physics {
    }
    
    checkIsOnGround(body) {
-      body.computeAABB()
+      body.updateAABB()
       const rayPositionFrom = body.position.clone()
       rayPositionFrom.y = body.aabb.lowerBound.y + 1
       const rayPositionTo = rayPositionFrom.clone()

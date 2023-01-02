@@ -1,5 +1,5 @@
-import * as THREE from '../node_modules/three/build/three.module.js'
-import { SkeletonUtils } from '../node_modules/three/examples/jsm/utils/SkeletonUtils.js'
+import * as THREE from '../libs/three/build/three.module.mjs'
+import { SkeletonUtils } from '../libs/three/examples/jsm/utils/SkeletonUtils.mjs'
 
 export class C3_Model {
    constructor({ c3, loadInfo, object, isClone = false, id }) {
