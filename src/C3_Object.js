@@ -28,13 +28,14 @@ export class C3_Object {
       
       if (this.physicsObject) this.c3.physics.removeObject(this.physicsObject)
       this.c3.objects.removeFromList(this)
+
       if (this.mesh.isInstance) {
          this.mesh.model.deleteInstance(this.mesh.id)
       }
       
-      this.mesh.traverse && this.mesh.traverse(o => {
-         o.dispatchEvent( { type: 'removed' } );
-      })
+      // this.mesh.traverse && this.mesh.traverse(o => {
+      //    o.dispatchEvent( { type: 'removed' } );
+      // })
       
       const transformObject = this.c3.transform.getObject() 
       if (transformObject && transformObject.id === this.id) {

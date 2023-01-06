@@ -68,15 +68,18 @@ export class ObjectCamera extends c3.Object {
       }
       
       const objects = c3.mouse.raycast()
-      // console.log(objects)
 
       for (let { object } of objects) {
+         if (object.blockSelect) continue
+         
+         // for indicating what the ray is on
          object.setRotation(0, 0, 0)
          object.setScale(2, 2, 2)
-
+         
          if (c3.mouse.isDown()) {
             c3.transform.enable()
             c3.transform.attach(object)
+            break
          }
       }
       
@@ -84,8 +87,12 @@ export class ObjectCamera extends c3.Object {
          const transformObject = c3.transform.getObject()
          if (transformObject) {
             transformObject.destroy()
-            // c3.transform.detach()
          }
+      }
+
+      if (c3.keyboard.check(KEYMAP.add).down) {
+         const newObject = c3.objects.create(c3.types.model, { pos: new c3.Vector(0, 0, 0) })
+         c3.transform.attach(newObject)
       }
    }
    

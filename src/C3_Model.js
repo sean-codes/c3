@@ -176,7 +176,7 @@ export class C3_Model {
       if (!object) console.error('[C3_Model] creating instance without passing object');
       this.instanceData.id += 1
       this.instanceData.count += 1
-      this.instanceData.idMap[this.instanceData.id] = this.instanceData.id - 1
+      this.instanceData.idMap[this.instanceData.id] = this.instanceData.count - 1
       this.instanceData.objectMap.push(object)
       this.updateInstance()
       
@@ -191,6 +191,7 @@ export class C3_Model {
    deleteInstance(id) {
       const { instanceData } = this
       instanceData.count -= 1
+
       const mapId = instanceData.idMap[id]
       
       // idk this doesn't feel right
@@ -201,7 +202,7 @@ export class C3_Model {
       for (let object of instanceData.objectMap) {
          instanceData.idMap[object.mesh.id] = count
          count++
-      }
+      }      
 
       this.updateInstance()
    }
@@ -231,6 +232,7 @@ export class C3_Model {
          this.instanceData.mesh.castShadow = true
          this.instanceData.mesh.receiveShadow = true
       }
+
       c3.scene.add(this.instanceData.mesh)
    }
    

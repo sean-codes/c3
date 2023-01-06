@@ -2,6 +2,7 @@ import { c3 } from './c3.js'
 import { ObjectModel } from './objects/ObjectModel.js'
 import { ObjectLight } from './objects/ObjectLight.js'
 import { ObjectCamera } from './objects/ObjectCamera.js'
+import { ObjectGrid } from './objects/ObjectGrid.js'
 
 export const KEYMAP = {
    forward: 'w',
@@ -10,7 +11,8 @@ export const KEYMAP = {
    backward: 's',
    flyUp: 'r',
    flyDown: 'f',
-   del: 'delete',
+   del: 'backspace',
+   add: 'enter',
 }
 
 c3.init({
@@ -19,6 +21,7 @@ c3.init({
       model: ObjectModel,
       light: ObjectLight,
       camera: ObjectCamera,
+      grid: ObjectGrid,
    },
    
    models: [
@@ -28,12 +31,12 @@ c3.init({
    init: function() {
       this.mesh.setMaterialType(this.const.MaterialTypePhong)
       this.objects.create(c3.types.light)
-      this.objects.create(c3.types.camera, { pos: new c3.Vector(100, 100, 100)})
-      // this.objects.create(c3.types.camera, { pos: new c3.Vector(0, 0, 50)})
+      this.objects.create(c3.types.grid)
+      this.objects.create(c3.types.camera, { pos: new c3.Vector(30, 30, 30)})
       
       const startTime = Date.now()
       
-      const count = 10
+      const count = 5
       const space = 10
       const offsetX = -(count * space)/2
       for (let z = 0; z < count; z++) {

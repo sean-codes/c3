@@ -10,15 +10,32 @@
       padding: 0;
       margin: 0;
       background: #000;
+      font-family: monospace;
     }
 
     canvas {
       display: block;
     }
+
+    .help {
+      position: fixed;
+      top: 0;
+      right: 0;
+      color: #FFF;
+      background: rgba(0, 0, 0, 0.25);
+      padding: 0.5rem;
+      font-size: 1.25rem;
+    }
  </style>
 </head>
 
 <body>
+   <div class="help">
+      move = a/s/d/w <br/>
+      up/down = r/f <br/>
+      add = enter <br/>
+      del = backspace <br/>
+   </div>
   <script type="module" src="./index.js"></script>
 </body>
 </html>
