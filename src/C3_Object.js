@@ -9,6 +9,7 @@ export class C3_Object {
       this.rotation = new THREE.Euler(0, 0, 0)
       this.origin = new THREE.Object3D()
       this.origin.C3_Object = this // might be handy for querying
+      this.dead = false
 
       // turn this into something? 
       this.mesh = this.mesh ? this.mesh(attr) : c3.mesh.Blank()
@@ -24,6 +25,7 @@ export class C3_Object {
    }
 
    destroy() {
+      this.dead = true
       this.origin.parent.remove(this.origin)
       
       if (this.physicsObject) this.c3.physics.removeObject(this.physicsObject)

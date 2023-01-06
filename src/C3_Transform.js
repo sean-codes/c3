@@ -133,13 +133,18 @@ export class C3_Transform {
       this.pointer.rotation.copy(new THREE.Euler(rotation.x, rotation.y, rotation.z))
       this.pointer.scale.copy(scale)
       this.handleChange()
-   }
+   } 
    
    getObject() {
       return this.gameObject
    }
-   
+
    step() {
       this.changed = false
+
+      if (this.gameObject && this.gameObject.dead) {
+         this.detach()
+      }
    }
 }
+ 
