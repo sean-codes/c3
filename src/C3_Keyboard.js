@@ -23,8 +23,10 @@ export class C3_Keyboard {
    }
 
    listen() {
-      document.body.addEventListener('keydown', e => { !e.repeat && this.addEvent(e, 'down')})
-      document.body.addEventListener('keyup', e => { this.addEvent(e, 'up') })
+      if (typeof document !== 'undefined') {
+         document.body.addEventListener('keydown', e => { !e.repeat && this.addEvent(e, 'down')})
+         document.body.addEventListener('keyup', e => { this.addEvent(e, 'up') })
+      }
    }
    
    addEvent(e, type) {

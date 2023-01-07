@@ -1,4 +1,4 @@
-import { C3 } from '../../src/C3.js'
+import { C3 } from '../../src/C3.mjs'
 const c3 = new C3()
 
 class ObjectCube extends c3.Object {
