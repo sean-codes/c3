@@ -141,10 +141,12 @@ export class C3_Object {
    }
    
    setScale(x, y, z) {
-      this.origin.scale.x = x
-      this.origin.scale.y = y
-      this.origin.scale.z = z
-      this.scaleUpdate()
+      if (this.origin.scale.x !== x || this.origin.scale.y !== y || this.origin.scale.z !== z) {
+         this.origin.scale.x = x
+         this.origin.scale.y = y
+         this.origin.scale.z = z
+         this.scaleUpdate()
+      }
    }
    
    setScaleVec({ x, y, z}) {
