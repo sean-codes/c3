@@ -11,11 +11,11 @@ export class C3_Objects {
    * @returns {C3_Object}
    */
    create(GameObject, attr)  {
+      this.idCounter += 1
       const newObject = new GameObject(this.c3, this.idCounter, attr, GameObject)
 
       this.list.push(newObject)
       this.c3.scene.add(newObject.origin)
-      this.idCounter += 1
       
       return newObject
    }

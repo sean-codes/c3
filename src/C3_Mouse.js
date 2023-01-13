@@ -69,7 +69,7 @@ export class C3_Mouse {
    isUp() {
       return this.isUp
    }
-   
+
    raycast() {
       // TODO: cache this incase it's called more than once per step
       this.raycaster.setFromCamera(this.pos, this.c3.camera.object)
@@ -79,47 +79,42 @@ export class C3_Mouse {
       const returnIntersects = {} // for unique
       for (const intersect of intersects) {
          const { object, distance, point, face, normal, instanceId, c3_model } = intersect
-         let c3_object = undefined
-         
-         if (instanceId != null && intersect.object.c3_model) {
-            const c3_object = intersect.object.c3_model.instanceData.objectMap[instanceId]
-            // console.log('fish', instanceId, )
-            returnIntersects[c3_object.id] = { 
-               object: c3_object,
-               distance: distance,
-               point: point,
-               normal: face && normal,
-            }
+
+         var c3_objects = this.raycastIntersectCurse(object, [])
+
+         // instanced mesh
+         if (instanceId != null && object.c3_model) {
+            c3_objects.push(object.c3_model.instanceData.objectMap[instanceId])
          }
-         
-         object.traverseAncestors((a) => {
-            if (c3_object) return
-                  
-            if (a.instanceId && a.C3_Model) c3_object = {
-               object: a.C3_Model.instanceData.objectMap[a.instanceId],
-               distance: distance,
-               point: point,
-               normal: face && normal,
-            }
-            
-            if (a.C3_Object) c3_object = { // duplicate me again i dare you
-               object: a.C3_Object, 
-               distance: distance, 
-               point: point, 
-               normal: face && face.normal,
-            }
-         })
-         
-         
-         if (c3_object) {
+
+         // let c3_object = undefined
+         for (var c3_object of c3_objects) {
             // only add if it hasn't been or is closer than current
-            if (!returnIntersects[c3_object.object.id] 
-               || returnIntersects[c3_object.object.id].distance > c3_object.distance) {
-               returnIntersects[c3_object.object.id] = c3_object
+            const alreadyAdded = returnIntersects[c3_object.id]  
+            if (!alreadyAdded || alreadyAdded.distance > distance) {
+               returnIntersects[c3_object.id] = {
+                  object: c3_object,
+                  distance: distance,
+                  point: point,
+                  normal: face && normal,
+               }
             }
          }
       }
       
       return Object.values(returnIntersects).sort((a, b) => a.distance - b.distance)
+   }
+
+   raycastIntersectCurse(intersect, collection) {
+
+      if (intersect.C3_Object) {
+         collection.push(intersect.C3_Object)
+      }
+
+      if (intersect.parent) {
+         this.raycastIntersectCurse(intersect.parent, collection)
+      }
+
+      return collection
    }
 }
