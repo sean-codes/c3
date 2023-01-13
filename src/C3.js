@@ -124,15 +124,18 @@ export class C3 {
    }
 
    engineStep() {
-      // rever later? animationframe >:(
+      // delta bits
       const oneSec = 1000/60
       const timeScale = 1/ (this.engineSpeed / oneSec)
-      // setTimeout(() => this.engineStep(), this.engineSpeed)
-      typeof window !== 'undefined' 
+      
+      // for debugging lower fps
+      const useAnimationFrame = window.requestAnimationFrame && this.engineSpeed === 1000/60
+      
+      useAnimationFrame
          ? requestAnimationFrame(() => this.engineStep()) 
          : setTimeout(() => this.engineStep(), this.engineSpeed)
          
-      // I want to run this even if stopped
+      // run this even if stopped
       this.gamepad.loop()
       
       if (!this.running) return
