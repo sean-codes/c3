@@ -87,6 +87,7 @@ export class C3_Physics {
          const { mesh, shape, offsetY, isInstance } = meshData[i]
 
          let createdShapeData = undefined
+     
          if (shape === SHAPES.BOX) createdShapeData = createShapeBox(meshData[i])
          if (shape === SHAPES.MESH) createdShapeData = createShapeConvexPolyhedron(meshData[i])
          // need to update these
@@ -271,14 +272,15 @@ function createShapeCylinder(object) {
 }
 
 function createShapeConvexPolyhedron(physicsMeshData) {
-   let mesh = physicsMeshData.mesh//(object)
+   let mesh = getMesh(physicsMeshData.mesh)
    mesh.updateMatrixWorld()
    const geometry = new THREE.Geometry()
    geometry.fromBufferGeometry(mesh.geometry)
+   
    geometry.rotateX(mesh.rotation.x)
    geometry.rotateY(mesh.rotation.y)
    geometry.rotateZ(mesh.rotation.z)
-   
+
    // Do this  after rotating
    const scale = getMeshGeoScale(mesh)
    if (physicsMeshData.isInstance) {
@@ -286,11 +288,7 @@ function createShapeConvexPolyhedron(physicsMeshData) {
    }
 
    geometry.scale(scale.x, scale.y, scale.z)
-   geometry.center()
-   
-   geometry.rotateX(-mesh.rotation.x)
-   geometry.rotateY(-mesh.rotation.y)
-   geometry.rotateZ(-mesh.rotation.z)
+   geometry.center() 
 
    // We have to move the points around so they aren't perfectly aligned?
    var eps = 1e-2; // between 2-4 seems to work
