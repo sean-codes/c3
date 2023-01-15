@@ -57,6 +57,8 @@ export class C3_Object {
          this.body.position.y = y + this.physicsObject.offset.y
          this.body.position.z = z + this.physicsObject.offset.z
       }
+
+      this.onMove()
    }
    
    moveVec({ x, y, z }) {
@@ -184,6 +186,16 @@ export class C3_Object {
             'XYZ')
       }
    }
+
+   turnTowards(position, speed) {
+      const pos = this.getPosition()
+      const direction = position.clone().sub(pos)
+      const targetAngle = c3.math.loopAngle(new c3.THREE.Vector2(-direction.x, direction.z).angle() - (Math.PI/2))
+      const angleDiff = c3.math.angleToAngle(this.rotation.y, targetAngle)
+      const newAngle = c3.math.loopAngle(this.rotation.y + (angleDiff * speed))
+
+      this.setRotationY(newAngle)
+   }
    
    scaleUpdate() {
       const { c3 } = this
@@ -248,6 +260,7 @@ export class C3_Object {
    }
   
    onResize() {}
+   onMove() {}
    create() {}
    step() {}
 
