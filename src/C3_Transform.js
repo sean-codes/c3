@@ -37,7 +37,14 @@ export class C3_Transform {
       this.controls.enabled = false
    }
    
+   setPositionVec(vec) {
+      this.pointer.position.copy(vec)
+      this.handleChange()
+   }
+
    attach(gameObject) {
+      this.detach()
+      
       const currentPosition = gameObject.getPosition()
       const currentRotation = gameObject.getRotation()
       const currentScale = gameObject.getScale()
@@ -57,9 +64,11 @@ export class C3_Transform {
       
       this.controls.attach(this.pointer)
       this.gameObject = gameObject
+      this.gameObject.beingTransformed = true
    }
    
    detach() {
+      if (this.gameObject) this.gameObject.beingTransformed = false
       this.gameObject = undefined
       this.controls.detach()
       c3.scene.remove(this.pointer)
@@ -90,8 +99,12 @@ export class C3_Transform {
    }
    
    handleChange() {
-      if (!this.gameObject) return
       this.changed = true
+      this.updateGameObject()
+   }
+   
+   updateGameObject() {
+      if (!this.gameObject) return
       this.gameObject.setScaleVec(this.pointer.scale)
       this.gameObject.setPositionVec(this.pointer.position)
       this.gameObject.setRotationVec(this.pointer.rotation)
@@ -142,6 +155,7 @@ export class C3_Transform {
    step() {
       this.changed = false
 
+      this.updateGameObject()
       if (this.gameObject && this.gameObject.dead) {
          this.detach()
       }
