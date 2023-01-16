@@ -22,7 +22,22 @@ export class C3_Html {
    
    create(html) {
       const htmlObject = new CSS2DObject(html)
+      htmlObject.toggle = (bool) => {
+         htmlObject.visible = typeof bool === 'undefined'
+            ? !htmlObject.visible
+            : bool
+
+         if (htmlObject.dead) htmlObject.visible = false
+      }
+
       return htmlObject
+   }
+
+   destroy(htmlObject) {
+      htmlObject.dead = true
+      htmlObject.element.remove()
+      htmlObject.parent.remove(htmlObject)
+      htmlObject.visible = false
    }
 
    loop(scene, camera) {

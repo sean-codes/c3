@@ -5,6 +5,11 @@ export class C3_Gamepad {
    constructor(c3) {
       this.c3 = c3
       this.map = new GamepadMap(c3)
+      this.index = null
+
+      window.addEventListener('gamepadconnected', (event) => {
+         this.index = event.gamepad.index
+      });
    }
    
    loop() {
@@ -23,7 +28,7 @@ export class C3_Gamepad {
       if (!gamepads.length) return
       
       // temporary
-      return gamepads[0] || gamepads[1]
+      return gamepads[this.index]
    }
 
    read() {

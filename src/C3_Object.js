@@ -25,19 +25,25 @@ export class C3_Object {
    }
 
    destroy() {
+      
       this.dead = true
       this.origin.parent.remove(this.origin)
       
       if (this.physicsObject) this.c3.physics.removeObject(this.physicsObject)
       this.c3.objects.removeFromList(this)
-
+      
       if (this.mesh.isInstance) {
          this.mesh.model.deleteInstance(this.mesh.id)
       }
       
-      // this.mesh.traverse && this.mesh.traverse(o => {
-      //    o.dispatchEvent( { type: 'removed' } );
-      // })
+      this.mesh.traverse && this.mesh.traverse(o => {
+         // why did we comment this out?
+         // o.dispatchEvent( { type: 'removed' } );
+         
+         if (o.isCSS2DObject) {
+            this.c3.html.destroy(o)
+         }
+      })
       
       const transformObject = this.c3.transform.getObject() 
       if (transformObject && transformObject.id === this.id) {
