@@ -150,7 +150,6 @@ export class C3_Model {
          : this.object.children[0]
       const clone = SkeletonUtils.clone(cloneObject)
       clone.animations = cloneObject.animations
-      
       clone.traverse((part) => {
          if(part.type.includes('SkinnedMesh') && part.material) {
             const materials = Array.isArray(part.material) ? part.material : [part.material]
@@ -166,6 +165,7 @@ export class C3_Model {
          isClone: true
       })
       
+      clone.c3_model = newModel
       return newModel
    }
    
@@ -557,7 +557,7 @@ export class C3_Model {
          }
       })
       
-      if (this.object.parent) this.object.parent.remove(this.object)
+      // if (this.object.parent) this.object.parent.remove(this.object)
       this.c3.models.remove(this)
    }
 }

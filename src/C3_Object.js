@@ -36,10 +36,12 @@ export class C3_Object {
          this.mesh.model.deleteInstance(this.mesh.id)
       }
       
-      this.mesh.traverse && this.mesh.traverse(o => {
+      this.mesh && this.mesh.traverse && this.mesh.traverse(o => {
          // why did we comment this out?
          // o.dispatchEvent( { type: 'removed' } );
-         
+         if (o.c3_model) {
+            this.c3.models.remove(o.c3_model)
+         }
          if (o.isCSS2DObject) {
             this.c3.html.destroy(o)
          }
