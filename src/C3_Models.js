@@ -22,7 +22,7 @@ export class C3_Models {
          return sum
       }, [])
       
-      if (!modelToRemove.destroyed) modelToRemove.destroy()
+      // if (!modelToRemove.destroyed) modelToRemove.destroy()
    }
    
    /**
