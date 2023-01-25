@@ -20,7 +20,7 @@ export class C3_Object {
       this.physics = this.physics ? this.physics() : { meshes: [] }
       this.physicsObject = this.physics.meshes.length ? c3.physics.addObject(this) : undefined
       this.body = this.physicsObject ? this.physicsObject.body : undefined
-      
+      this.isBeingTransformed = false
       this.create(this.attr)
    }
 

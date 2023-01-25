@@ -557,7 +557,7 @@ export class C3_Model {
          }
       })
       
-      // if (this.object.parent) this.object.parent.remove(this.object)
+      if (this.object.parent) this.object.parent.remove(this.object)
       this.c3.models.remove(this)
    }
 }
