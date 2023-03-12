@@ -21,7 +21,13 @@ export class C3_Html {
    }
    
    create(html) {
-      const htmlObject = new CSS2DObject(html)
+      var div = html
+      if (typeof div === 'string') {
+         div = document.createElement('div')
+         div.innerHTML = html
+      }
+
+      const htmlObject = new CSS2DObject(div)
       htmlObject.toggle = (bool) => {
          htmlObject.visible = typeof bool === 'undefined'
             ? !htmlObject.visible
@@ -36,8 +42,11 @@ export class C3_Html {
    destroy(htmlObject) {
       htmlObject.dead = true
       htmlObject.element.remove()
-      htmlObject.parent.remove(htmlObject)
       htmlObject.visible = false
+      // we should remove from parent but this causes an error
+      // going to remove it for the moment since usually we only
+      // destroy an htmlObject when we are destroying the parent
+      // htmlObject.parent.remove(htmlObject)
    }
 
    loop(scene, camera) {
