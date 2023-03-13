@@ -343,17 +343,19 @@ export class C3_Model {
       clip.clampWhenFinished = true // keeps at last frame when finished
       clip.setLoop(THREE.LoopOnce, 1)
       clip.time = currTime
+      clip.paused = false
       // clip.timeScale = -1
       this.animateWeight(clipName, 1, 0)
       
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
+            this.mixer.removeEventListener('finished', stopAnimation)
+            
             const weight = this.animateGetWeightTarget(clipName)
             const endedEarly = weight == 0
             onEnd && onEnd(endedEarly)
             if (!dontResetWeightOnEnd) {
                this.animateWeight(clipName, 0, 0)
-               this.mixer.removeEventListener('finished', stopAnimation)
             }
          }
       }
@@ -374,12 +376,15 @@ export class C3_Model {
       
       const stopAnimation = (e) => {
          if (e.action.getClip().name === clip._clip.name) {
+            this.mixer.removeEventListener('finished', stopAnimation)
+            
             const weight = this.animateGetWeightTarget(clipName)
             const endedEarly = weight == 0
             onEnd && onEnd(endedEarly)
+
+            // animateTo
             if (!dontResetWeightOnEnd) {
                this.animateWeight(clipName, 0, smoothOut)
-               this.mixer.removeEventListener('finished', stopAnimation)
             }
          }
       }
@@ -401,18 +406,22 @@ export class C3_Model {
    }
    
    animateWeight(clipName, weight, time=null, then) {
-      this.clips[clipName].c3_weightTarget = weight
+      var clip = this.clips[clipName] 
+      if (weight > 0) {
+         clip.paused = false
+      }
+      clip.c3_weightTarget = weight
 
       if (time == 0) {
-         this.clips[clipName].c3_weightCurrent = weight
+         clip.c3_weightCurrent = weight
       }
       
       if (time) {
-         this.clips[clipName].c3_weightDampen = 1 / (60 * time)
+         clip.c3_weightDampen = 1 / (60 * time)
       }
       
       if (then) {
-         this.clips[clipName].c3_then = then
+         clip.c3_then = then
       }
    }
    
