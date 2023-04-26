@@ -5,7 +5,7 @@
 
 ## examples
 - [rpg-3d](http://sean-codes.github.io/c3/example/rpg-3d/index.html)
-- [basic-cube](http://sean-codes.github.io/c3/example/basic_cube_monofile/index.html)
+- [basic-cube](http://sean-codes.github.io/c3/example/basic-cube-monofile/index.html)
 
 
 ## Boilerplate
