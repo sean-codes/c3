@@ -55,6 +55,10 @@ export class C3_Object {
       
       this.onDestroy && this.onDestroy()
    }
+
+   attach(object) {
+      this.mesh.add(object.mesh ? object.mesh : object)
+   }
    
    setPosition(x, y, z) {
       this.origin.position.y = y
