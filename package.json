@@ -4,15 +4,11 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "serve-dev"
   },
   "author": "",
   "license": "ISC",
   "type": "module",
-  "dependencies": {
-    "cannon-es": "^0.14.0",
-    "dat.gui": "^0.7.7",
-    "three": "^0.116.1",
-    "zlibjs": "^0.3.1"
-  }
+  "notes": "Manually managing dependancies under ./libs"
 }

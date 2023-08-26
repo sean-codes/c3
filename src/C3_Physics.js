@@ -1,7 +1,8 @@
-import * as CANNON from '../node_modules/cannon-es/dist/cannon-es.js'
-import * as THREE from '../node_modules/three/build/three.module.js'
-import { ConvexGeometry } from '../node_modules/three/examples/jsm/geometries/ConvexGeometry.js'
-import { CannonDebugRenderer } from '../node_modules/cannon-es-debugger-jsm/index.js'
+import * as CANNON from '../libs/cannon-es/dist/cannon-es.js'
+import * as THREE from '../libs/three/build/three.module.js'
+import { ConvexGeometry } from '../libs/three/examples/jsm/geometries/ConvexGeometry.js'
+import { CannonDebugRenderer } from '../libs/cannon-es-debugger-jsm/index.js'
+import { Geometry } from '../libs/three-geometry/Geometry.js'
 
 export const SHAPES = {
    BOX: 'BOX',
@@ -87,7 +88,6 @@ export class C3_Physics {
          const { mesh, shape, offsetY, isInstance } = meshData[i]
 
          let createdShapeData = undefined
-     
          if (shape === SHAPES.BOX) createdShapeData = createShapeBox(meshData[i])
          if (shape === SHAPES.MESH) createdShapeData = createShapeConvexPolyhedron(meshData[i])
          // need to update these
@@ -166,6 +166,7 @@ export class C3_Physics {
    
    removeObject(physicsObject) {
       this.world.removeBody(physicsObject.body)
+      
       delete this.list[physicsObject.body.id]
    }
    
@@ -177,10 +178,15 @@ export class C3_Physics {
    }
    
    loop() {
-      this.world.step(1/60)
+      try {
+         this.world.step(1/60)
+      } catch(e) {
+         console.log('uhhh', e, this.world.bodies)
+      }
 
       const debugBodies = []
-      for (const physicObjectId in this.list) {
+      var keys = Object.keys(this.list)
+      for (const physicObjectId of keys) {
          const { object, body, linkToMesh, debug, offset, checkIsOnGround, contacts } = this.list[physicObjectId]
          const { origin } = object
          
@@ -194,8 +200,14 @@ export class C3_Physics {
          if (linkToMesh) {
             const meshWorldPosition = origin.getWorldPosition(new THREE.Vector3())
             const meshWorldQuat = origin.getWorldQuaternion(new THREE.Quaternion())
-            body.position.copy(meshWorldPosition)
-            body.quaternion.copy(meshWorldQuat)
+            
+            body.position.x = meshWorldPosition.x
+            body.position.y = meshWorldPosition.y
+            body.position.z = meshWorldPosition.z
+            body.quaternion.x = meshWorldQuat.x
+            body.quaternion.y = meshWorldQuat.y
+            body.quaternion.z = meshWorldQuat.z
+            body.quaternion.w = meshWorldQuat.w
          } else {
             origin.position.copy(body.position).sub(offset)
             origin.quaternion.copy(body.quaternion)
@@ -211,6 +223,7 @@ export class C3_Physics {
             debugBodies.push(body)
          }
       }
+
       
       this.debugger.update(debugBodies)
    }
@@ -262,7 +275,7 @@ function createShapeCylinder(object) {
    // rotate the cylinder to map with threejs
    const shape = new CANNON.Cylinder(radiusTop, radiusBottom, height, radialSegments)
    var quat = new CANNON.Quaternion()
-   quat.setFromAxisAngle(new CANNON.Vec3(0, 1, 0), -Math.PI/2)
+   quat.setFromAxisAngle(new CANNON.Vec3(1, 0, 0), -Math.PI/2)
    var translation = new CANNON.Vec3(0, 0, 0)
    shape.transformAllPoints(translation, quat)
    
@@ -274,7 +287,7 @@ function createShapeCylinder(object) {
 function createShapeConvexPolyhedron(physicsMeshData) {
    let mesh = getMesh(physicsMeshData.mesh)
    mesh.updateMatrixWorld()
-   const geometry = new THREE.Geometry()
+   const geometry = new Geometry()
    geometry.fromBufferGeometry(mesh.geometry)
    
    geometry.rotateX(mesh.rotation.x)
@@ -300,10 +313,12 @@ function createShapeConvexPolyhedron(physicsMeshData) {
 
    // create convex geometry
    var convexGeo = new ConvexGeometry(geometry.vertices);
+   var convexGeoCheat = new Geometry()
+   convexGeoCheat.fromBufferGeometry(convexGeo)
 
    // get vertices and faces for cannon
-   const vertices = convexGeo.vertices.map(v => new CANNON.Vec3(v.x, v.y, v.z));
-   const faces = convexGeo.faces.map(f => [f.a, f.b, f.c]);
+   const vertices = convexGeoCheat.vertices.map(v => new CANNON.Vec3(v.x, v.y, v.z));
+   const faces = convexGeoCheat.faces.map(f => [f.a, f.b, f.c]);
    
    return {
       shape: new CANNON.ConvexPolyhedron({ vertices, faces }),
@@ -368,9 +383,12 @@ function getSizeOfMesh(object) {
    const mesh = getMesh(object)
    const scale = getMeshScale(mesh)
    const geo = new THREE.BufferGeometry()
-   mesh.geometry.type.includes('Buffer')
-      ? geo.copy(mesh.geometry)
-      : geo.fromGeometry(mesh.geometry)
+   geo.copy(mesh.geometry)
+
+
+   // mesh.geometry.type.includes('Buffer')
+   //    ? geo.copy(mesh.geometry)
+   //    : mesh.geometry.toBufferGeometry()//geo.fromGeometry(mesh.geometry)
 
    const mes = new THREE.Mesh(geo)
    mes.scale.copy(scale)
@@ -439,9 +457,10 @@ function getMeshGeoInfo(mesh) {
    const gScale = getMeshGeoScale(mesh)
    
    const tGeo = new THREE.BufferGeometry()
-   mesh.geometry.type.includes('Buffer')
-      ? tGeo.copy(mesh.geometry)
-      : tGeo.fromGeometry(mesh.geometry)
+   tGeo.copy(mesh.geometry)
+   // mesh.geometry.type.includes('Buffer')
+   //    ? tGeo.copy(mesh.geometry)
+   //    : tGeo.fromGeometry(mesh.geometry)
    
    
    tGeo.rotateX(mesh.rotation.x)

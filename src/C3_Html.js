@@ -1,4 +1,4 @@
-import { CSS2DRenderer, CSS2DObject } from '../node_modules/three/examples/jsm/renderers/CSS2DRenderer.js'
+import { CSS2DRenderer, CSS2DObject } from '../libs/three/examples/jsm/renderers/CSS2DRenderer.js'
 
 export class C3_Html {
    constructor(c3) {
@@ -9,6 +9,8 @@ export class C3_Html {
          position: fixed;
          top: 0px; 
          left: 0px;
+         width: 100%;
+         height: 100%;
          pointer-events: none;
       `)
 

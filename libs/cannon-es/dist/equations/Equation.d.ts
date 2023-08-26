@@ -1,0 +1,30 @@
+import { JacobianElement } from '../math/JacobianElement';
+import type { Body } from '../objects/Body';
+import type { Shape } from '../shapes/Shape';
+export declare class Equation {
+    id: number;
+    minForce: number;
+    maxForce: number;
+    bi: Body;
+    bj: Body;
+    si: Shape;
+    sj: Shape;
+    a: number;
+    b: number;
+    eps: number;
+    jacobianElementA: JacobianElement;
+    jacobianElementB: JacobianElement;
+    enabled: boolean;
+    multiplier: number;
+    static id: number;
+    constructor(bi: Body, bj: Body, minForce?: number, maxForce?: number);
+    setSpookParams(stiffness: number, relaxation: number, timeStep: number): void;
+    computeB(a: number, b: number, h: number): number;
+    computeGq(): number;
+    computeGW(): number;
+    computeGWlambda(): number;
+    computeGiMf(): number;
+    computeGiMGt(): number;
+    addToWlambda(deltalambda: number): void;
+    computeC(): number;
+}

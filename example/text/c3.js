@@ -19,7 +19,7 @@ class ObjectText extends c3.Object {
       div.classList.add('text')
       const text = c3.html.create(div)
       this.text = text
-
+      
       return text
    }
    
@@ -27,6 +27,8 @@ class ObjectText extends c3.Object {
       this.destroyTimer = 60
       const posX = Math.random() * 10 - 5
       this.setPosition(posX, 0, 0)
+
+      console.log(this.text)
    }
    
    step() { 
@@ -55,6 +57,7 @@ c3.init({
    
    step: function() {
       if (Math.random() > 0.9) {
+         console.log('hello')
          c3.objects.create(c3.types.Text)
       }
    }

@@ -1,4 +1,4 @@
-import * as THREE from '../node_modules/three/build/three.module.js'
+import * as THREE from '../libs/three/build/three.module.js'
 
 export class C3_Vector {
    // can't remember why you did this. will remove later

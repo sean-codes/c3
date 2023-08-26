@@ -13,7 +13,8 @@ export class ObjectCylinder extends c3.Object {
    physics() {
       return {
          meshes: [{ mesh: this.mesh }],
-         material: 'BOX'
+         material: 'BOX',
+         debug: true,
       }
    }
    

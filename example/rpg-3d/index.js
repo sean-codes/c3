@@ -13,6 +13,9 @@ import { ObjectTarget } from './Objects/ObjectTarget.js'
 import { ObjectWeapon } from './Objects/ObjectWeapon.js'
 import { ObjectCylinder } from './Objects/ObjectCylinder.js'
 
+var eleFps = document.querySelector('.fps')
+
+
 c3.init({
    node_modules: '../../node_modules',
    path: '../C3',
@@ -49,18 +52,20 @@ c3.init({
    models: [
       { name: 'sword', file: './Assets/equipment/Sword.fbx', scale: 0.0125, rotation: [0, Math.PI*0.5, 0], offset: [0, -0.4, 0.15] },
       { name: 'shield', file: './Assets/equipment/Shield.fbx', scale: 0.013, rotation: [0, -Math.PI*0.5, 0], offset: [0, 0, 0] },
-      { name: 'tree', file: './Assets/environment/Tree.fbx', scale: 0.035, },
-      { name: 'rock', file: './Assets/environment/Rock.fbx', scale: 0.035, },
-      { name: 'bush', file: './Assets/environment/Bush.fbx', scale: 0.035, },
-      { name: 'fence', file: './Assets/environment/Fence.fbx', scale: 0.035, },
+      { name: 'tree', file: './Assets/environment/tree.glb', scale: 3, },
+      { name: 'rock', file: './Assets/environment/rock.glb', scale: 3, },
+      { name: 'box_rock', file: './Assets/environment/box_rock_1.glb', scale: 2.00, },
+      { name: 'bush', file: './Assets/environment/bush.glb', scale: 3, },
+      { name: 'fence', file: './Assets/environment/fence.glb', scale: 3, },
       { 
          name: 'dragon', 
-         file: './Assets/Dragon.fbx', 
-         scale: 0.01, 
+         file: './Assets/dragon.glb', 
+         scale: 1, 
          offset: [0, 0.2, 0.15],
+         log: true,
          clips: [
-            { name: 'DragonModel|Dragon_Flying', map: 'DragonModel|Dragon_Flying'},
-            { name: 'DragonModel|Dragon_Death', map: 'DragonModel|Dragon_Death'},
+            { name: 'flying', map: 'Dragon_Flying'},
+            { name: 'death', map: 'Dragon_Death'},
          ],
       },
       { log: true, name: 'arrow', file: './Assets/equipment/Arrow.fbx', scale: 0.015, rotation: [-Math.PI*0.5, 0, 0], offset: [0, 0, 0] },
@@ -105,11 +110,11 @@ c3.init({
 
    init: function() {
       c3.scene.setBackground('#FFF')      
-      c3.camera.setNearFar(1, 75)
-      c3.scene.setFog(45, 75)
+      // c3.camera.setNearFar(1, 105)
+      // c3.scene.setFog(45, 75)
 
-      c3.models.materialAdd('BOX', new c3.THREE.MeshLambertMaterial({ color: '#F55' }))
-      c3.models.materialAdd('TARGET', new c3.THREE.MeshLambertMaterial({ color: '#99f' }))
+      c3.models.materialAdd('BOX', new c3.THREE.MeshLambertMaterial({ color: '#F55', transparent: false, }))
+      c3.models.materialAdd('TARGET', new c3.THREE.MeshLambertMaterial({ color: '#99f', transparent: false, }))
       c3.models.materialAdd('WIREFRAME', new c3.THREE.MeshBasicMaterial({
          color: '#000',
          wireframe: true,
@@ -134,9 +139,9 @@ c3.init({
       //    c3.objects.create(c3.types.Box)
       // }
       // 
-      // for (let i = 0; i < 100; i++) {
-      //    c3.objects.create(c3.types.Resource)
-      // }
+      for (let i = 0; i < 100; i++) {
+         c3.objects.create(c3.types.Resource)
+      }
       // 
       for (let x = 0; x < 2; x++) {
          for (let y = 0; y < 2; y++) {
@@ -144,14 +149,15 @@ c3.init({
          }
       }
       
-      // c3.objects.create(c3.types.Cylinder, { pos: new c3.Vector(0, 10, 10)})
+      c3.objects.create(c3.types.Cylinder, { pos: new c3.Vector(0, 10, 10)})
       // // 
-      // c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-15, 3, -15) })
+      c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-15, 3, -15) })
       // c3.objects.create(c3.types.Platform, { pos: new c3.Vector(-20, 6, -15) })
       // c3.objects.create(c3.types.Target, { pos: new c3.Vector(-8, 4, 8) })
    },
 
    step: function(c3) {
       // this.scripts.cameraController.step()
+      eleFps.innerText = c3.fps.fps
    }
 })

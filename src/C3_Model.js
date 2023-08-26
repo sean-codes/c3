@@ -1,5 +1,5 @@
-import * as THREE from '../node_modules/three/build/three.module.js'
-import { SkeletonUtils } from '../node_modules/three/examples/jsm/utils/SkeletonUtils.js'
+import * as THREE from '../libs/three/build/three.module.js'
+import * as SkeletonUtils from '../libs/three/examples/jsm/utils/SkeletonUtils.js'
 
 export class C3_Model {
    constructor({ c3, loadInfo, object, isClone = false, id }) {
@@ -23,7 +23,7 @@ export class C3_Model {
                material.reflectivity = 0
                material.shininess = 0
                material.metalness = 0 // metal textures need different lighting?
-               
+               // material.forceSinglePass = true
                if (loadInfo.materialOverrides) {
                   const overrides = loadInfo.materialOverrides[material.name]
                   if (overrides) {

@@ -25,7 +25,7 @@ c3.init({
    },
    
    models: [
-      { name: 'rock', file: './Assets/rock.fbx', scale: 0.035, },
+      { name: 'rock', file: './Assets/rock.glb', scale: 3, },
    ],
    
    init: function() {
@@ -36,7 +36,7 @@ c3.init({
       
       const startTime = Date.now()
       
-      const count = 5
+      const count = 2
       const space = 10
       const offsetX = -(count * space)/2
       for (let z = 0; z < count; z++) {
@@ -46,7 +46,7 @@ c3.init({
             for (let x = 0; x < count; x++) {
                const xPos = (offsetX) + x * space
                // this.objects.create(c3.types.model, { pos: new c3.Vector(xPos, 0, 0) })
-               this.objects.create(c3.types.model, { pos: new c3.Vector(xPos, yPos, zPos) })
+               c3.objects.create(c3.types.model, { pos: new c3.Vector(xPos, yPos, zPos) })
             }
          }
       }

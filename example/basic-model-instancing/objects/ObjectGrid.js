@@ -19,7 +19,7 @@ export class ObjectGrid extends c3.Object {
          side: c3.THREE.DoubleSide
       })
       this.material = material
-      const geometry = new c3.THREE.PlaneBufferGeometry( 1000, 1000 );
+      const geometry = new c3.THREE.PlaneGeometry( 1000, 1000 );
       const plane = new c3.THREE.Mesh( geometry, material );
       plane.rotation.x = -Math.PI*0.5
       return plane

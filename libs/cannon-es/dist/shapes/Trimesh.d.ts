@@ -1,0 +1,35 @@
+import { Shape } from '../shapes/Shape';
+import { Vec3 } from '../math/Vec3';
+import { AABB } from '../collision/AABB';
+import { Octree } from '../utils/Octree';
+import type { Quaternion } from '../math/Quaternion';
+export declare class Trimesh extends Shape {
+    vertices: Float32Array;
+    indices: Int16Array;
+    normals: Float32Array;
+    aabb: AABB;
+    edges: Int16Array | null;
+    scale: Vec3;
+    tree: Octree;
+    static computeNormal: (va: Vec3, vb: Vec3, vc: Vec3, target: Vec3) => void;
+    static createTorus: (radius: number, tube: number, radialSegments: number, tubularSegments: number, arc: number) => Trimesh;
+    constructor(vertices: number[], indices: number[]);
+    updateTree(): void;
+    getTrianglesInAABB(aabb: AABB, result: number[]): number[];
+    setScale(scale: Vec3): void;
+    updateNormals(): void;
+    updateEdges(): void;
+    getEdgeVertex(edgeIndex: number, firstOrSecond: number, vertexStore: Vec3): void;
+    getEdgeVector(edgeIndex: number, vectorStore: Vec3): void;
+    getVertex(i: number, out: Vec3): Vec3;
+    private _getUnscaledVertex;
+    getWorldVertex(i: number, pos: Vec3, quat: Quaternion, out: Vec3): Vec3;
+    getTriangleVertices(i: number, a: Vec3, b: Vec3, c: Vec3): void;
+    getNormal(i: number, target: Vec3): Vec3;
+    calculateLocalInertia(mass: number, target: Vec3): Vec3;
+    computeLocalAABB(aabb: AABB): void;
+    updateAABB(): void;
+    updateBoundingSphereRadius(): void;
+    calculateWorldAABB(pos: Vec3, quat: Quaternion, min: Vec3, max: Vec3): void;
+    volume(): number;
+}
