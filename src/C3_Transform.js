@@ -1,5 +1,5 @@
-import { TransformControls } from '../node_modules/three/examples/jsm/controls/TransformControls.js'
-import * as THREE from '../node_modules/three/build/three.module.js'
+import { TransformControls } from '../libs/three/examples/jsm/controls/TransformControls.js'
+import * as THREE from '../libs/three/build/three.module.js'
 const MODES = {
    translate: 'translate',
    rotate: 'rotate',

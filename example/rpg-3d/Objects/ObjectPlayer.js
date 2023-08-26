@@ -289,7 +289,8 @@ export class ObjectPlayer extends c3.Object {
       
       if (c3.keyboard.check('attack').up) {
          if (this.gear.type === 'bow' && this.model.animateGetWeight('Arms.Bow') > 0.99) {
-            c3.objects.create(c3.types.Arrow, { pos: this.modelArrow.object.getWorldPosition(), rotation: this.getRotation() })
+            const arrowPos = this.modelArrow.object.getWorldPosition(new c3.THREE.Vector3())
+            c3.objects.create(c3.types.Arrow, { pos: arrowPos, rotation: this.getRotation() })
          }
       }
       

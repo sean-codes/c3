@@ -5,13 +5,9 @@ export class ObjectResource extends c3.Object {
       const type = c3.math.choose(['tree', 'rock', 'bush'])
       const model = c3.models.find(type).clone()
       
-      let geo
-      if (type === 'tree') {
-         geo = new c3.THREE.BoxBufferGeometry(1, 20, 1)
-         
-      }
+      let geo = new c3.THREE.BoxGeometry(1, 20, 1)
       if (type === 'rock' || type === 'bush') {
-         geo = new c3.THREE.SphereBufferGeometry(2)
+         geo = new c3.THREE.SphereGeometry(2)
       }
       const mat = c3.models.materialFind('WIREFRAME')
       const mes = new c3.THREE.Mesh(geo, mat)

@@ -1,7 +1,7 @@
-import * as THREE from '../node_modules/three/build/three.module.js'
-import * as CANNON from '../node_modules/cannon-es/dist/cannon-es.js'
-import { FBXLoader } from '../node_modules/three/examples/jsm/loaders/FBXLoader.js'
-import { GLTFLoader } from '../node_modules/three/examples/jsm/loaders/GLTFLoader.js'
+import * as THREE from '../libs/three/build/three.module.js'
+import * as CANNON from '../libs/cannon-es/dist/cannon-es.js'
+import { FBXLoader } from '../libs/three/examples/jsm/loaders/FBXLoader.js'
+import { GLTFLoader } from '../libs/three/examples/jsm/loaders/GLTFLoader.js'
 
 import { C3_Objects } from './C3_Objects.js'
 import { C3_Camera } from './C3_Camera.js'

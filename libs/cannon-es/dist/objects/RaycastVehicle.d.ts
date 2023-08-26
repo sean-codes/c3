@@ -1,0 +1,40 @@
+import type { Body } from '../objects/Body';
+import { Vec3 } from '../math/Vec3';
+import { WheelInfo } from '../objects/WheelInfo';
+import type { WheelInfoOptions } from '../objects/WheelInfo';
+import type { Transform } from '../math/Transform';
+import type { Constraint } from '../constraints/Constraint';
+import type { World } from '../world/World';
+export declare type RaycastVehicleOptions = {
+    chassisBody: Body;
+    indexRightAxis?: number;
+    indexForwardAxis?: number;
+    indexUpAxis?: number;
+};
+export declare class RaycastVehicle {
+    chassisBody: Body;
+    wheelInfos: WheelInfo[];
+    sliding: boolean;
+    world: World | null;
+    indexRightAxis: number;
+    indexForwardAxis: number;
+    indexUpAxis: number;
+    constraints: Constraint[];
+    preStepCallback: () => void;
+    currentVehicleSpeedKmHour: number;
+    constructor(options: RaycastVehicleOptions);
+    addWheel(options?: WheelInfoOptions): number;
+    setSteeringValue(value: number, wheelIndex: number): void;
+    applyEngineForce(value: number, wheelIndex: number): void;
+    setBrake(brake: number, wheelIndex: number): void;
+    addToWorld(world: World): void;
+    getVehicleAxisWorld(axisIndex: number, result: Vec3): void;
+    updateVehicle(timeStep: number): void;
+    updateSuspension(deltaTime: number): void;
+    removeFromWorld(world: World): void;
+    castRay(wheel: WheelInfo): number;
+    updateWheelTransformWorld(wheel: WheelInfo): void;
+    updateWheelTransform(wheelIndex: number): void;
+    getWheelTransformWorld(wheelIndex: number): Transform;
+    updateFriction(timeStep: number): void;
+}

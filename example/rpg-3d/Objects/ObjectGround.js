@@ -2,7 +2,7 @@ import { c3 } from '../c3.js'
 
 export class ObjectGround extends c3.Object {
    mesh() {
-      const geo = new c3.THREE.BoxBufferGeometry(200, 3, 200)
+      const geo = new c3.THREE.BoxGeometry(200, 3, 200)
       const mat = new c3.THREE.MeshPhongMaterial({ 
          color: '#4b7', 
          // map: textureGrass, 
@@ -23,7 +23,7 @@ export class ObjectGround extends c3.Object {
          meshes: [{ mesh: this.mesh, type: 'BOX' }],
          material: 'GROUND',
          mass: 0,
-         debug: true
+         // debug: true
       }
    }
    

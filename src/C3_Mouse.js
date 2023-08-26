@@ -1,4 +1,4 @@
-import * as THREE from '../node_modules/three/build/three.module.js'
+import * as THREE from '../libs/three/build/three.module.js'
 
 export class C3_Mouse {
    constructor(c3) {
@@ -74,7 +74,6 @@ export class C3_Mouse {
       // TODO: cache this incase it's called more than once per step
       this.raycaster.setFromCamera(this.pos, this.c3.camera.object)
       const intersects = this.raycaster.intersectObjects(this.c3.scene.object.children, true)
-      // console.log(intersects)
       // match the intersects up with C3_Objects
       const returnIntersects = {} // for unique
       for (const intersect of intersects) {
@@ -102,6 +101,7 @@ export class C3_Mouse {
          }
       }
       
+
       return Object.values(returnIntersects).sort((a, b) => a.distance - b.distance)
    }
 

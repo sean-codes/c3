@@ -1,0 +1,73 @@
+import { Vec3 } from '../math/Vec3';
+import { Quaternion } from '../math/Quaternion';
+import { RaycastResult } from '../collision/RaycastResult';
+import { Shape } from '../shapes/Shape';
+import { AABB } from '../collision/AABB';
+import type { Body } from '../objects/Body';
+import type { Sphere } from '../shapes/Sphere';
+import type { Box } from '../shapes/Box';
+import type { Plane } from '../shapes/Plane';
+import type { Heightfield } from '../shapes/Heightfield';
+import type { ConvexPolyhedron } from '../shapes/ConvexPolyhedron';
+import type { Trimesh } from '../shapes/Trimesh';
+import type { World } from '../world/World';
+export declare const RAY_MODES: {
+    CLOSEST: 1;
+    ANY: 2;
+    ALL: 4;
+};
+export declare type RayMode = typeof RAY_MODES[keyof typeof RAY_MODES];
+export declare type RayOptions = {
+    from?: Vec3;
+    to?: Vec3;
+    mode?: RayMode;
+    result?: RaycastResult;
+    skipBackfaces?: boolean;
+    collisionFilterMask?: number;
+    collisionFilterGroup?: number;
+    checkCollisionResponse?: boolean;
+    callback?: RaycastCallback;
+};
+export declare type RaycastCallback = (result: RaycastResult) => void;
+export declare class Ray {
+    from: Vec3;
+    to: Vec3;
+    direction: Vec3;
+    precision: number;
+    checkCollisionResponse: boolean;
+    skipBackfaces: boolean;
+    collisionFilterMask: number;
+    collisionFilterGroup: number;
+    mode: number;
+    result: RaycastResult;
+    hasHit: boolean;
+    callback: RaycastCallback;
+    static CLOSEST: typeof RAY_MODES['CLOSEST'];
+    static ANY: typeof RAY_MODES['ANY'];
+    static ALL: typeof RAY_MODES['ALL'];
+    static pointInTriangle: (p: Vec3, a: Vec3, b: Vec3, c: Vec3) => boolean;
+    [Shape.types.SPHERE]: typeof Ray.prototype._intersectSphere;
+    [Shape.types.PLANE]: typeof Ray.prototype._intersectPlane;
+    [Shape.types.BOX]: typeof Ray.prototype._intersectBox;
+    [Shape.types.CONVEXPOLYHEDRON]: typeof Ray.prototype._intersectConvex;
+    [Shape.types.HEIGHTFIELD]: typeof Ray.prototype._intersectHeightfield;
+    [Shape.types.TRIMESH]: typeof Ray.prototype._intersectTrimesh;
+    constructor(from?: Vec3, to?: Vec3);
+    intersectWorld(world: World, options: RayOptions): boolean;
+    intersectBody(body: Body, result?: RaycastResult): void;
+    intersectBodies(bodies: Body[], result?: RaycastResult): void;
+    private updateDirection;
+    private intersectShape;
+    _intersectBox(box: Box, quat: Quaternion, position: Vec3, body: Body, reportedShape: Shape): void;
+    _intersectPlane(shape: Plane, quat: Quaternion, position: Vec3, body: Body, reportedShape: Shape): void;
+    getAABB(aabb: AABB): void;
+    _intersectHeightfield(shape: Heightfield, quat: Quaternion, position: Vec3, body: Body, reportedShape: Shape): void;
+    _intersectSphere(sphere: Sphere, quat: Quaternion, position: Vec3, body: Body, reportedShape: Shape): void;
+    _intersectConvex(shape: ConvexPolyhedron, quat: Quaternion, position: Vec3, body: Body, reportedShape: Shape, options?: {
+        faceList: number[];
+    }): void;
+    _intersectTrimesh(mesh: Trimesh, quat: Quaternion, position: Vec3, body: Body, reportedShape: Shape, options?: {
+        faceList?: any[];
+    }): void;
+    private reportIntersection;
+}

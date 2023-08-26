@@ -68,7 +68,7 @@ export class ObjectCamera extends c3.Object {
       }
       
       const objects = c3.mouse.raycast()
-
+      // console.log(objects)
       for (let { object } of objects) {
          if (object.blockSelect) continue
          
@@ -88,12 +88,19 @@ export class ObjectCamera extends c3.Object {
          if (transformObject) {
             transformObject.destroy()
          }
+      }  
+
+      if (c3.mouse.isDown()) {
+
+         // const newObject = c3.objects.create(c3.types.model, { pos: new c3.Vector(0, 0, 0) })
       }
 
       if (c3.keyboard.check(KEYMAP.add).down) {
+         console.log('done')
          const newObject = c3.objects.create(c3.types.model, { pos: new c3.Vector(0, 0, 0) })
-         c3.transform.attach(newObject)
+         // c3.transform.attach(newObject)
       }
+      
    }
    
    lookAt(pos) {

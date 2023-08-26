@@ -24,8 +24,8 @@ export class ObjectDragon extends c3.Object {
    
    create({ pos }) {
       this.setPositionVec(pos)
-      this.model.animateWeight('DragonModel|Dragon_Flying', 1)
-      this.model.animateTime('DragonModel|Dragon_Flying', Math.random() * 15 )
+      this.model.animateWeight('flying', 1)
+      this.model.animateTime('flying', Math.random() * 15 )
       this.accel = 0
       this.dead = false
    }
@@ -61,7 +61,7 @@ export class ObjectDragon extends c3.Object {
    killDragon() {
       if (this.dead) return
       this.dead = true
-      this.model.animateOnce('DragonModel|Dragon_Death', 1, () => {
+      this.model.animateOnce('death', 1, () => {
          this.destroy()
       })
    }
