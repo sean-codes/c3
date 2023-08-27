@@ -25,30 +25,34 @@ export class C3_Render {
     this.composer = new EffectComposer(this.renderer)
     
     var renderPass = new RenderPass(c3.scene.object, c3.camera.object)
-    // var fxaaPass = new ShaderPass(FXAAShader)
-    // var outlinePass = new OutlinePass(new THREE.Vector2(window.innerWidth, window.innerHeight), c3.scene.object, c3.camera.object)
-    // c3.global.outlinePass = outlinePass
-    // this.addPass(fxaaPass, {
-      //   resize: (pixelRatio, width, height) => {
-        //     // if this is common move into handleResize
-        //     console.log('resized', width, height)
-        // const pixelRatio = window.devicePixelRatio
-        // renderPass.setSize(window.innerWidth*pixelRatio, window.innerHeight*pixelRatio)
-        //   fxaaPass.material.uniforms['resolution'].value.x = 1 / ( window.innerWidth * pixelRatio )
-        // fxaaPass.material.uniforms['resolution'].value.y = 1 / ( window.innerHeight * pixelRatio )
-    //   }
-    // })
-    this.composer.addPass(renderPass)
-    // this.composer.addPass(fxaaPass)
-    // this.addPass(renderPass)
-    // this.addPass(outlinePass)
-    // this.addPass(outlinePass)
+    var fxaaPass = new ShaderPass(FXAAShader)
+
+    this.addPass(renderPass, 0)
+    this.addPass(fxaaPass, 100, {
+        resize: (pixelRatio, width, height) => {
+          // if this is common move into handleResize
+          // renderPass.setSize(window.innerWidth*pixelRatio, window.innerHeight*pixelRatio)
+          fxaaPass.material.uniforms['resolution'].value.x = 1 / ( width * pixelRatio )
+          fxaaPass.material.uniforms['resolution'].value.y = 1 / ( height * pixelRatio )
+      }
+    })
   }
   
-  addPass(pass, options) {
-    this.passes.push({ pass, options })
-    this.composer.addPass(pass)
-    // this.handleResize()
+  addPass(pass, sort = 1, options) {
+    this.passes.push({ pass, sort, options })
+
+    // reset passes
+    for (let pass of this.composer.passes) {
+      this.composer.removePass(pass)
+    }
+
+    // add them back
+    var sorted = this.passes.sort((a, b) => a.sort < b.sort ? -1 : 1)
+    for (let uPass of sorted) {
+      this.composer.addPass(uPass.pass)      
+    }
+
+    this.handleResize(window.innerWidth, window.innerHeight)
   }
 
   loop(scene, camera, delta) {
@@ -57,7 +61,6 @@ export class C3_Render {
   }
 
   handleResize(width, height) { 
-    console.log('help', width, height)
     this.renderer.domElement.width = width
     this.renderer.domElement.height = height
     this.renderer.setSize(width, height)
@@ -66,8 +69,7 @@ export class C3_Render {
     
     // update render passes
     for (var { pass, options } of this.passes) {
-      console.log('hi', pass)
-      pass.setSize(width, height, false)
+      pass.setSize(width, height)
       options?.resize(window.devicePixelRatio, width, height)
     }
   }
