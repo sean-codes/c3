@@ -1,7 +1,6 @@
 import * as THREE from '../libs/three/build/three.module.js'
 import { EffectComposer } from '../libs/three/examples/jsm/postprocessing/EffectComposer.js'
 import { RenderPass } from '../libs/three/examples/jsm/postprocessing/RenderPass.js'
-import { OutlinePass } from '../libs/three/examples/jsm/postprocessing/OutlinePass.js'
 import { ShaderPass } from '../libs/three/examples/jsm/postprocessing/ShaderPass.js'
 import { FXAAShader } from '../libs/three/examples/jsm/shaders/FXAAShader.js'
 
