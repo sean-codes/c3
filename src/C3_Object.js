@@ -56,7 +56,7 @@ export class C3_Object {
    }
 
    attach(object) {
-      this.mesh.add(object.mesh ? object.mesh : object)
+      this.mesh.add(object.origin ? object.origin : object)
    }
    
    setPosition(x, y, z) {
