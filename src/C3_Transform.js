@@ -9,9 +9,12 @@ const MODES = {
 export class C3_Transform {
    constructor(c3) {
       this.c3 = c3
+      
       this.controls = new TransformControls(
          c3.camera.object, 
-         c3.render.renderer.domElement)
+         c3.render.renderer.domElement
+      )
+      
       this.controls.enabled = false
       this.pointer = new THREE.Object3D()
       this.controls.attach(this.pointer)
@@ -88,6 +91,10 @@ export class C3_Transform {
          c3.scene.add(this.pointer)
          c3.scene.add(this.controls)
       }
+   }
+
+   isHovered() {
+      return !!this.controls.axis
    }
    
    handleDown(e) {

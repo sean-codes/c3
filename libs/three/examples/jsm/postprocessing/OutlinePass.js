@@ -180,7 +180,7 @@ class OutlinePass extends Pass {
 		function gatherSelectedMeshesCallBack( object ) {
 
 			if ( object.isMesh ) {
-
+				
 				if ( bVisible === true ) {
 
 					object.visible = cache.get( object );
@@ -211,6 +211,7 @@ class OutlinePass extends Pass {
 		const selectedMeshes = [];
 
 		function gatherSelectedMeshesCallBack( object ) {
+			if (object.mode) console.log(object)
 
 			if ( object.isMesh ) selectedMeshes.push( object );
 
@@ -309,25 +310,26 @@ class OutlinePass extends Pass {
 
 			// Make selected objects invisible
 			this.changeVisibilityOfSelectedObjects( false );
-
+			
 			const currentBackground = this.renderScene.background;
 			this.renderScene.background = null;
-
+			
 			// 1. Draw Non Selected objects in the depth buffer
 			this.renderScene.overrideMaterial = this.depthMaterial;
 			renderer.setRenderTarget( this.renderTargetDepthBuffer );
 			renderer.clear();
 			renderer.render( this.renderScene, this.renderCamera );
-
+			
 			// Make selected objects visible
 			this.changeVisibilityOfSelectedObjects( true );
 			this._visibilityCache.clear();
-
+			
 			// Update Texture Matrix for Depth compare
 			this.updateTextureMatrix();
-
+			
 			// Make non selected objects invisible, and draw only the selected objects, by comparing the depth buffer of non selected objects
 			this.changeVisibilityOfNonSelectedObjects( false );
+			c3.transform.controls.visible = false
 			this.renderScene.overrideMaterial = this.prepareMaskMaterial;
 			this.prepareMaskMaterial.uniforms[ 'cameraNearFar' ].value.set( this.renderCamera.near, this.renderCamera.far );
 			this.prepareMaskMaterial.uniforms[ 'depthTexture' ].value = this.renderTargetDepthBuffer.texture;
@@ -337,6 +339,7 @@ class OutlinePass extends Pass {
 			renderer.render( this.renderScene, this.renderCamera );
 			this.renderScene.overrideMaterial = null;
 			this.changeVisibilityOfNonSelectedObjects( true );
+			c3.transform.controls.visible = true
 			this._visibilityCache.clear();
 
 			this.renderScene.background = currentBackground;
