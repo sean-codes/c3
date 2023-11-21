@@ -120,7 +120,6 @@ export class C3 {
       this.storage.init(this.storages)
       this.userInit.call(this)
       this.engineStep()
-      
    }
 
    engineStep() {
@@ -129,6 +128,9 @@ export class C3 {
       const timeScale = 1/ (this.engineSpeed / oneSec)
       
       // for debugging lower fps
+      if (this.fps.fps > 65) { 
+         window.requestAnimationFrame = null 
+      }
       const useAnimationFrame = window.requestAnimationFrame && this.engineSpeed === 1000/60
       
       useAnimationFrame
