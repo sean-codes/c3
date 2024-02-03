@@ -11,17 +11,40 @@ export class C3_Mesh {
       this.materialType = materialType
    }
    
-   Box({
-      size = [1, 1, 1],
-      color = '#FFF'
-   }) {
+   createMaterial(color) {
       let MaterialConstructor = THREE.MeshBasicMaterial
       
       if (this.materialType == CONSTANTS.MaterialTypePhong) {
          MaterialConstructor = THREE.MeshPhongMaterial
       }
+
+      return new MaterialConstructor({ color })
+   }
+
+   Box({
+      size = [1, 1, 1],
+      color = '#FFF'
+   }) {
       const geo = new THREE.BoxBufferGeometry(...size)
-      const mat = new MaterialConstructor({ color })
+      const mat = this.createMaterial(color)
+      return new THREE.Mesh(geo, mat)
+   }
+
+   Sphere({
+      size = 1,
+      color = '#FFF'
+   }) {
+      const geo = new THREE.SphereGeometry(size)
+      const mat = this.createMaterial(color)
+      return new THREE.Mesh(geo, mat)
+   }
+
+   Cylinder({
+      size = [1, 1, 2, 16],
+      color = '#FFF'
+   }) {
+      const geo = new THREE.CylinderGeometry(...size)
+      const mat = this.createMaterial(color)
       return new THREE.Mesh(geo, mat)
    }
    

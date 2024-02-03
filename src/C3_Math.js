@@ -107,3 +107,10 @@ export function radian(degree) {
   return degree * (Math.PI/180)
 }
 
+export function degree(radian) {
+  return (radian / Math.PI) * 180
+}
+
+export function round(number, size) {
+  return Math.round(number * size) / size
+}

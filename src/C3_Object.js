@@ -12,7 +12,7 @@ export class C3_Object {
       this.dead = false
 
       // turn this into something? 
-      this.mesh = this.mesh ? this.mesh(attr) : c3.mesh.Blank()
+      this.mesh = this.mesh ? this.mesh(attr || {}) : c3.mesh.Blank()
       if (!this.mesh.isInstance) {
          this.origin.add(this.mesh.object || this.mesh)
       }
