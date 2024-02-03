@@ -102,3 +102,8 @@ export function loopAngle(a) {
 
   return modAngle
 }
+
+export function radian(degree) {
+  return degree * (Math.PI/180)
+}
+

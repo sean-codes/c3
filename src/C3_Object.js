@@ -179,6 +179,10 @@ export class C3_Object {
       return this.origin.getWorldDirection(new THREE.Vector3())
    }
 
+   getDirectionToward(object) {
+      return this.getPosition().sub(object.getPosition()).normalize()
+   }
+
    addRotationY(radians) {
       this.rotation.y = this.c3.math.loopAngle(this.rotation.y + radians)
       this.rotateUpdate()

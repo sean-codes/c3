@@ -38,6 +38,10 @@ export class C3_Html {
          if (htmlObject.dead) htmlObject.visible = false
       }
 
+      htmlObject.setHTML = (html) => {
+         htmlObject.element.innerHTML = html
+      }
+
       return htmlObject
    }
 
