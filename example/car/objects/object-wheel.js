@@ -5,32 +5,31 @@ export class ObjectWheel extends c3.Object {
       this.container = new c3.THREE.Object3D()
 
 
+
       // wheels
-      this.sphere = c3.mesh.Sphere({ size: 0.2, color: '#FFF' })
-      this.cylinder = c3.mesh.Cylinder({ size: [0.25, 0.25, 0.1, 16], color: '#444'})
+      this.sphere = c3.mesh.Sphere({ size: 0.1, color: '#FFF' })
+      this.cylinder = c3.mesh.Cylinder({ size: [0.25, 0.25, 0.1, 6], color: '#444'})
       this.cylinder.rotateZ(Math.PI/2)
       
       this.cylinder.position.x = 0.1 * side
 
+      this.sphere.add(this.cylinder)
       this.container.add(this.sphere)
-      this.container.add(this.cylinder)
       
       return this.container
    }
 
-   physics() {
-      return {
-         meshes: [ 
-            { mesh: this.sphere },
-         ],
-         // mass: 0,
-      }
-   }
+   // physics() {
+   //    return {
+   //       meshes: [ 
+   //          { mesh: this.sphere },
+   //       ],
+   //       mass: 0,
+   //    }
+   // }
    
    create({ position, side = 1}) {
-      console.log('create')
       this.setPositionVec(position)
-      
    }
 
    step() {

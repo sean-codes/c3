@@ -1,4 +1,5 @@
-export const MaterialTypePhong = 'Phong'
-export const MaterialTypeBasic = 'Basic'
+export const MaterialTypePhong = 'MaterialPhong'
+export const MaterialTypeBasic = 'MaterialBasic'
+export const MaterialTypeToon = 'MaterialToon'
 export const INPUT_GAMEPAD = 'GAMEPAD'
 export const INPUT_KEYBOARD = 'KEYBOARD'

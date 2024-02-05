@@ -4,21 +4,21 @@ import * as CONSTANTS from './constants.js'
 export class C3_Mesh {
    constructor(c3) {
       this.c3 = c3
-      this.materialType = CONSTANTS.MaterialTypeBasic
+      this.materialType = CONSTANTS.MaterialTypeToon
+      this.materialConstructor = THREE.MeshToonMaterial
+      this.constructors = {}
+      this.constructors[CONSTANTS.MaterialTypeBasic] = THREE.MeshBasicMaterial
+      this.constructors[CONSTANTS.MaterialTypePhong] = THREE.MeshPhongMaterial
+      this.constructors[CONSTANTS.MaterialTypeToon] = THREE.MeshToonMaterial
    }
    
    setMaterialType(materialType) {
       this.materialType = materialType
+      this.materialConstructor = this.constructors[materialType]
    }
    
    createMaterial(color) {
-      let MaterialConstructor = THREE.MeshBasicMaterial
-      
-      if (this.materialType == CONSTANTS.MaterialTypePhong) {
-         MaterialConstructor = THREE.MeshPhongMaterial
-      }
-
-      return new MaterialConstructor({ color })
+      return new this.materialConstructor({ color })
    }
 
    Box({

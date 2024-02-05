@@ -167,14 +167,23 @@ export class C3_Object {
       this.setScale(x, y, z)
    }
    
+   /**
+    * @returns {THREE.Vector3}
+    */
    getScale() {
       return this.origin.scale
    }
 
+   /**
+    * @returns {THREE.Vector3}
+    */
    getRotation() {
       return this.rotation
    }
 
+   /**
+    * @returns {THREE.Vector3}
+    */
    getDirection() {
       return this.origin.getWorldDirection(new THREE.Vector3())
    }

@@ -22,14 +22,14 @@ c3.init({
    },
    
    init: function() {
-      this.mesh.setMaterialType(this.const.MaterialTypePhong)
-      c3.camera.setPosition(5, 5, 10)
+      window.c3 = c3
+      c3.camera.setPosition(10, 5, 5)
       c3.camera.lookAt(0, 0, 0)
       this.objects.create(c3.types.light)
       this.objects.create(c3.types.ground, { position: new c3.Vector(0, -3, 0)})
       this.objects.create(c3.types.car, { position: new c3.Vector(0, 0, 0)})
       // this.objects.create(c3.types.ramp, { position: new c3.Vector(0, -2.5, 0) })
-      c3.physics.debug = true
+      // c3.physics.debug = true
    },
    
    step: () => {
