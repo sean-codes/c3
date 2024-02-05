@@ -10,15 +10,28 @@
       padding: 0;
       margin: 0;
       background: #000;
+      font-family: monospace;
     }
 
     canvas {
       display: block;
     }
+
+    .note {
+      position: absolute;
+      top: 20px; 
+      right: 20px;
+      color: #FFF;
+    }
  </style>
+
+
 </head>
 
 <body>
+  <div class="note">
+    move: wasd <br/>
+  </div>
   <script type="module" src="./index.js"></script>
 </body>
 </html>
