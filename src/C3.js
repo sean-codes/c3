@@ -28,7 +28,7 @@ import { C3_Gamepad } from './C3_Gamepad.js'
 import { C3_Html } from './C3_Html.js'
 
 export class C3 {
-   constructor(options = undefined) {
+   constructor(options = {}) {
       this.clock = new THREE.Clock()
       
       this.global = {}
@@ -64,6 +64,8 @@ export class C3 {
       this.engineSpeed = 1000/60
       this.screenWidth = 0
       this.screenHeight = 0
+      this.maxResolutionX = options.maxResolutionX
+      this.maxResolutionY = options.maxResolutionY
    }
    
    init({
@@ -128,7 +130,8 @@ export class C3 {
       const timeScale = 1/ (this.engineSpeed / oneSec)
       
       // for debugging lower fps
-      if (this.fps.fps > 65) { 
+      if (window.requestAnimationFrame && this.fps.fps > 65) {
+         console.log('[C3]: Switching to setTimeout rendering')
          window.requestAnimationFrame = null 
       }
       const useAnimationFrame = window.requestAnimationFrame && this.engineSpeed === 1000/60
@@ -162,6 +165,9 @@ export class C3 {
       this.transform.step()
       
       this.loops += 1
+
+      
+      
    }
    
    stop() {
@@ -172,10 +178,33 @@ export class C3 {
       this.running = true
    }
 
+   getScreenSize() {
+      const pixelRatio = window.devicePixelRatio
+      var rWidth = (window.innerWidth * pixelRatio)
+      var rHeight = (window.innerHeight * pixelRatio)
+      var width = rWidth
+      var height = rHeight
+      var ratio = width/height
+      if (this.maxResolutionX && width > this.maxResolutionX) {
+         width = this.maxResolutionX
+         height = width * ratio
+      }
+      if (this.maxResolutionY && height > this.maxResolutionY) {
+         height = this.maxResolutionY
+         width = height * ratio
+      }
+
+      return { 
+         width, 
+         height, 
+         rWidth,
+         rHeight
+      }
+   }
+
    handleResize(e) {
-      const pixelRatio = 1 //window.devicePixelRatio
-      const width = window.innerWidth * pixelRatio
-      const height = window.innerHeight * pixelRatio
+      const { width, height } = this.getScreenSize() 
+
       this.screenWidth = width
       this.screenHeight = height
       this.render.handleResize(width, height)

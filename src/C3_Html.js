@@ -59,8 +59,8 @@ export class C3_Html {
       this.renderer.render(scene.object, camera.object)
    }
    
-   handleResize(width, height) {
-      this.renderer.setSize(width, height)
+   handleResize() {
+      this.renderer.setSize(window.innerWidth, window.innerHeight)
    }
    
    addStyle(key, style) {
