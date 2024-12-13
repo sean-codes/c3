@@ -19,14 +19,14 @@ export class ObjectWheel extends c3.Object {
       return this.container
    }
 
-   // physics() {
-   //    return {
-   //       meshes: [ 
-   //          { mesh: this.sphere },
-   //       ],
-   //       mass: 0,
-   //    }
-   // }
+   physics() {
+      return {
+         meshes: [ 
+            { mesh: this.sphere },
+         ],
+         // mass: 0,
+      }
+   }
    
    create({ position, side = 1}) {
       this.setPositionVec(position)
@@ -34,5 +34,24 @@ export class ObjectWheel extends c3.Object {
 
    step() {
 
+   }
+
+   move(accel) {
+      var rot = this.getRotation()
+      // console.log(rot)
+      var direction = rot.y 
+      // console.log(direction)
+      var currentSpeedX = Math.sin(direction) * -accel
+      var currentSpeedY = Math.cos(direction) * -accel
+      this.body.velocity.set(
+         currentSpeedX,
+         this.body.velocity.y,
+         currentSpeedY,
+      )
+      this.cylinder.rotateY(accel * 0.1)
+   }
+
+   turnWheel(turn) {
+      this.setRotationY(turn)
    }
 }
