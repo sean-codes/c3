@@ -50,8 +50,8 @@ export class C3_Render {
     for (let uPass of sorted) {
       this.composer.addPass(uPass.pass)      
     }
-
-    this.handleResize(window.innerWidth, window.innerHeight)
+    var { width, height } = this.c3.getScreenSize()
+    this.handleResize(width, height)
   }
 
   loop(scene, camera, delta) {

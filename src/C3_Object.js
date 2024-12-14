@@ -59,6 +59,10 @@ export class C3_Object {
       this.mesh.add(object.origin ? object.origin : object)
    }
    
+   setPositionVec({ x, y, z }) {
+      this.setPosition(x, y, z)
+   }
+   
    setPosition(x, y, z) {
       this.origin.position.y = y
       this.origin.position.z = z
@@ -73,7 +77,11 @@ export class C3_Object {
       this.onMove()
    }
    
-   moveVec({ x, y, z }) {
+   moveVec(v) {
+      this.move(v.x, v.y, v.z)
+   }
+
+   move(x, y, z) {
       this.origin.position.x += x
       this.origin.position.y += y
       this.origin.position.z += z
@@ -85,15 +93,16 @@ export class C3_Object {
       }
    }
    
-   setPositionVec({ x, y, z }) {
-      this.setPosition(x, y, z)
-   }
 
    /**
    * @returns {THREE.Vector3}
    */
    getPosition() {
       return this.origin.position.clone()
+   }
+   
+   distanceTo(other) {
+      return this.getPosition().distanceTo(other.getPosition())
    }
    
    // mmmm... i dont like these here!
@@ -189,7 +198,7 @@ export class C3_Object {
    }
 
    getDirectionToward(object) {
-      return this.getPosition().sub(object.getPosition()).normalize()
+      return object.getPosition().sub(this.getPosition()).normalize()
    }
 
    addRotationY(radians) {

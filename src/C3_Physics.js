@@ -86,7 +86,6 @@ export class C3_Physics {
       const offset = new THREE.Vector3(0, 0, 0)
       for (let i = 0; i < meshData.length; i++) {
          const { mesh, shape, offsetY, isInstance } = meshData[i]
-
          let createdShapeData = undefined
          if (shape === SHAPES.BOX) createdShapeData = createShapeBox(meshData[i])
          if (shape === SHAPES.MESH) createdShapeData = createShapeConvexPolyhedron(meshData[i])
@@ -445,7 +444,8 @@ function getShapeType(object) {
    const geo = mesh.geometry ? mesh.geometry : mesh.children[0].children[0].geometry
    const geoType = geo.type
    // pls fix
-   // if (part.name.toLowerCase().includes('c3_phy_mesh') ? SHAPES.MESH : SHAPES.BOX
+   // im trying but now c3_phy_mesh only supports box?
+   if (mesh.name.includes('c3_phy_mesh_box')) return SHAPES.BOX
    
    if (geoType.startsWith('Sphere')) return SHAPES.SPHERE
    if (geoType.startsWith('Cylinder')) return SHAPES.CYLINDER
