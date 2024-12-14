@@ -2871,7 +2871,7 @@ var ConvexPolyhedron = /*#__PURE__*/function (_Shape) {
       var depth = planeNormalWS.dot(pVtxIn[_i5]) + planeEqWS; // ???
 
       if (depth <= minDist) {
-        console.log("clamped: depth=" + depth + " to minDist=" + minDist);
+        // console.log("clamped: depth=" + depth + " to minDist=" + minDist);
         depth = minDist;
       }
 
