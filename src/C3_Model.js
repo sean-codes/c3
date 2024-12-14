@@ -24,6 +24,7 @@ export class C3_Model {
                material.shininess = 0
                material.metalness = 0 // metal textures need different lighting?
                // material.forceSinglePass = true
+               
                if (loadInfo.materialOverrides) {
                   const overrides = loadInfo.materialOverrides[material.name]
                   if (overrides) {
@@ -151,11 +152,10 @@ export class C3_Model {
       const clone = SkeletonUtils.clone(cloneObject)
       clone.animations = cloneObject.animations
       clone.traverse((part) => {
+         // there is some reason to make a unique mat
          if(part.type.includes('SkinnedMesh') && part.material) {
-            const materials = Array.isArray(part.material) ? part.material : [part.material]
-            for (var mat of materials) {
-               mat = new THREE[mat.type](mat)
-            }
+            if (Array.isArray(part.material)) part.material = part.material.map(mat => mat.clone())
+            else part.material = part.material.clone()
          }
       })
       

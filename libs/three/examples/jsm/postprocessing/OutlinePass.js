@@ -30,7 +30,7 @@ class OutlinePass extends Pass {
 		this.edgeGlow = 0.0;
 		this.usePatternTexture = false;
 		this.edgeThickness = 1.0;
-		this.edgeStrength = 2.0;
+		this.edgeStrength = 3.0;
 		this.downSampleRatio = 2;
 		this.pulsePeriod = 0;
 
