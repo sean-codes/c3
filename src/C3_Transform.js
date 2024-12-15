@@ -45,14 +45,14 @@ export class C3_Transform {
       this.handleChange()
    }
 
-   attach(gameObject) {
+   attach(gameObject, setUndo = true) {
       this.detach()
       
       const currentPosition = gameObject.getPosition()
       const currentRotation = gameObject.getRotation()
       const currentScale = gameObject.getScale()
       
-      if (!this.gameObject || this.gameObject.id !== gameObject.id) {
+      if (setUndo && (!this.gameObject || this.gameObject.id !== gameObject.id)) {
          this.gameObjectInitialTransform.position = currentPosition.clone()
          this.gameObjectInitialTransform.scale = currentScale.clone()
          this.gameObjectInitialTransform.rotation = currentRotation.clone()
