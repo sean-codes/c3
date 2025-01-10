@@ -100,7 +100,9 @@ export class C3_Model {
       // this likely means we are doing some kind of destructive mutation to the clips... will look into it in more detail later
       for (let definedClip of loadInfo.clips || []) {
          const animation = object.animations.find(c => definedClip.map === c.name)
-         
+         if (!animation) {
+            console.log('C3: Animation not found', definedClip.map)
+         }
          let clipName = definedClip ? definedClip.name : animation.name
          let adjustedClip = THREE.AnimationUtils.subclip(animation, animation.name, 0, Math.round(animation.time * 24), 24)
          if (definedClip) {

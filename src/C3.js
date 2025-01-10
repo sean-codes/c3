@@ -61,7 +61,7 @@ export class C3 {
       this.script = {}
       this.version = 0
       this.loading = 0   
-      this.engineSpeed = 1000/60
+      this.engineSpeed = options.speed || 1000/60
       this.screenWidth = 0
       this.screenHeight = 0
       this.maxResolutionX = options.maxResolutionX
