@@ -108,6 +108,7 @@ export class C3_Model {
          if (definedClip) {
             if (definedClip.add) {  
                var addToClip =  object.animations.find(c => c.name === definedClip.add)
+               if (!addToClip) console.log(`C3: Add to clip not found ${definedClip.add} for ${clipName}`)
                THREE.AnimationUtils.makeClipAdditive(adjustedClip, 0, addToClip || undefined)
             }
             
@@ -451,6 +452,18 @@ export class C3_Model {
    animateGetPercentDone(clipName) {
       const clip = this.clips[clipName]
       return clip.getEffectiveWeight() ? (clip.time / clip.getClip().duration) : 0
+   }
+
+   animateGetAllPlaying() {
+      var playing = []
+      for (var clipName in this.clips) {
+         var clip = this.clips[clipName]
+         if (clip.c3_weightCurrent > 0) {
+            playing.push({ name: clipName, weight: clip.c3_weightCurrent, clip })
+         }
+      }
+
+      return playing
    }
    
    loop(delta) {
