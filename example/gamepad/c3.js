@@ -15,8 +15,8 @@ class ObjectCube extends c3.Object {
 class ObjectLight extends c3.Object {
    mesh() {
       var lights = new c3.THREE.Object3D()
-      lights.add(c3.light.Directional({ color: '#FFF', intensity: 0.5 }))
-      lights.add(c3.light.Ambient({ color: '#f22', intensity: 0.5}))
+      lights.add(c3.light.Directional({ color: '#FFF', intensity: 0.25 }))
+      lights.add(c3.light.Ambient({ color: '#f22', intensity: 0.25}))
       return lights
    }
    
@@ -37,7 +37,7 @@ c3.init({
    
    init: function() {
       c3.mesh.setMaterialType(c3.const.MaterialTypePhong)
-      c3.scene.setBackground('#555')
+      c3.scene.setBackground('#333342')
       c3.camera.setPosition(0, 0, 10)
       
       c3.objects.create(c3.types.Cube)
