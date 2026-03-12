@@ -154,7 +154,6 @@ class GamepadButton {
    constructor(c3, index) {
       this.c3 = c3
       this.index = index
-      
       this.value = 0
       this.status = {
          up: false,
@@ -164,7 +163,6 @@ class GamepadButton {
    }
    
    update(gamepad, index) {
-      // line order here matters. i am confused
       const button = gamepad.buttons[index]
       this.status.down = false
       if (!button) return

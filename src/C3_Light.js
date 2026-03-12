@@ -3,9 +3,10 @@ import * as THREE from '../libs/three/build/three.module.js'
 
 export class C3_Light {
    Directional({
-      color = '#FFF'
+      color = '#FFF',
+      intensity = 1
    } = {}) {
-      return new THREE.DirectionalLight(color)
+      return new THREE.DirectionalLight(color, intensity)
    }
    
    Ambient({

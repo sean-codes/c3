@@ -14,7 +14,10 @@ class ObjectCube extends c3.Object {
 
 class ObjectLight extends c3.Object {
    mesh() {
-      return c3.light.Directional()
+      var lights = new c3.THREE.Object3D()
+      lights.add(c3.light.Directional({ color: '#FFF', intensity: 0.5 }))
+      lights.add(c3.light.Ambient({ color: '#f22', intensity: 0.5}))
+      return lights
    }
    
    create() {
@@ -35,7 +38,7 @@ c3.init({
    init: function() {
       c3.mesh.setMaterialType(c3.const.MaterialTypePhong)
       c3.scene.setBackground('#555')
-      c3.camera.setPosition(0, 0, 2)
+      c3.camera.setPosition(0, 0, 10)
       
       c3.objects.create(c3.types.Cube)
       c3.objects.create(c3.types.Light)
@@ -82,7 +85,7 @@ c3.init({
          eleTableButtons.querySelector('#anolog_left_click .value').innerHTML = !!gamepad.anolog_left_click?.status.held
 
          // updated pressed
-         var pressedChecks = ['x', 'circle', 'triangle', 'square']
+         var pressedChecks = ['x', 'circle', 'triangle', 'square', 'r1', 'l1', 'r2', 'l2']
          for (var pressedCheck of pressedChecks) {
             if (gamepad[pressedCheck]?.status.down) {
                var ele = eleTableButtons.querySelector(`#${pressedCheck} .pressed`)

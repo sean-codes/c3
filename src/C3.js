@@ -93,6 +93,7 @@ export class C3 {
       this.keyboard.applyKeyMap(keyMap)
       this.running = true
       this.loops = 0
+      this.timeoutFallback = false
       
       // applying c3 to scripts
       for (const scriptName in scripts) {
@@ -132,9 +133,10 @@ export class C3 {
       // for debugging lower fps
       if (window.requestAnimationFrame && this.fps.fps > 65) {
          console.log('[C3]: Switching to setTimeout rendering')
-         window.requestAnimationFrame = null 
+         // window.requestAnimationFrame = null 
+         this.timeoutFallback = true
       }
-      const useAnimationFrame = window.requestAnimationFrame && this.engineSpeed === 1000/60
+      const useAnimationFrame = window.requestAnimationFrame && this.engineSpeed === 1000/60 && !this.timeoutFallback
       useAnimationFrame
          ? requestAnimationFrame(() => this.engineStep()) 
          : setTimeout(() => this.engineStep(), this.engineSpeed)
@@ -165,8 +167,6 @@ export class C3 {
       
       this.loops += 1
 
-      
-      
    }
    
    stop() {
