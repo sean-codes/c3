@@ -135,7 +135,6 @@ export class C3 {
          window.requestAnimationFrame = null 
       }
       const useAnimationFrame = window.requestAnimationFrame && this.engineSpeed === 1000/60
-      
       useAnimationFrame
          ? requestAnimationFrame(() => this.engineStep()) 
          : setTimeout(() => this.engineStep(), this.engineSpeed)

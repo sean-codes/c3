@@ -1,25 +1,77 @@
-// lazy write this for single pad first
+// WIP. The API for this is fine but the implementation needs work. Button presses in between frames can be missed.
+
 // buttons and keyboard keys will map the same
+const GAMEPAD_MAPS = {
+   'DUALSHOCK 4': {
+      anolog_left: [0, 1],
+      anolog_right: [2, 3],
+      dpad_up: 12,
+      dpad_down: 13,
+      dpad_left: 14,
+      dpad_right: 15,
+      start: 8,
+      options: 9,
+      r1: 5,
+      r2: 7,
+      l1: 4,
+      l2: 6,
+      x: 0,
+      circle: 1,
+      square: 2,
+      triangle: 3,
+      anolog_left_click: 10,
+      anolog_right_click: 11,
+   },
+   'DualSense Edge': {
+      anolog_left: [0, 1],
+      anolog_right: [2, 3],
+      // dpad on edge is a anolog reading these do not work
+      dpad_up: 12,
+      dpad_down: 13,
+      dpad_left: 14,
+      dpad_right: 15,
+      start: 9,
+      options: 8,
+      r1: 5,
+      r2: 7,
+      l1: 4,
+      l2: 6,
+      x: 1,
+      circle: 2,
+      square: 0,
+      triangle: 3,
+      anolog_left_click: 10,
+      anolog_right_click: 11,
+   }
+}
 
 export class C3_Gamepad {
    constructor(c3) {
       this.c3 = c3
       this.map = new GamepadMap(c3)
       this.index = null
+      this.buttonMap = null
 
       window.addEventListener('gamepadconnected', (event) => {
          this.index = event.gamepad.index
+         this.buttonMap = this.getMap(event.gamepad)
+         console.log('[C3] Gamepad connected: ', event)
       });
    }
    
    loop() {
       const gamepad = this.getGamepad()
-      
       if (gamepad) {
-         this.map.update(gamepad)
+         this.map.update(gamepad, this.buttonMap)
       }
    }
-   
+
+   getMap(gamepad) {
+      var ids = Object.keys(GAMEPAD_MAPS)
+      var id = ids.find(k => gamepad.id.includes(k))
+      return GAMEPAD_MAPS[id]
+   }
+
    getGamepad() {
       const isScreenFocused = document.hasFocus()
       if (!isScreenFocused) return
@@ -75,26 +127,26 @@ class GamepadMap {
       this.anolog_right_click = new GamepadButton(this.c3, 11)
    }
    
-   update(gamepad) {
+   update(gamepad, map) {
       // not even a loop
-      this.anolog_left.update(gamepad.axes[0], gamepad.axes[1])
-      this.anolog_right.update(gamepad.axes[2], gamepad.axes[3])
-      this.dpad_up.update(gamepad)
-      this.dpad_down.update(gamepad)
-      this.dpad_left.update(gamepad)
-      this.dpad_right.update(gamepad)
-      this.start.update(gamepad)
-      this.options.update(gamepad)
-      this.r1.update(gamepad)
-      this.r2.update(gamepad)
-      this.l1.update(gamepad)
-      this.l2.update(gamepad)
-      this.x.update(gamepad)
-      this.circle.update(gamepad)
-      this.square.update(gamepad)
-      this.triangle.update(gamepad)
-      this.anolog_left_click.update(gamepad)
-      this.anolog_right_click.update(gamepad)
+      this.anolog_left.update(gamepad.axes[map.anolog_left[0]], gamepad.axes[map.anolog_left[1]])
+      this.anolog_right.update(gamepad.axes[map.anolog_right[0]], gamepad.axes[map.anolog_right[1]])
+      this.dpad_up.update(gamepad, map.dpad_up)
+      this.dpad_down.update(gamepad, map.dpad_down)
+      this.dpad_left.update(gamepad, map.dpad_left)
+      this.dpad_right.update(gamepad, map.dpad_right)
+      this.start.update(gamepad, map.start)
+      this.options.update(gamepad, map.options)
+      this.r1.update(gamepad, map.r1)
+      this.r2.update(gamepad, map.r2)
+      this.l1.update(gamepad, map.l1)
+      this.l2.update(gamepad, map.l2)
+      this.x.update(gamepad, map.x)
+      this.circle.update(gamepad, map.circle)
+      this.square.update(gamepad, map.square)
+      this.triangle.update(gamepad, map.triangle)
+      this.anolog_left_click.update(gamepad, map.anolog_left_click)
+      this.anolog_right_click.update(gamepad, map.anolog_right_click)
    }
 }
 
@@ -111,11 +163,12 @@ class GamepadButton {
       }
    }
    
-   update(gamepad) {
+   update(gamepad, index) {
       // line order here matters. i am confused
-      const button = gamepad.buttons[this.index]
+      const button = gamepad.buttons[index]
       this.status.down = false
-      
+      if (!button) return
+
       if (button.pressed) {
          this.c3.lastInputType = this.c3.const.INPUT_GAMEPAD
 
