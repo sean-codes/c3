@@ -128,7 +128,8 @@ export class C3_Mouse {
    }
 
    // mouse locking
-   enableMouseLock() {
+   enableLock() {
+      console.log('C3_Mouse: Pointer lock enabled')
       const canvas = this.c3.render.renderer.domElement
       this.lockMouseFunction = () => {
          if (!document.pointerLockElement) {
@@ -138,13 +139,20 @@ export class C3_Mouse {
 
       canvas.addEventListener('click', this.lockMouseFunction)
       document.addEventListener('pointerlockchange', (e) => {
-         this.locked = !this.locked
+         this.locked = !!document.pointerLockElement
       })
    }
 
-   disableMouseLock() {
+
+   disableLock() {
+      console.log('C3_Mouse: Pointer lock disabled')
       const canvas = this.c3.render.renderer.domElement
       canvas.removeEventListener('click', this.lockMouseFunction)
+      this.unlock()
+   }
+
+   unlock() {
       this.locked = false
+      document.exitPointerLock()
    }
 }
