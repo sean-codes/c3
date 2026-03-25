@@ -131,7 +131,7 @@ export class C3 {
       const timeScale = 1/ (this.engineSpeed / oneSec)
       
       // for debugging lower fps
-      if (window.requestAnimationFrame && this.fps.fps > 65) {
+      if (window.requestAnimationFrame && this.fps.fps > 65 && !this.timeoutFallback) {
          console.log('[C3]: Switching to setTimeout rendering')
          // window.requestAnimationFrame = null 
          this.timeoutFallback = true

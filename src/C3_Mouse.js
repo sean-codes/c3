@@ -3,7 +3,9 @@ import * as THREE from '../libs/three/build/three.module.js'
 export class C3_Mouse {
    constructor(c3) {
       this.c3 = c3
-      this.pos = new THREE.Vector3()
+      this.pos = new THREE.Vector2()
+      this.movement = new THREE.Vector2()
+
       this.raycaster = new THREE.Raycaster()
       this.events = []
       this.block = false
@@ -14,6 +16,9 @@ export class C3_Mouse {
       this.scrollX = 0
       this.scrollY = 0
       this.passThrough(window)
+
+      this.locked = false
+      this.lockMouseFunction = null
    }
    
    passThrough(ele) {
@@ -29,6 +34,9 @@ export class C3_Mouse {
    handleMousemove(e) {
       this.pos.x = event.clientX / window.innerWidth * 2 - 1
       this.pos.y = event.clientY / window.innerHeight * -2 + 1;
+
+      this.movement.x += e.movementX
+      this.movement.y += e.movementY
    }
    
    handleMousedown(e) {
@@ -58,8 +66,9 @@ export class C3_Mouse {
          }
       }
       
+      this.movement.x = 0
+      this.movement.y = 0
       this.events = []
-      // console.log(c3.mouse.down, c3.mouse.up, c3.mouse.held)
    }
    
    isDown() {
@@ -116,5 +125,26 @@ export class C3_Mouse {
       }
 
       return collection
+   }
+
+   // mouse locking
+   enableMouseLock() {
+      const canvas = this.c3.render.renderer.domElement
+      this.lockMouseFunction = () => {
+         if (!document.pointerLockElement) {
+            canvas.requestPointerLock()
+         }
+      }
+
+      canvas.addEventListener('click', this.lockMouseFunction)
+      document.addEventListener('pointerlockchange', (e) => {
+         this.locked = !this.locked
+      })
+   }
+
+   disableMouseLock() {
+      const canvas = this.c3.render.renderer.domElement
+      canvas.removeEventListener('click', this.lockMouseFunction)
+      this.locked = false
    }
 }
