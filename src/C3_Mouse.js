@@ -9,9 +9,17 @@ export class C3_Mouse {
       this.raycaster = new THREE.Raycaster()
       this.events = []
       this.block = false
+
+      // kept both for simplicity
       this.down = false
       this.held = false
       this.up = false
+
+      this.buttons = [
+         { down: false, held: false, up: false },
+         { down: false, held: false, up: false },
+         { down: false, held: false, up: false },
+      ]
       
       this.scrollX = 0
       this.scrollY = 0
@@ -41,12 +49,12 @@ export class C3_Mouse {
    
    handleMousedown(e) {
       if (this.block) return
-      this.events.push({ down: true, held: true })
+      this.events.push({ down: true, held: true, button: e.button })
    }
    
    handleMouseup(e) {
       if (this.block) return
-      this.events.push({ up: true, held: false })
+      this.events.push({ up: true, held: false, button: e.button })
    }
    
    blockInput() {
@@ -55,16 +63,29 @@ export class C3_Mouse {
    
    loop() {
       this.block = false
-      this.down = false
-      if (this.up) this.held = false
-      this.up = false
-      this.scrollX = 0
-      this.scrollY = 0
+
+      for (var i in this.buttons) {
+         var button = this.buttons[i]
+         button.down = false
+         if (button.up) this.held = false
+         button.down = false
+         button.up = false
+
+      }
+
       for (const event of this.events) {
          for (const eventName in event) {
-            this[eventName] = event[eventName]
+            this.buttons[event.button][eventName] = event[eventName]
          }
       }
+
+      // for friendly usage
+      this.down = this.buttons[0].down
+      this.up = this.buttons[0].up
+      this.held = this.buttons[0].held
+
+      this.scrollX = 0
+      this.scrollY = 0
       
       this.movement.x = 0
       this.movement.y = 0
@@ -76,7 +97,15 @@ export class C3_Mouse {
    }
    
    isUp() {
-      return this.isUp
+      return this.up
+   }
+
+   isRightDown() {
+      return this.buttons[2].down
+   }
+
+   isRightUp() {
+      return this.buttons[2].up
    }
 
    raycast() {
@@ -131,7 +160,7 @@ export class C3_Mouse {
    enableLock() {
       console.log('C3_Mouse: Pointer lock enabled')
       const canvas = this.c3.render.renderer.domElement
-      this.lockMouseFunction = () => {
+      this.lockMouseFunction = (e) => {
          if (!document.pointerLockElement) {
             canvas.requestPointerLock()
          }
